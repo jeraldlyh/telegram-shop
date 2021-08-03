@@ -1,4 +1,4 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize } = require("sequelize")
 
 
 const sequelize = new Sequelize(
@@ -9,6 +9,6 @@ const sequelize = new Sequelize(
 		host: process.env.PGHOST,
 		dialect: "postgres",
 	}
-);
+)
 
-module.exports = sequelize;
+module.exports = sequelize

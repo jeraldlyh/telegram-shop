@@ -36,7 +36,7 @@ const Address = db.define(
 			type: DataTypes.STRING(120),
 			allowNull: false,
 		},
-        country: {
+        postalCode: {
 			type: DataTypes.STRING(16),
 			allowNull: false,
 		},
