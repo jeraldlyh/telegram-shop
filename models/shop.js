@@ -1,6 +1,6 @@
 const { DataTypes, Deferrable } = require("sequelize")
 const db = require("../db/index")
-const Owner = require("./owner")
+const User = require("./user")
 
 
 const Shop = db.define(
@@ -18,7 +18,7 @@ const Shop = db.define(
 		ownerID: {
 			type: DataTypes.INTEGER,
 			references: {
-				model: Owner,
+				model: User,
 				key: "telegramID",
 				deferrable: Deferrable.INITIALLY_IMMEDIATE,
 			},

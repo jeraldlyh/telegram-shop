@@ -28,7 +28,7 @@ const Product = db.define(
 			type: DataTypes.INTEGER,
 			allowNull: false,
 		},
-		category: {
+		categoryID: {
 			type: DataTypes.UUID,
 			references: {
 				model: Category,

@@ -1,23 +1,31 @@
-const { Owner, Shop, Category, Product, User, Address, Order, OrderItem, Payment } = require("../../../models")
+const { Shop, Category, Product, User, Address, Order, OrderItem, Payment } = require("../../../models")
 const faker = require("faker")
 const _ = require("lodash")
 
 
 module.exports = {
     createDummyData: async function (ctx) {
-        const owner = await Owner.create({
-            telegramID: faker.datatype.number(),
-            name: faker.name.firstName(),
-            email: faker.internet.email(),
-            mobile: faker.phone.phoneNumber()
-        })
+        var user = null
+        var shop = null
 
+        try {
+            user = await User.create({
+                telegramID: faker.datatype.number(),
+                name: faker.name.firstName(),
+                email: faker.internet.email(),
+                mobile: faker.phone.phoneNumber(),
+                isOwner: true, // faker.datatype.boolean()
+            })
 
-        const shop = await Shop.create({
-            botID: faker.datatype.number(),
-            name: faker.lorem.word(),
-            ownerID: owner.toJSON().telegramID
-        })
+            shop = await Shop.create({
+                botID: faker.datatype.number(),
+                name: ctx.botInfo.first_name,
+                ownerID: user.toJSON().telegramID
+            })
+        } catch (error) {
+            user = await User.findByPk(ctx.from.id)
+            shop = await Shop.findOne({ where: { name: ctx.botInfo.first_name } })
+        }
 
         const category = await Category.create({
             name: faker.commerce.department(),
@@ -27,23 +35,19 @@ module.exports = {
         const randomProd = _.random(1, 5)
 
         for (var i = 0; i < randomProd; i++) {
+            console.log(category.toJSON().id)
             await Product.create({
                 name: faker.commerce.product(),
                 description: faker.commerce.productDescription(),
                 price: faker.commerce.price(),
                 quantity: faker.datatype.number(),
-                category: category.toJSON().id
+                categoryID: category.toJSON().id
             })
         }
 
         // TODO: Creation of OrderItems and Order
 
-        const user = await User.create({
-            telegramID: faker.datatype.number(),
-            name: faker.name.firstName(),
-            email: faker.internet.email(),
-            mobile: faker.phone.phoneNumber()
-        })
+
 
         const randomAddress = _.random(1, 2)
         for (var i = 0; i < randomAddress; i++) {

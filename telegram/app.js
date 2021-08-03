@@ -15,7 +15,7 @@ db.authenticate()
 
 
 bot.command("start", ctx => {
-    const BOT_NAME = bot.botInfo.first_name
+    const BOT_NAME = ctx.botInfo.first_name
     const message = `Welcome to ${BOT_NAME}
 
 \\<insert shop description here\\>
@@ -28,7 +28,6 @@ If the keyboard has not opened, you can open it by pressing the button with four
         .keyboard([
             ["View Categories", "View Cart"]
         ])
-        .oneTime()
         .resize()
     )
 })

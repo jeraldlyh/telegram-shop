@@ -30,5 +30,4 @@ const Category = db.define(
 	}
 )
 
-
 module.exports = Category

@@ -1,4 +1,4 @@
-const { DataTypes, Deferrable } = require("sequelize")
+const { DataTypes } = require("sequelize")
 const db = require("../db")
 
 
@@ -24,6 +24,11 @@ const User = db.define(
 			unique: true,
 			allowNull: false,
 		},
+        isOwner: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
+        }
 	},
 	{
 		timestamps: true,

@@ -1,8 +1,6 @@
 const { Sequelize, DataTypes, Deferrable } = require("sequelize")
 const db = require("../db")
-const Shop = require("./shop")
 const User = require("./user")
-const Payment = require("./payment")
 
 
 const Order = db.define(
@@ -14,14 +12,6 @@ const Order = db.define(
 			primaryKey: true,
 			allowNull: false,
 		},
-        paymentID: {
-            type: DataTypes.UUID,
-			references: {
-				model: Payment,
-				key: "id",
-				deferrable: Deferrable.INITIALLY_IMMEDIATE,
-			},
-        },
         userID: {
 			type: DataTypes.INTEGER,
 			references: {
@@ -29,13 +19,13 @@ const Order = db.define(
 				key: "telegramID",
 			},
 		},
-        shopID: {
-			type: DataTypes.INTEGER,
-			references: {
-				model: Shop,
-				key: "botID",
-			},
-		},
+        // shopID: {
+		// 	type: DataTypes.INTEGER,
+		// 	references: {
+		// 		model: Shop,
+		// 		key: "botID",
+		// 	},
+		// },
         status: {
             type: Sequelize.ENUM,
             values: ["PENDING", "COMPLETED"],
