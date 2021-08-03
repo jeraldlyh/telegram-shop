@@ -2,7 +2,6 @@ const { Sequelize, DataTypes, Deferrable } = require("sequelize")
 const db = require("../db")
 const Shop = require("./shop")
 const User = require("./user")
-const OrderItem = require("./orderItem")
 const Payment = require("./payment")
 
 
@@ -37,16 +36,8 @@ const Order = db.define(
 				key: "botID",
 			},
 		},
-        orderItemID: {
-            type: DataTypes.UUID,
-			references: {
-				model: OrderItem,
-				key: "id",
-				deferrable: Deferrable.INITIALLY_IMMEDIATE,
-			},
-        },
         status: {
-            type: DataTypes.ENUM,
+            type: Sequelize.ENUM,
             values: ["PENDING", "COMPLETED"],
             default: "PENDING",
             allowNull: false

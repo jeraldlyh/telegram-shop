@@ -1,4 +1,4 @@
-const { DataTypes, Deferrable } = require("sequelize")
+const { DataTypes } = require("sequelize")
 const db = require("../db")
 
 

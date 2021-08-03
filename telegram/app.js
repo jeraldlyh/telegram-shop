@@ -1,7 +1,7 @@
 const { Telegraf, Markup } = require("telegraf")
-const db = require("./db")
+const db = require("../db")
+const models = require("../models")
 const Category = require("./commands/category")
-const models = require("./models")
 
 
 const bot = new Telegraf(process.env.BOT_TOKEN)
@@ -10,7 +10,7 @@ const bot = new Telegraf(process.env.BOT_TOKEN)
 db.authenticate()
 	.then(() => console.log("Connection has been established successfully."))
 	.catch((err) => console.log(err))
-db.sync({ force: true })
+// db.sync({ force: true })
 
 
 

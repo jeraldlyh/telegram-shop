@@ -12,14 +12,6 @@ const Payment = db.define(
 			primaryKey: true,
 			allowNull: false,
 		},
-		Order: {
-			type: DataTypes.UUID,
-			references: {
-				model: Order,
-				key: "id",
-				deferrable: Deferrable.INITIALLY_IMMEDIATE,
-			},
-		},
 	},
 	{
 		timestamps: true,

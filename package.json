@@ -4,7 +4,7 @@
   "description": "Telegram Shop Templates",
   "main": "app.js",
   "scripts": {
-    "start-telegram": "nodemon -r dotenv/config telegram/app.js"
+    "start-tele": "nodemon -r dotenv/config telegram/app.js"
   },
   "repository": {
     "type": "git",
