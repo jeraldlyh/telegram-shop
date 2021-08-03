@@ -20,11 +20,7 @@ const Address = db.define(
 				deferrable: Deferrable.INITIALLY_IMMEDIATE,
 			},
 		},	
-        address1: {
-			type: DataTypes.STRING(120),
-			allowNull: false,
-		},
-        address2: {
+        address: {
 			type: DataTypes.STRING(120),
 			allowNull: false,
 		},

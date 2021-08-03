@@ -18,6 +18,8 @@
   "homepage": "https://github.com/jeraldlyh/TeleShop#readme",
   "dependencies": {
     "dotenv": "^10.0.0",
+    "faker": "^5.5.3",
+    "lodash": "^4.17.21",
     "nodemon": "^2.0.12",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",

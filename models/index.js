@@ -5,8 +5,8 @@ const Product = require("./product")
 const User = require("./user")
 const Address = require("./address")
 const Order = require("./order")
-const OrderTime = require("./orderItem")
+const OrderItem = require("./orderItem")
 const Payment = require("./payment")
 
 
-module.exports = {Owner, Shop, Category, Product, User, Address, Order, OrderTime, Payment}
+module.exports = {Owner, Shop, Category, Product, User, Address, Order, OrderItem, Payment}

@@ -1,7 +1,7 @@
 const { Telegraf, Markup } = require("telegraf")
 const db = require("../db")
-const models = require("../models")
 const Category = require("./commands/category")
+const Dummy = require("./commands/dummy")
 
 
 const bot = new Telegraf(process.env.BOT_TOKEN)
@@ -33,6 +33,9 @@ If the keyboard has not opened, you can open it by pressing the button with four
     )
 })
 
+bot.command("test", ctx => Dummy.createDummyData(ctx))
+
 bot.hears("View Categories", ctx => Category.listCategories(ctx))
+
 
 bot.launch()

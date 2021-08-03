@@ -1,4 +1,4 @@
-const { Sequelize, DataTypes, Deferrable } = require("sequelize")
+const { Sequelize, DataTypes } = require("sequelize")
 const db = require("../db")
 const Order = require("./order")
 

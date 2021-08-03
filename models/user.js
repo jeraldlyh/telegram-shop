@@ -20,7 +20,7 @@ const User = db.define(
 			allowNull: false,
 		},
 		mobile: {
-			type: DataTypes.STRING(8),
+			type: DataTypes.STRING(30),
 			unique: true,
 			allowNull: false,
 		},
