@@ -10,7 +10,7 @@ module.exports = {
 
         try {
             user = await User.create({
-                telegramID: faker.datatype.number(),
+                telegramID: ctx.from.id,
                 name: faker.name.firstName(),
                 email: faker.internet.email(),
                 mobile: faker.phone.phoneNumber(),
@@ -18,7 +18,7 @@ module.exports = {
             })
 
             shop = await Shop.create({
-                botID: faker.datatype.number(),
+                botID: ctx.botInfo.id,
                 name: ctx.botInfo.first_name,
                 ownerID: user.toJSON().telegramID
             })
@@ -26,6 +26,7 @@ module.exports = {
             user = await User.findByPk(ctx.from.id)
             shop = await Shop.findOne({ where: { name: ctx.botInfo.first_name } })
         }
+
 
         const category = await Category.create({
             name: faker.commerce.department(),
