@@ -1,31 +1,24 @@
 const _ = require("lodash")
 const { Markup } = require("telegraf")
-const { Shop, Category, Product } = require("../../models")
+const Database = require("../../db/actions")
 const Utils = require("../utils")
+const Template = require("../template")
+
 
 
 module.exports = {
     getAllCategories: async function (ctx) {
-        const shop = await Shop.findOne({
-            where: { name: ctx.botInfo.first_name },
-            include: [{
-                model: Category,
-                include: [{
-                    model: Product
-                }]
-            }]
-        })
-
+        const shop = await Database.getCategoryByShop(ctx.botInfo.first_name)
         const data = shop.toJSON()
         const categories = data.Categories
-        var output = ""
-        var inlineKeyboard = [
-            [{ text: "Back to Home", callback_data: "/" }]
-        ]
+
+        var bodyMessage = ""
+        var inlineKeyboard = []
         var buffer = []
 
+        // Populate category with products
         _.forEach(categories, function (category) {
-            output += `<b><u>${category.name}</u></b>\n`
+            bodyMessage += `<b><u>${category.name}</u></b>\n`
 
             if (buffer.length === 3) {
                 inlineKeyboard.push(buffer)
@@ -35,24 +28,21 @@ module.exports = {
 
             // Populate product description
             _.forEach(category.Products, function (product, index) {
-                output += `${index + 1}. ${product.name} ($${product.price}) ${Utils.determineStockLevel(product.quantity)}\n`
+                bodyMessage += `${index + 1}. ${product.name} ($${product.price}) ${Utils.determineStockLevel(product.quantity)}\n`
             })
-
-            output += "\n"
+            bodyMessage += "\n"
         })
 
         if (buffer.length > 0) {            // In case buffer still has items
             inlineKeyboard.push(buffer)
         }
 
-        output += "<i>🟢 - Available</i>\n"
-        output += "<i>🟡 - Low on stock</i>\n"
-        output += "<i>🔴 - Out of stock</i>"
+        inlineKeyboard.push([{ text: "Back to Home", callback_data: "/" }])
 
-        ctx.replyWithHTML(output, Markup
+        ctx.replyWithHTML(Template.categoryMessage(bodyMessage), Markup
             .inlineKeyboard(inlineKeyboard)
             .oneTime()
-            .resize()
+            .resize(),
         )
     },
 }
