@@ -4,5 +4,11 @@ module.exports = {
             return "🟢"
         }
         return "🔴"
-    }
+    },
+    getCallbackPaths: function (path) {
+        if (path === "/") {
+            return [path]
+        }
+        return path.slice(1).split("/")     // Slice to remove preceding path
+    },
 }

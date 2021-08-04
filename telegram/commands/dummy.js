@@ -1,4 +1,4 @@
-const { Shop, Category, Product, User, Address, Order, OrderItem, Payment } = require("../../../models")
+const { Shop, Category, Product, User, Address, Order, OrderItem, Payment } = require("../../models")
 const faker = require("faker")
 const _ = require("lodash")
 
@@ -20,6 +20,7 @@ module.exports = {
             shop = await Shop.create({
                 botID: ctx.botInfo.id,
                 name: ctx.botInfo.first_name,
+                image: faker.image.imageUrl(),
                 ownerID: user.toJSON().telegramID
             })
         } catch (error) {
@@ -29,8 +30,9 @@ module.exports = {
 
 
         const category = await Category.create({
-            name: faker.commerce.department(),
             shopID: shop.toJSON().botID,
+            name: faker.commerce.department(),
+            image: faker.image.imageUrl(),
         })
 
         const randomProd = _.random(1, 5)
@@ -40,6 +42,7 @@ module.exports = {
             await Product.create({
                 name: faker.commerce.product(),
                 description: faker.commerce.productDescription(),
+                image: faker.image.imageUrl(),
                 price: faker.commerce.price(),
                 quantity: faker.datatype.number(),
                 categoryID: category.toJSON().id

@@ -16,6 +16,10 @@ const Category = db.define(
 			type: DataTypes.STRING(120),
 			allowNull: false,
 		},
+        image: {
+            type: DataTypes.STRING(100),
+            allowNull: null,
+        },
 		shopID: {
 			type: DataTypes.INTEGER,
 			references: {

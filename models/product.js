@@ -20,6 +20,10 @@ const Product = db.define(
 			type: DataTypes.TEXT,
 			allowNull: false,
 		},
+        image: {
+            type: DataTypes.STRING(100),
+            allowNull: null,
+        },
 		price: {
 			type: DataTypes.DECIMAL(10, 2),
 			allowNull: false,

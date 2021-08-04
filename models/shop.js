@@ -15,6 +15,10 @@ const Shop = db.define(
 			type: DataTypes.STRING(120),
 			allowNull: false,
 		},
+        image: {
+            type: DataTypes.STRING(100),
+            allowNull: null,
+        },
 		ownerID: {
 			type: DataTypes.INTEGER,
 			references: {
