@@ -52,5 +52,16 @@ module.exports = {
             }]
         })
         return data.Products
+    },
+    getCategoryByShop: async function (shopID) {
+        return await Models.Shop.findOne({
+            where: { name: ctx.botInfo.first_name },
+            include: [{
+                model: Category,
+                include: [{
+                    model: Product
+                }]
+            }]
+        })
     }
 }
