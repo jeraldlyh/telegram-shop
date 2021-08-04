@@ -53,13 +53,13 @@ module.exports = {
         })
         return data.Products
     },
-    getCategoryByShop: async function (shopID) {
+    getCategoryByShop: async function (shopName) {
         return await Models.Shop.findOne({
-            where: { name: ctx.botInfo.first_name },
+            where: { name: shopName },
             include: [{
-                model: Category,
+                model: Models.Category,
                 include: [{
-                    model: Product
+                    model: Models.Product
                 }]
             }]
         })
