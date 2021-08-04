@@ -10,8 +10,7 @@ module.exports = {
         const product = await Database.getProductByName(ctx.botInfo.id, productName)
 
         try {
-            existingOrder = await Database.getPendingOrderByUser(ctx.botInfo.first_name, ctx.from.id)
-            console.log(existingOrder)
+            existingOrder = await Database.getPendingOrderByUser(ctx.botInfo.id, ctx.from.id)
             cart = await Database.getOrderItemByProductOrder(existingOrder.toJSON().id, product.toJSON().id)
         } catch (error) { }
 
@@ -30,5 +29,8 @@ module.exports = {
                 await Database.createOrderItem(newOrder.toJSON().id, product.toJSON().id, 1)
             }
         }
+    },
+    sendCartMessage: async function (ctx) {
+        ctx.replyWithHTML()
     }
 }

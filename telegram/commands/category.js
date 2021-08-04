@@ -8,7 +8,7 @@ const Template = require("../template")
 
 module.exports = {
     getAllCategories: async function (ctx) {
-        const shop = await Database.getCategoryByShop(ctx.botInfo.first_name)
+        const shop = await Database.getCategoryByShop(ctx.botInfo.id)
         const data = shop.toJSON()
         const categories = data.Categories
 

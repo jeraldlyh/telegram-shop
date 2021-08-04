@@ -1,6 +1,7 @@
 const _ = require("lodash")
 const Template = require("../template")
 const Database = require("../../db/actions")
+const Cart = require("./cart")
 
 
 module.exports = {
@@ -9,8 +10,7 @@ module.exports = {
         for (const product of products) {
             await module.exports.sendProductCardMessage(ctx, product)
         }
-
-        // ctx.replyWithHTML()
+        Cart.sendCartMessage(ctx)
     },
     getProductByName: async function (ctx, productName) {
         const product = await Database.getProductByName(productName)

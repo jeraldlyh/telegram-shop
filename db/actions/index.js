@@ -25,9 +25,9 @@ module.exports = {
             }
         })
     },
-    getPendingOrderByUser: async function (shopName, userID) {
+    getPendingOrderByUser: async function (shopID, userID) {
         const data = await Models.Shop.findOne({
-            where: { name: shopName },
+            where: { botID: shopID },
             include: [{
                 model: Models.Order,
                 where: {
@@ -60,9 +60,9 @@ module.exports = {
         })
         return data.Products
     },
-    getCategoryByShop: async function (shopName) {
+    getCategoryByShop: async function (shopID) {
         return await Models.Shop.findOne({
-            where: { name: shopName },
+            where: { botID: shopID },
             include: [{
                 model: Models.Category,
                 include: [{
@@ -70,5 +70,8 @@ module.exports = {
                 }]
             }]
         })
+    },
+    getOrderItemsByCategory: async function (categoryName) {
+
     }
 }
