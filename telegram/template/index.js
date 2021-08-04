@@ -11,18 +11,21 @@ module.exports = {
 
         return message
     },
-    indivCartMessage: function (products) {
-        var productMessage = ""
-        // const totalCost =  _.sumBy(products, function(o) { o.price}
-        _.forEach(products, function (product) {
-            productMessage += `${product.quantity} ${product.name} - $)}`
+    indivCartMessage: function (cart) {
+        var cartMessage = "🛒 Your cart contains the following products:\n\n"
+
+        _.forEach(cart, function (product) {
+            const quantity = product.Orders[0].Cart.quantity
+            const productCost = quantity * product.price
+            cartMessage += `${quantity}x ${product.name} - $${productCost}\n`
         })
 
-        var message = `
-🛒 Your cart contains the following products:
+        const totalCost = _.sumBy(cart, function (product) {
+            return product.Orders[0].Cart.quantity * parseFloat(product.price)
+        })
 
-Total: <b>${amount}</b>
-`
+        cartMessage += `\nTotal: <b>$${totalCost}</b>`
+        return cartMessage
     },
     productCardMessage: function (product) {
         const extra = Markup.inlineKeyboard([

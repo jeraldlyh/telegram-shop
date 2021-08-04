@@ -1,5 +1,6 @@
 const _ = require("lodash")
 const Database = require("../../db/actions")
+const Template = require("../template")
 
 
 module.exports = {
@@ -11,7 +12,7 @@ module.exports = {
 
         try {
             existingOrder = await Database.getPendingOrderByUser(ctx.botInfo.id, ctx.from.id)
-            cart = await Database.getOrderItemByProductOrder(existingOrder.toJSON().id, product.toJSON().id)
+            cart = await Database.getCartByProductOrder(existingOrder.toJSON().id, product.toJSON().id)
         } catch (error) { }
 
 
@@ -23,14 +24,16 @@ module.exports = {
             }
         } else {        // Updates existing order if exist, else create new order
             if (existingOrder) {
-                await Database.createOrderItem(existingOrder.toJSON().id, product.toJSON().id, 1)
+                await Database.createCart(existingOrder.toJSON().id, product.toJSON().id, 1)
             } else {
                 const newOrder = await Database.createOrder(ctx.from.id, ctx.botInfo.id)
-                await Database.createOrderItem(newOrder.toJSON().id, product.toJSON().id, 1)
+                await Database.createCart(newOrder.toJSON().id, product.toJSON().id, 1)
             }
         }
     },
-    sendCartMessage: async function (ctx) {
-        ctx.replyWithHTML()
+    sendCartMessage: async function (ctx, categoryName) {
+        const cart = await Database.getCartByCategory(ctx.botInfo.id, categoryName, ctx.from.id)
+        ctx.replyWithHTML(Template.indivCartMessage(cart))
+        // TODO - ADD INLINE KEYBOARD
     }
 }

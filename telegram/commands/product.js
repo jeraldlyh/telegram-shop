@@ -10,13 +10,13 @@ module.exports = {
         for (const product of products) {
             await module.exports.sendProductCardMessage(ctx, product)
         }
-        Cart.sendCartMessage(ctx)
+        await Cart.sendCartMessage(ctx, categoryName)
     },
     getProductByName: async function (ctx, productName) {
         const product = await Database.getProductByName(productName)
         module.exports.sendProductCardMessage(ctx, product)
     },
     sendProductCardMessage: async function (ctx, product) {
-        ctx.replyWithPhoto(product.image, Template.productCardMessage(product))
+        await ctx.replyWithPhoto(product.image, Template.productCardMessage(product))
     }
 }

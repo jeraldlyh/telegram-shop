@@ -4,8 +4,8 @@ const Order = require("./order")
 const Product = require("./product")
 
 
-const OrderItem = db.define(
-	"OrderItem",
+const Cart = db.define(
+	"Cart",
 	{
         orderID: {
 			type: DataTypes.UUID,
@@ -33,4 +33,4 @@ const OrderItem = db.define(
 	}
 )
 
-module.exports = OrderItem
+module.exports = Cart

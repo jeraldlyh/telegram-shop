@@ -1,5 +1,5 @@
 const Models = require("../../models")
-const { Op } = require("sequelize")
+const { Op, col } = require("sequelize")
 
 
 module.exports = {
@@ -9,16 +9,15 @@ module.exports = {
             shopID: shopID
         })
     },
-    createOrderItem: async function (orderID, productID, quantity) {
-        console.log("HERE", orderID, productID, quantity)
-        return await Models.OrderItem.create({
+    createCart: async function (orderID, productID, quantity) {
+        return await Models.Cart.create({
             orderID: orderID,
             productID: productID,
             quantity: quantity
         })
     },
-    getOrderItemByProductOrder: async function (orderID, productID) {
-        return await Models.OrderItem.findOne({
+    getCartByProductOrder: async function (orderID, productID) {
+        return await Models.Cart.findOne({
             where: {
                 orderID: orderID,
                 productID: productID
@@ -71,7 +70,25 @@ module.exports = {
             }]
         })
     },
-    getOrderItemsByCategory: async function (categoryName) {
-
+    getCartByCategory: async function (shopID, categoryName, userID) {
+        const data = await Models.Shop.findOne({
+            where: { botID: shopID },
+            include: [{
+                model: Models.Category,
+                where: { name: categoryName },
+                include: [{
+                    model: Models.Product,
+                    include: [{
+                        model: Models.Order,
+                        where: { userID: userID },
+                        required: true,
+                        through: {
+                            attributes: ["quantity"]
+                        }
+                    }],
+                }]
+            }]
+        })
+        return data.toJSON().Categories[0].Products
     }
 }

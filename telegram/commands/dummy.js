@@ -1,4 +1,4 @@
-const { Shop, Category, Product, User, Address, Order, OrderItem, Payment } = require("../../models")
+const { Shop, Category, Product, User, Address, Order, Payment } = require("../../models")
 const faker = require("faker")
 const _ = require("lodash")
 
@@ -48,10 +48,6 @@ module.exports = {
                 categoryID: category.toJSON().id
             })
         }
-
-        // TODO: Creation of OrderItems and Order
-
-
 
         const randomAddress = _.random(1, 2)
         for (var i = 0; i < randomAddress; i++) {
