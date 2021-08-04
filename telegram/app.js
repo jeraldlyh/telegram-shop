@@ -1,4 +1,4 @@
-const { Telegraf, Composer } = require("telegraf")
+const { Telegraf } = require("telegraf")
 const _ = require("lodash")
 const db = require("../db")
 const Category = require("./commands/category")
@@ -24,5 +24,6 @@ bot.use(Routes)
 
 // Listeners
 bot.hears("View Categories", ctx => Category.getAllCategories(ctx))
+bot.hears("Home", ctx => Menu.sendWelcomeMessage(ctx))
 
 bot.launch({ dropPendingUpdates: true })

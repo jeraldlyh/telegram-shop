@@ -1,4 +1,4 @@
-const { Sequelize, DataTypes, Deferrable } = require("sequelize")
+const { DataTypes, Deferrable } = require("sequelize")
 const db = require("../db")
 const Order = require("./order")
 const Product = require("./product")
@@ -7,12 +7,6 @@ const Product = require("./product")
 const OrderItem = db.define(
 	"OrderItem",
 	{
-		id: {
-			type: DataTypes.UUID,
-			defaultValue: Sequelize.UUIDV4,
-			primaryKey: true,
-			allowNull: false,
-		},
         orderID: {
 			type: DataTypes.UUID,
 			references: {
