@@ -1,6 +1,7 @@
-const { Sequelize, DataTypes, Deferrable } = require("sequelize")
+const { Sequelize, DataTypes } = require("sequelize")
 const db = require("../db")
 const User = require("./user")
+const Shop = require("./shop")
 
 
 const Order = db.define(
@@ -19,13 +20,13 @@ const Order = db.define(
 				key: "telegramID",
 			},
 		},
-        // shopID: {
-		// 	type: DataTypes.INTEGER,
-		// 	references: {
-		// 		model: Shop,
-		// 		key: "botID",
-		// 	},
-		// },
+        shopID: {
+			type: DataTypes.INTEGER,
+			references: {
+				model: Shop,
+				key: "botID",
+			},
+		},
         status: {
             type: Sequelize.ENUM,
             values: ["PENDING", "COMPLETED"],

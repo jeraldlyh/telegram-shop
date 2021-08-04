@@ -13,6 +13,7 @@ User.hasMany(Order, { sourceKey: "telegramID", foreignKey: "userID" })
 
 Shop.belongsTo(User, { foreignKey: "ownerID" })
 Shop.hasMany(Category, { sourceKey: "botID", foreignKey: "shopID" })
+Shop.hasMany(Order, { sourceKey: "botID", foreignKey: "shopID" })
 
 Category.belongsTo(Shop, { foreignKey: "shopID" })
 Category.hasMany(Product, { sourceKey: "id", foreignKey: "categoryID" })
@@ -20,6 +21,7 @@ Category.hasMany(Product, { sourceKey: "id", foreignKey: "categoryID" })
 Product.belongsTo(Category, { foreignKey: "categoryID" })
 Product.belongsToMany(Order, { through: "OrderItem", sourceKey: "id", foreignKey: "productID" })
 
+Order.belongsTo(Shop, { foreignKey: "shopID" })
 Order.belongsToMany(Product, { through: "OrderItem", sourceKey: "id", foreignKey: "orderID" })
 Order.hasOne(Payment, { sourceKey: "id", foreignKey: "orderID" })
 

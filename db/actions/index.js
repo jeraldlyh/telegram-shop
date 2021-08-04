@@ -3,12 +3,14 @@ const { Op } = require("sequelize")
 
 
 module.exports = {
-    createOrder: async function (userID) {
+    createOrder: async function (userID, shopID) {
         return await Models.Order.create({
             userID: userID,
+            shopID: shopID
         })
     },
     createOrderItem: async function (orderID, productID, quantity) {
+        console.log("HERE", orderID, productID, quantity)
         return await Models.OrderItem.create({
             orderID: orderID,
             productID: productID,
@@ -23,13 +25,18 @@ module.exports = {
             }
         })
     },
-    getPendingOrderByUser: async function (userID) {
-        return await Models.Order.findOne({
-            where: {
-                userID: userID,
-                status: { [Op.eq]: "PENDING" }
-            }
+    getPendingOrderByUser: async function (shopName, userID) {
+        const data = await Models.Shop.findOne({
+            where: { name: shopName },
+            include: [{
+                model: Models.Order,
+                where: {
+                    userID: userID,
+                    status: { [Op.eq]: "PENDING" }
+                }
+            }]
         })
+        return data.Orders[0]
     },
     getProductByName: async function (shopID, productName) {
         const data = await Models.Category.findOne({

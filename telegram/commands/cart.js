@@ -10,7 +10,8 @@ module.exports = {
         const product = await Database.getProductByName(ctx.botInfo.id, productName)
 
         try {
-            existingOrder = await Database.getPendingOrderByUser(ctx.from.id)
+            existingOrder = await Database.getPendingOrderByUser(ctx.botInfo.first_name, ctx.from.id)
+            console.log(existingOrder)
             cart = await Database.getOrderItemByProductOrder(existingOrder.toJSON().id, product.toJSON().id)
         } catch (error) { }
 
@@ -25,7 +26,7 @@ module.exports = {
             if (existingOrder) {
                 await Database.createOrderItem(existingOrder.toJSON().id, product.toJSON().id, 1)
             } else {
-                const newOrder = await Database.createOrder(ctx.from.id)
+                const newOrder = await Database.createOrder(ctx.from.id, ctx.botInfo.id)
                 await Database.createOrderItem(newOrder.toJSON().id, product.toJSON().id, 1)
             }
         }
