@@ -1,5 +1,5 @@
 const Models = require("../../models")
-const { Op, col } = require("sequelize")
+const { Op } = require("sequelize")
 
 
 module.exports = {

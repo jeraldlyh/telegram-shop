@@ -1,11 +1,6 @@
-const { Telegraf } = require("telegraf")
-const _ = require("lodash")
+const { Telegraf, session, Scenes } = require("telegraf")
+const CustomScenes = require("./scenes")
 const db = require("../db")
-const Category = require("./commands/category")
-const Dummy = require("./commands/dummy")
-const Menu = require("./commands/menu")
-
-const Routes = require("./routes")
 
 
 const bot = new Telegraf(process.env.BOT_TOKEN)
@@ -15,15 +10,23 @@ db.authenticate()
     .catch((err) => console.log(err))
 // db.sync({ force: true })
 
-// Commands
-bot.command("start", ctx => Menu.sendWelcomeMessage(ctx))
-bot.command("test", ctx => Dummy.createDummyData(ctx))
+bot.use(session())
+const stage = new Scenes.Stage([
+    CustomScenes.welcomeScene,
+    CustomScenes.categoryScene,
+    CustomScenes.productScene,
+    CustomScenes.cartScene,
+])
+bot.use(stage.middleware())
 
-// Routing Queries
-bot.use(Routes)
+// Commands
+bot.command("start", ctx => {
+    ctx.scene.enter("WELCOME_SCENE")
+})
+// bot.command("test", ctx => Dummy.createDummyData(ctx))
 
 // Listeners
-bot.hears("View Categories", ctx => Category.getAllCategories(ctx))
-bot.hears("Home", ctx => Menu.sendWelcomeMessage(ctx))
+// bot.hears("View Categories", ctx => Category.getAllCategories(ctx))
+// bot.hears("Home", ctx => Menu.sendWelcomeMessage(ctx))
 
 bot.launch({ dropPendingUpdates: true })

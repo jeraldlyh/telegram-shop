@@ -27,9 +27,10 @@ module.exports = {
         cartMessage += `\nTotal: <b>$${totalCost}</b>`
         return cartMessage
     },
-    productCardMessage: function (product) {
+    productCardMessage: function (product, quantity) {
         const extra = Markup.inlineKeyboard([
             { text: "➕ Add", callback_data: `POST /cart/${product.name}/add` },
+            { text: quantity.toString(), callback_data: " " },
             { text: "➖ Remove", callback_data: `POST /cart/${product.name}/remove` }
         ])
         extra.caption = `
