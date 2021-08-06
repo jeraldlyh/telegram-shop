@@ -1,10 +1,11 @@
 const _ = require("lodash")
+const { Telegram } = require("telegraf")
 const Database = require("../../db/actions")
 const Template = require("../template")
 
 
 module.exports = {
-    addProductToCart: async function (ctx, productName) {
+    addProduct: async function (ctx, productName) {
         var cart = null
         var existingOrder = null        // Checks if user has a pending order that's incompleted
 
@@ -26,14 +27,17 @@ module.exports = {
             }
         }
     },
-    removeProductFromCart: async function (ctx, productName) {
+    removeProduct: async function (ctx, productName) {
         const product = await Database.getProductByName(ctx.botInfo.id, productName)
         const existingOrder = await Database.getPendingOrderByUser(ctx.botInfo.id, ctx.from.id)
         const cart = await Database.getCartByProductOrder(existingOrder.toJSON().id, product.toJSON().id)
         await cart.decrement("quantity", { by: 1 })
     },
-    sendCartMessage: async function (ctx, data) {
-        await ctx.replyWithHTML(Template.indivCartMessage(data))
-        // TODO - ADD INLINE KEYBOARD
+    sendMessage: async function (ctx, data) {
+        return await ctx.replyWithHTML(Template.indivCartMessage(data), Template.cartButtons())
+    },
+    editMessage: async function (ctx, categoryName, messageID) {
+        const cart = await Database.getCartByCategory(ctx.botInfo.id, categoryName, ctx.from.id)
+        return await Telegram.editMessageText(ctx.chat.id, messageID, undefined, Template.indivCartMessage(cart), Template.cartButtons())
     }
 }

@@ -27,20 +27,36 @@ module.exports = {
         cartMessage += `\nTotal: <b>$${totalCost}</b>`
         return cartMessage
     },
-    productCardMessage: function (product, quantity) {
+    cartButtons: function () {
         const extra = Markup.inlineKeyboard([
-            { text: "➕ Add", callback_data: `POST /cart/${product.name}/add` },
-            { text: quantity.toString(), callback_data: " " },
-            { text: "➖ Remove", callback_data: `POST /cart/${product.name}/remove` }
+            [{ text: "Back to Categories", callback_data: " abc" }],
+            [{ text: "Proceed to Checkout", callback_data: "as" }]
         ])
-        extra.caption = `
+        extra.parse_mode = "HTML"
+        return extra
+    },
+    productCardMessage: function (product) {
+        const caption = `
 <b><u>${product.name}</u></b>
 
 <i>${product.description}</i>
 
 Price: <b>$${product.price}</b> | Qty: ${product.quantity}
 `
+        return caption
+    },
+    productButtons: function (categoryName, product, quantity) {
+        const extra = Markup.inlineKeyboard(
+            [
+                [
+                    { text: "➖ Remove", callback_data: `POST /cart/${categoryName}/${product.name}/remove` },
+                    { text: "➕ Add", callback_data: `POST /cart/${categoryName}/${product.name}/add` },
+                ],
+                [{ text: `Quantity: ${quantity.toString()}`, callback_data: " " }]
+            ],
+        )
         extra.parse_mode = "HTML"
+        extra.caption = module.exports.productCardMessage(product)
         return extra
     }
 }

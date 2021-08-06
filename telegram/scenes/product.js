@@ -8,7 +8,10 @@ const _ = require("lodash")
 const productScene = new Scenes.BaseScene("PRODUCT_SCENE")
 
 productScene.enter(async (ctx) => {
-    const messageID = await Product.getProductByCategory(ctx, ctx.scene.state.category)
+    const cart = await Product.getProductByCategory(ctx, ctx.scene.state.category)
+    const message = await Cart.sendMessage(ctx, cart)
+    console.log(message.text)
+    ctx.session.cartID = message.message_id          // Save cartID to be edited within the session
 })
 
 productScene.on("callback_query", async (ctx) => {
@@ -17,20 +20,25 @@ productScene.on("callback_query", async (ctx) => {
 
     switch (method) {
         case "POST":
-            const productName = pathData[1]
-            const action = pathData[2]
+            const categoryName = pathData[1]
+            const productName = pathData[2]
+            const action = pathData[3]
             const inlineKeyboardData = _.flatten(ctx.callbackQuery.message.reply_markup.inline_keyboard)
-            const currentQuantity = inlineKeyboardData[1].text
-            const messageID = ctx.callbackQuery.message.message_id
+            const currentQuantity = inlineKeyboardData[2].text.split(" ")[1]        // i.e. Quantity: 23
 
             if (action === "add") {
+                await Cart.addProduct(ctx, productName)
+                await Product.editMessage(ctx, categoryName, productName, parseInt(currentQuantity) + 1)
 
-                await Cart.addProductToCart(ctx, productName)
-                await Product.editProductMessage(ctx, messageID, productName, parseInt(currentQuantity) + 1)
+                const updatedCart = await Cart.editMessage(ctx, categoryName, ctx.session.cartID)
+                ctx.session.cartID = updatedCart.message_id         // Update cart message ID in session data
             } else {
                 if (currentQuantity > 0) {
-                    await Cart.removeProductFromCart(ctx, productName)
-                    await Product.editProductMessage(ctx, messageID, productName, parseInt(currentQuantity) - 1)
+                    await Cart.removeProduct(ctx, productName)
+                    await Product.editMessage(ctx, categoryName, productName, parseInt(currentQuantity) - 1)
+
+                    const updatedCart = await Cart.editMessage(ctx, categoryName, ctx.session.cartID)
+                    ctx.session.cartID = updatedCart.message_id         // Update cart message ID in session data
                 }
             }
             break
