@@ -46,7 +46,7 @@ insert shop description here
 
         for (const category of cart) {
             if (category.Products && category.Products.length !== 0) {
-                message += `<b><u>${category.name}</u></b>\n`
+                message += `<b><u>${category.name} (${category.Products.length})</u></b>\n`
                 for (const product of category.Products) {
                     const quantity = product.Orders[0].Cart.quantity
                     const productCost = quantity * product.price

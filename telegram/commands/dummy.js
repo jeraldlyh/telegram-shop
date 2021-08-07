@@ -1,4 +1,4 @@
-const { Shop, Category, Product, User, Address, Order, Payment } = require("../../database/models")
+const { Shop, Category, Product, User, Address, Voucher } = require("../../database/models")
 const faker = require("faker")
 const _ = require("lodash")
 
@@ -22,11 +22,16 @@ module.exports = {
                 image: faker.image.imageUrl(),
                 ownerID: user.toJSON().telegramID
             })
+
+            await Voucher.create({
+                code: faker.lorem.word(),
+                discount: Math.floor(Math.random() * (20 - 1 + 1) + 1),     // 1% - 20%
+                shopID: shop.toJSON().botID
+            })
         } catch (error) {
             user = await User.findByPk(ctx.from.id)
             shop = await Shop.findOne({ where: { name: ctx.botInfo.first_name } })
         }
-
 
         const category = await Category.create({
             shopID: shop.toJSON().botID,

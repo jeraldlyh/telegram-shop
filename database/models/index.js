@@ -6,6 +6,7 @@ const Address = require("./address")
 const Order = require("./order")
 const Cart = require("./cart")
 const Payment = require("./payment")
+const Voucher = require("./voucher")
 
 User.hasMany(Shop, { sourceKey: "telegramID", foreignKey: "ownerID" })
 User.hasMany(Address, { sourceKey: "telegramID", foreignKey: "userID" })
@@ -14,6 +15,9 @@ User.hasMany(Order, { sourceKey: "telegramID", foreignKey: "userID" })
 Shop.belongsTo(User, { foreignKey: "ownerID" })
 Shop.hasMany(Category, { sourceKey: "botID", foreignKey: "shopID" })
 Shop.hasMany(Order, { sourceKey: "botID", foreignKey: "shopID" })
+Shop.hasMany(Voucher, { sourceKey: "botID", foreignKey: "shopID" })
+
+Voucher.belongsTo(Shop, { foreignKey: "shopID" })
 
 Category.belongsTo(Shop, { foreignKey: "shopID" })
 Category.hasMany(Product, { sourceKey: "id", foreignKey: "categoryID" })
@@ -29,4 +33,4 @@ Payment.belongsTo(Order, { foreignKey: "orderID" })
 
 Address.belongsTo(User, { foreignKey: "userID" })
 
-module.exports = { Shop, Category, Product, User, Address, Order, Cart, Payment }
+module.exports = { Shop, Category, Product, User, Address, Order, Cart, Payment, Voucher }

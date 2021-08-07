@@ -1,11 +1,10 @@
-const { Sequelize, DataTypes } = require("sequelize")
+const { DataTypes, Sequelize, Deferrable } = require("sequelize")
 const db = require("../index")
-const User = require("./user")
 const Shop = require("./shop")
 
 
-const Order = db.define(
-    "Order",
+const Voucher = db.define(
+    "Voucher",
     {
         id: {
             type: DataTypes.UUID,
@@ -13,30 +12,26 @@ const Order = db.define(
             primaryKey: true,
             allowNull: false,
         },
-        userID: {
+        code: {
+            type: DataTypes.TEXT,
+            allowNull: false,
+        },
+        discount: {
             type: DataTypes.INTEGER,
-            references: {
-                model: User,
-                key: "telegramID",
-            },
+            allowNull: false,
         },
         shopID: {
             type: DataTypes.INTEGER,
             references: {
                 model: Shop,
                 key: "botID",
+                deferrable: Deferrable.INITIALLY_IMMEDIATE,
             },
         },
-        status: {
-            type: Sequelize.ENUM,
-            values: ["PENDING", "COMPLETED"],
-            defaultValue: "PENDING",
-            allowNull: false
-        }
     },
     {
         timestamps: true,
     }
 )
 
-module.exports = Order
+module.exports = Voucher

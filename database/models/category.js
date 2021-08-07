@@ -4,34 +4,34 @@ const Shop = require("./shop")
 
 
 const Category = db.define(
-	"Category",
-	{
-		id: {
-			type: DataTypes.UUID,
-			defaultValue: Sequelize.UUIDV4,
-			primaryKey: true,
-			allowNull: false,
-		},
-		name: {
-			type: DataTypes.STRING(120),
-			allowNull: false,
-		},
+    "Category",
+    {
+        id: {
+            type: DataTypes.UUID,
+            defaultValue: Sequelize.UUIDV4,
+            primaryKey: true,
+            allowNull: false,
+        },
+        name: {
+            type: DataTypes.STRING(120),
+            allowNull: false,
+        },
         image: {
             type: DataTypes.STRING(100),
             allowNull: null,
         },
-		shopID: {
-			type: DataTypes.INTEGER,
-			references: {
-				model: Shop,
-				key: "botID",
-				deferrable: Deferrable.INITIALLY_IMMEDIATE,
-			},
-		},
-	},
-	{
-		timestamps: true,
-	}
+        shopID: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: Shop,
+                key: "botID",
+                deferrable: Deferrable.INITIALLY_IMMEDIATE,
+            },
+        },
+    },
+    {
+        timestamps: true,
+    }
 )
 
 module.exports = Category
