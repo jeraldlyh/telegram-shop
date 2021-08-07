@@ -1,27 +1,21 @@
 const { Scenes, Markup } = require("telegraf")
 const Utils = require("../utils")
+const Template = require("../template")
 
 
 const welcomeScene = new Scenes.BaseScene("WELCOME_SCENE")
 
 welcomeScene.enter(async (ctx) => {
-    const BOT_NAME = ctx.botInfo.first_name
-    const text = `Welcome to ${BOT_NAME}
+    const text = Template.welcomeMessage(ctx.botInfo.first_name)
 
-\\<insert shop description here\\>
-
-_Press a key on the bottom keyboard to select an option\\.
-If the keyboard has not opened, you can open it by pressing the button with four small squares in the message bar\\._
-`
-
-    const message = await ctx.replyWithMarkdownV2(text, Markup
+    const message = await ctx.replyWithHTML(text, Markup
         .keyboard([
             ["View Categories", "View Cart"]
         ])
         .oneTime()
         .resize()
     )
-    ctx.session.messageID = [message.message_id]
+    ctx.session.cleanUpState = [message.message_id]
 })
 
 welcomeScene.hears("View Categories", async (ctx) => {
@@ -36,12 +30,12 @@ welcomeScene.hears("View Cart", async (ctx) => {
 
 // Listener to clear message after scene ends
 welcomeScene.on("message", async (ctx) => {
-    ctx.session.messageID = _.concat(ctx.session.messageID, ctx.message.message_id)
+    Utils.updateCleanUpState(ctx, ctx.message.message_id)
 })
 
 welcomeScene.leave(async (ctx) => {
     console.log("Cleaning welcome scene")
-    await Utils.cleanUpMessage(ctx, ctx.session.messageID)
+    await Utils.cleanUpMessage(ctx)
 })
 
 module.exports = {

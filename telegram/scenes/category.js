@@ -7,7 +7,7 @@ const categoryScene = new Scenes.BaseScene("CATEGORY_SCENE")
 
 categoryScene.enter(async (ctx) => {
     const message = await Category.getAllCategories(ctx)
-    ctx.session.messageID = [message.message_id]
+    ctx.session.cleanUpState = [message.message_id]
 })
 
 categoryScene.action("/", async (ctx) => {
@@ -36,11 +36,11 @@ categoryScene.on("callback_query", async (ctx) => {
 
 // Listener to clear message after scene ends
 categoryScene.on("message", async (ctx) => {
-    ctx.session.messageID = _.concat(ctx.session.messageID, ctx.message.message_id)
+    Utils.updateCleanUpState(ctx, ctx.message.message_id)
 })
 
 categoryScene.leave(async (ctx) => {
-    await Utils.cleanUpMessage(ctx, ctx.session.messageID)
+    await Utils.cleanUpMessage(ctx)
 })
 
 module.exports = {

@@ -4,7 +4,7 @@ const Template = require("../template")
 
 
 module.exports = {
-    addProduct: async function (ctx, productName) {
+    addProduct: async function (ctx, productName, amount) {
         var cart = null
         var existingOrder = null        // Checks if user has a pending order that's incompleted
 
@@ -16,28 +16,27 @@ module.exports = {
         } catch (error) { }
 
         if (cart) {         // Checks if user has existing cart
-            cart.increment("quantity", { by: 1 })
+            cart.increment("quantity", { by: amount })
         } else {        // Updates existing order if exist, else create new order
             if (existingOrder) {
-                await Database.createCart(existingOrder.toJSON().id, product.toJSON().id, 1)
+                await Database.createCart(existingOrder.toJSON().id, product.toJSON().id, amount)
             } else {
                 const newOrder = await Database.createOrder(ctx.from.id, ctx.botInfo.id)
-                await Database.createCart(newOrder.toJSON().id, product.toJSON().id, 1)
+                await Database.createCart(newOrder.toJSON().id, product.toJSON().id, amount)
             }
         }
     },
-    removeProduct: async function (ctx, productName) {
+    removeProduct: async function (ctx, productName, amount) {
         const product = await Database.getProductByName(ctx.botInfo.id, productName)
         const existingOrder = await Database.getPendingOrderByUser(ctx.botInfo.id, ctx.from.id)
         const cart = await Database.getCartByProductOrder(existingOrder.toJSON().id, product.toJSON().id)
-        await cart.decrement("quantity", { by: 1 })
+        await cart.decrement("quantity", { by: amount })
     },
     sendMessage: async function (ctx, data) {
         return await ctx.replyWithHTML(Template.indivCartMessage(data), Template.cartButtons())
     },
-    editMessage: async function (ctx, categoryName, messageID) {
-        const telegram = ctx.tg
+    editMessageByID: async function (ctx, categoryName, messageID) {
         const cart = await Database.getCartByCategory(ctx.botInfo.id, categoryName, ctx.from.id)
-        return await telegram.editMessageText(ctx.chat.id, messageID, undefined, Template.indivCartMessage(cart), Template.cartButtons())
-    }
+        return await ctx.telegram.editMessageText(ctx.chat.id, messageID, undefined, Template.indivCartMessage(cart), Template.cartButtons())
+    },
 }
