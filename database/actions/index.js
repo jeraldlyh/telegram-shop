@@ -70,7 +70,7 @@ module.exports = {
             }]
         })
     },
-    getCartByCategory: async function (shopID, categoryName, userID) {
+    getPendingCartByCategory: async function (shopID, categoryName, userID) {
         const data = await Models.Shop.findOne({
             where: { botID: shopID },
             include: [{
@@ -80,7 +80,10 @@ module.exports = {
                     model: Models.Product,
                     include: [{
                         model: Models.Order,
-                        where: { userID: userID },
+                        where: {
+                            userID: userID,
+                            status: "PENDING",
+                        },
                         required: true,
                         through: {
                             attributes: ["quantity"]
@@ -90,5 +93,28 @@ module.exports = {
             }]
         })
         return data.toJSON().Categories[0].Products
+    },
+    getPendingCartByShopID: async function (shopID, userID) {
+        const data = await Models.Shop.findOne({
+            where: { botID: shopID },
+            include: [{
+                model: Models.Category,
+                include: [{
+                    model: Models.Product,
+                    include: [{
+                        model: Models.Order,
+                        where: {
+                            userID: userID,
+                            status: "PENDING",
+                        },
+                        required: true,
+                        through: {
+                            attributes: ["quantity"]
+                        }
+                    }],
+                }]
+            }]
+        })
+        return data.Categories
     }
 }

@@ -19,27 +19,13 @@ const productScene = new Scenes.BaseScene("PRODUCT_SCENE")
  */
 
 productScene.enter(async (ctx) => {
-    const products = await Database.getProductByCategory(ctx.botInfo.id, ctx.scene.state.category)
-    const cart = await Database.getCartByCategory(ctx.botInfo.id, ctx.scene.state.category, ctx.from.id)
+    const cart = await Database.getPendingCartByCategory(ctx.botInfo.id, ctx.scene.state.category, ctx.from.id)
 
-    const productMessageID = []
-    for (const product of products) {
-        const existingOrder = _.find(cart, function (item) {      // Retrieves user existing order on the item
-            return item.name === product.name
-        })
-        const quantity = existingOrder ? existingOrder.Orders[0].Cart.quantity : 0
-        const message = await Product.sendMessage(ctx, ctx.scene.state.category, product, quantity)
-        productMessageID.push({                // Return messageID back to scene for deletion
-            id: message.message_id,
-            type: "product",
-            productName: product.name,
-        })
-    }
-
+    const productMessageID = await Product.sendCatalogue(ctx, ctx.scene.state.category, cart)
     ctx.session.cleanUpState = productMessageID
+
     const message = await Cart.sendMessage(ctx, cart)
     Utils.updateCleanUpState(ctx, { id: message.message_id, type: "cart" })       // Append cart message into session clean up state
-    // console.log(ctx.session.cleanUpState)
 })
 
 productScene.on("callback_query", async (ctx) => {
@@ -71,9 +57,8 @@ productScene.on("callback_query", async (ctx) => {
                     await Product.editMessage(ctx, categoryName, productName, parseInt(currentQuantity) - 1)
                     await Cart.editMessageByID(ctx, categoryName, getCartMessageID(ctx))
                 }
-            } else if (action === "quantity") {     // i.e. POST /cart/category/product/quantity/?available=XXX&?current=YYY
-                // i.e. ["?available", 10, "?current", 8]
-                const parameters = Utils.getQueryParameters(pathData[4])
+            } else if (action === "edit") {     // i.e. POST /cart/category/product/edit/?available=XXX&?current=YYY
+                const parameters = Utils.getQueryParameters(pathData[4])        // i.e. ["?available", 10, "?current", 8]
                 ctx.session.isWaiting = {
                     status: true,
                     available: parameters[1],
@@ -90,8 +75,6 @@ productScene.on("callback_query", async (ctx) => {
     }
     await ctx.answerCbQuery().catch(err => console.log(err))
 })
-
-productScene.command("/test", ctx => console.log(ctx.session.cleanUpState))
 
 // Listener to clear message after scene ends
 productScene.on("message", async (ctx) => {
@@ -138,16 +121,13 @@ productScene.on("message", async (ctx) => {
             Utils.updateCleanUpState(ctx, { id: success.message_id, type: "system" })
 
             setTimeout(() => {
-                console.log("before", ctx.session.cleanUpState)
                 Utils.cleanUpMessage(ctx, true, ["system", "user"], true)
-                console.log("after", ctx.session.cleanUpState)
             }, 10 * 1000)
 
-            const cart = await Database.getCartByCategory(ctx.botInfo.id, categoryName, ctx.from.id)
+            const cart = await Database.getPendingCartByCategory(ctx.botInfo.id, categoryName, ctx.from.id)
             const message = await Cart.sendMessage(ctx, cart)
             replaceCartMessageInState(ctx, { id: message.message_id, type: "cart" })
         } catch (error) {
-            console.log("error", error)
             await ctx.replyWithHTML(error)
         }
     }

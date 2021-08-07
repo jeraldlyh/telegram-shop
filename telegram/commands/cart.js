@@ -36,7 +36,11 @@ module.exports = {
         return await ctx.replyWithHTML(Template.indivCartMessage(data), Template.cartButtons())
     },
     editMessageByID: async function (ctx, categoryName, messageID) {
-        const cart = await Database.getCartByCategory(ctx.botInfo.id, categoryName, ctx.from.id)
+        const cart = await Database.getPendingCartByCategory(ctx.botInfo.id, categoryName, ctx.from.id)
         return await ctx.telegram.editMessageText(ctx.chat.id, messageID, undefined, Template.indivCartMessage(cart), Template.cartButtons())
     },
+    sendOverallCartMessage: async function (ctx) {
+        const cart = await Database.getPendingCartByShopID(ctx.botInfo.id, ctx.from.id)
+        return await ctx.replyWithHTML(Template.overallCartMessage(cart), Template.paymentButtons())
+    }
 }

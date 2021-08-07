@@ -1,6 +1,7 @@
 const { Telegraf, session, Scenes } = require("telegraf")
 const CustomScenes = require("./scenes")
 const db = require("../database")
+const Dummy = require("./commands/dummy")
 
 
 const bot = new Telegraf(process.env.BOT_TOKEN)
@@ -25,7 +26,7 @@ bot.command("start", async (ctx) => {
     ctx.scene.enter("WELCOME_SCENE")
 })
 
-// bot.command("test", ctx => Dummy.createDummyData(ctx))
+bot.command("test", ctx => Dummy.createDummyData(ctx))
 
 // Listeners
 // bot.hears("View Categories", ctx => Category.getAllCategories(ctx))

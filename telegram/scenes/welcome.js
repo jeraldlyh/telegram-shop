@@ -10,20 +10,19 @@ welcomeScene.enter(async (ctx) => {
 
     const message = await ctx.replyWithHTML(text, Markup
         .keyboard([
-            ["View Categories", "View Cart"]
+            ["📚 View Categories", "🛒 View Cart"]
         ])
-        .oneTime()
         .resize()
     )
     ctx.session.cleanUpState = [message.message_id]
 })
 
-welcomeScene.hears("View Categories", async (ctx) => {
+welcomeScene.hears("📚 View Categories", async (ctx) => {
     await ctx.deleteMessage()
     ctx.scene.enter("CATEGORY_SCENE")
 })
 
-welcomeScene.hears("View Cart", async (ctx) => {
+welcomeScene.hears("🛒 View Cart", async (ctx) => {
     await ctx.deleteMessage()
     ctx.scene.enter("CART_SCENE")
 })

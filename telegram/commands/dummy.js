@@ -7,7 +7,6 @@ module.exports = {
     createDummyData: async function (ctx) {
         var user = null
         var shop = null
-
         try {
             user = await User.create({
                 telegramID: ctx.from.id,
