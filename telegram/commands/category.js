@@ -1,6 +1,6 @@
 const _ = require("lodash")
 const { Markup } = require("telegraf")
-const Database = require("../../db/actions")
+const Database = require("../../database/actions")
 const Utils = require("../utils")
 const Template = require("../template")
 
@@ -39,7 +39,7 @@ module.exports = {
 
         inlineKeyboard.push([{ text: "Back to Home", callback_data: "/" }])
 
-        ctx.replyWithHTML(Template.categoryMessage(bodyMessage), Markup
+        return await ctx.replyWithHTML(Template.categoryMessage(bodyMessage), Markup
             .inlineKeyboard(inlineKeyboard)
             .oneTime()
             .resize(),

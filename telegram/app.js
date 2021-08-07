@@ -1,6 +1,6 @@
 const { Telegraf, session, Scenes } = require("telegraf")
 const CustomScenes = require("./scenes")
-const db = require("../db")
+const db = require("../database")
 
 
 const bot = new Telegraf(process.env.BOT_TOKEN)
@@ -20,9 +20,11 @@ const stage = new Scenes.Stage([
 bot.use(stage.middleware())
 
 // Commands
-bot.command("start", ctx => {
+bot.command("start", async (ctx) => {
+    await ctx.deleteMessage()
     ctx.scene.enter("WELCOME_SCENE")
 })
+
 // bot.command("test", ctx => Dummy.createDummyData(ctx))
 
 // Listeners

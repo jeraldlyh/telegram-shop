@@ -1,6 +1,5 @@
 const _ = require("lodash")
-const { Telegram } = require("telegraf")
-const Database = require("../../db/actions")
+const Database = require("../../database/actions")
 const Template = require("../template")
 
 
@@ -37,7 +36,8 @@ module.exports = {
         return await ctx.replyWithHTML(Template.indivCartMessage(data), Template.cartButtons())
     },
     editMessage: async function (ctx, categoryName, messageID) {
+        const telegram = ctx.tg
         const cart = await Database.getCartByCategory(ctx.botInfo.id, categoryName, ctx.from.id)
-        return await Telegram.editMessageText(ctx.chat.id, messageID, undefined, Template.indivCartMessage(cart), Template.cartButtons())
+        return await telegram.editMessageText(ctx.chat.id, messageID, undefined, Template.indivCartMessage(cart), Template.cartButtons())
     }
 }

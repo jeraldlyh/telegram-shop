@@ -1,14 +1,13 @@
-const { Sequelize, DataTypes, Deferrable } = require("sequelize")
-const db = require("../db")
-const Shop = require("./shop")
+const { DataTypes, Deferrable } = require("sequelize")
+const db = require("../index")
+const User = require("./user")
 
 
-const Category = db.define(
-	"Category",
+const Shop = db.define(
+	"Shop",
 	{
-		id: {
-			type: DataTypes.UUID,
-			defaultValue: Sequelize.UUIDV4,
+		botID: {
+			type: DataTypes.INTEGER,
 			primaryKey: true,
 			allowNull: false,
 		},
@@ -20,11 +19,11 @@ const Category = db.define(
             type: DataTypes.STRING(100),
             allowNull: null,
         },
-		shopID: {
+		ownerID: {
 			type: DataTypes.INTEGER,
 			references: {
-				model: Shop,
-				key: "botID",
+				model: User,
+				key: "telegramID",
 				deferrable: Deferrable.INITIALLY_IMMEDIATE,
 			},
 		},
@@ -34,4 +33,4 @@ const Category = db.define(
 	}
 )
 
-module.exports = Category
+module.exports = Shop

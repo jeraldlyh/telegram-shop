@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes, Deferrable } = require("sequelize")
-const db = require("../db")
+const db = require("../index")
 const Order = require("./order")
 
 

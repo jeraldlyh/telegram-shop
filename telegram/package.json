@@ -1,0 +1,20 @@
+{
+    "name": "telegram",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "scripts": {
+        "dev": "nodemon -r dotenv/config app.js dotenv_config_path=../.env"
+    },
+    "dependencies": {
+        "dotenv": "^10.0.0",
+        "faker": "^5.5.3",
+        "lodash": "^4.17.21",
+        "nodemon": "^2.0.12",
+        "numeral": "^2.0.6",
+        "pg": "^8.7.1",
+        "pg-hstore": "^2.3.4",
+        "sequelize": "^6.6.5",
+        "telegraf": "^4.4.1"
+    }
+}

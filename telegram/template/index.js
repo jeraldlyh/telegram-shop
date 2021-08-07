@@ -1,5 +1,6 @@
 const _ = require("lodash")
 const { Markup } = require("telegraf")
+const numeral = require('numeral')
 
 
 module.exports = {
@@ -17,20 +18,20 @@ module.exports = {
         _.forEach(cart, function (product) {
             const quantity = product.Orders[0].Cart.quantity
             const productCost = quantity * product.price
-            cartMessage += `${quantity}x ${product.name} - $${productCost}\n`
+            cartMessage += `${quantity}x ${product.name} - ${numeral(productCost).format("$0,0.00")}\n`
         })
 
         const totalCost = _.sumBy(cart, function (product) {
             return product.Orders[0].Cart.quantity * parseFloat(product.price)
         })
 
-        cartMessage += `\nTotal: <b>$${totalCost}</b>`
+        cartMessage += `\nTotal: <b>${numeral(totalCost).format("$0,0.00")}</b>`
         return cartMessage
     },
     cartButtons: function () {
         const extra = Markup.inlineKeyboard([
-            [{ text: "Back to Categories", callback_data: " abc" }],
-            [{ text: "Proceed to Checkout", callback_data: "as" }]
+            [{ text: "Back to Categories", callback_data: "GET /category" }],
+            [{ text: "Proceed to Checkout", callback_data: "GET /checkout" }]
         ])
         extra.parse_mode = "HTML"
         return extra
@@ -41,7 +42,7 @@ module.exports = {
 
 <i>${product.description}</i>
 
-Price: <b>$${product.price}</b> | Qty: ${product.quantity}
+Price: <b>$${numeral(product.price).format("$0,0.00")}</b> | Qty: ${product.quantity}
 `
         return caption
     },

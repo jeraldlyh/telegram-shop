@@ -6,12 +6,13 @@ const Utils = require("../utils")
 const categoryScene = new Scenes.BaseScene("CATEGORY_SCENE")
 
 categoryScene.enter(async (ctx) => {
-    await Category.getAllCategories(ctx)
+    const message = await Category.getAllCategories(ctx)
+    ctx.session.messageID = [message.message_id]
 })
 
 categoryScene.action("/", async (ctx) => {
     await ctx.answerCbQuery()
-    return ctx.scene.enter("WELCOME_SCENE")
+    ctx.scene.enter("WELCOME_SCENE")
 })
 
 categoryScene.on("callback_query", async (ctx) => {
@@ -33,8 +34,13 @@ categoryScene.on("callback_query", async (ctx) => {
     await ctx.answerCbQuery().catch(err => console.log(err))
 })
 
-categoryScene.leave(ctx => {
-    // Do some cleanup
+// Listener to clear message after scene ends
+categoryScene.on("message", async (ctx) => {
+    ctx.session.messageID = _.concat(ctx.session.messageID, ctx.message.message_id)
+})
+
+categoryScene.leave(async (ctx) => {
+    await Utils.cleanUpMessage(ctx, ctx.session.messageID)
 })
 
 module.exports = {
