@@ -40,6 +40,7 @@ categoryScene.on("message", async (ctx) => {
 })
 
 categoryScene.leave(async (ctx) => {
+    console.log("Cleaning category scene")
     await Utils.cleanUpMessage(ctx)
 })
 

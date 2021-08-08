@@ -74,5 +74,16 @@ module.exports = {
     },
     updateUserMessageInState: function (ctx, message) {
         module.exports.updateCleanUpState(ctx, { id: message.message_id, type: "user" })
+    },
+    convertValueToFloat: function (value) {
+        return parseFloat(value.toFixed(2))
+    },
+    addTimeout: function (ctx, timeout) {
+        ctx.session.timeout.push(timeout)
+    },
+    clearTimeout: function (ctx) {
+        for (const timeout of ctx.session.timeout) {
+            clearTimeout(timeout)
+        }
     }
 }

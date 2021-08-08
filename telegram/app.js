@@ -11,13 +11,18 @@ db.authenticate()
     .catch((err) => console.log(err))
 // db.sync({ force: true })
 
-bot.use(session())
+// Middlewares
 const stage = new Scenes.Stage([
     CustomScenes.welcomeScene,
     CustomScenes.categoryScene,
     CustomScenes.productScene,
     CustomScenes.cartScene,
-])
+    CustomScenes.paymentScene,
+], {
+    default: CustomScenes.welcomeScene,
+    ttl: 60 * 5
+})
+bot.use(session())
 bot.use(stage.middleware())
 
 // Commands
@@ -26,6 +31,13 @@ bot.command("start", async (ctx) => {
     ctx.scene.enter("WELCOME_SCENE")
 })
 
+bot.on("pre_checkout_query", ctx => {
+    ctx.answerPreCheckoutQuery(true)
+    console.log("Answered checkout query")
+})
+
 bot.command("test", ctx => Dummy.createDummyData(ctx))
 
 bot.launch({ dropPendingUpdates: true })
+process.once('SIGINT', () => bot.stop('SIGINT'))
+process.once('SIGTERM', () => bot.stop('SIGTERM'))

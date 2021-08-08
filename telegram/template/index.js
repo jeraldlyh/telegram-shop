@@ -60,8 +60,8 @@ insert shop description here
                         ? `${quantity}x ${product.name} - ${numeral(productCost * (1 - discount)).format("$0,0.00")} (-${numeral(productCost * discount).format("$0,0.00")})\n`
                         : `${quantity}x ${product.name} - ${numeral(productCost).format("$0,0.00")}\n`
 
-                    totalCost += voucher ? productCost * (1 - discount) : productCost
-                    savedCost += voucher ? productCost * discount : 0
+                    totalCost += voucher ? (productCost * (1 - discount)) : productCost
+                    savedCost += voucher ? (productCost * discount) : 0
                 }
                 message += "\n"
             }
@@ -84,6 +84,7 @@ insert shop description here
             .keyboard([
                 ["⭐ Apply Voucher Code"],
                 ["💳 Proceed to Payment"],
+                ["🏠 Back to Home"]
             ])
             .resize()
         extra.parse_mode = "HTML"
@@ -192,6 +193,13 @@ You have successfully applied <i>${voucher.code}</i> with <b>${voucher.discount}
 You may now proceed to checkout by pressing on '💳 Proceed to Payment' button below.
 
 <i>This message will be deleted after 5 seconds for a better user experience. Please do not be startled. 😊</i>
+`
+    },
+    checkoutErrorMessage: function () {
+        return `
+You currently do not have any items in your cart to checkout!
+
+Perhaps, you're looking at the wrong place? 😶
 `
     }
 }

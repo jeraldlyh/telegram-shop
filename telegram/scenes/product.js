@@ -26,6 +26,7 @@ const productScene = new Scenes.BaseScene("PRODUCT_SCENE")
  */
 
 productScene.enter(async (ctx) => {
+    ctx.session.timeout = []        // Initialize empty array for timeouts
     const cart = await Database.getPendingCartByCategory(ctx.botInfo.id, ctx.scene.state.category, ctx.from.id)
 
     const productMessageID = await Product.sendCatalogue(ctx, ctx.scene.state.category, cart)
@@ -100,9 +101,9 @@ productScene.on("message", async (ctx) => {
             const cancel = await ctx.replyWithHTML(Template.cancelInputMessage())
             Utils.updateSystemMessageInState(ctx, cancel)
 
-            setTimeout(() => {
+            Utils.addTimeout(ctx, setTimeout(() => {
                 Utils.cleanUpMessage(ctx, true, ["system", "user"], true)
-            }, 5 * 1000)
+            }, 5 * 1000))
             return
         }
 
@@ -142,9 +143,9 @@ productScene.on("message", async (ctx) => {
             const success = await ctx.replyWithHTML(Template.inputSuccessMessage(productName, current, quantity))
             Utils.updateSystemMessageInState(ctx, success)
 
-            setTimeout(() => {
+            Utils.addTimeout(ctx, setTimeout(() => {
                 Utils.cleanUpMessage(ctx, true, ["system", "user"], true)
-            }, 10 * 1000)
+            }, 10 * 1000))
 
         } catch (error) {
             const errorMessage = await ctx.replyWithHTML(error)
@@ -159,6 +160,7 @@ const getProductMessageID = (ctx, productName) => {
 
 productScene.leave(async (ctx) => {
     console.log("Clearing product scene")
+    Utils.clearTimeout(ctx)
     await Utils.cleanUpMessage(ctx, true)
 })
 

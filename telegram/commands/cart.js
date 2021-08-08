@@ -1,4 +1,5 @@
 const _ = require("lodash")
+const Utils = require("../utils")
 const Database = require("../../database/actions")
 const Template = require("../template")
 
@@ -55,5 +56,31 @@ module.exports = {
         const cart = await Database.getPendingCartByShopID(ctx.botInfo.id, ctx.from.id)
         const [templateMessage, isEmpty] = Template.overallCartMessage(cart, ctx.botInfo.first_name)
         return await ctx.telegram.editMessageText(ctx.chat.id, messageID, undefined, templateMessage, Template.paymentButtons())
+    },
+    getPriceLabelsOfCart: async function (ctx, voucher) {
+        const cart = await Database.getPendingCartByShopID(ctx.botInfo.id, ctx.from.id)
+        const priceLabels = []
+        var totalSavings = 0
+
+        for (const category of cart) {
+            for (const product of category.Products) {
+                const quantity = product.Orders[0].Cart.quantity
+                const productCost = quantity * product.price
+                const discount = voucher ? voucher.discount / 100 : 0
+
+                priceLabels.push({
+                    label: `${quantity}x ${product.name}`,
+                    amount: 100 * productCost,
+                })
+                totalSavings += voucher ? (productCost * discount) : 0
+            }
+        }
+        if (totalSavings) {
+            priceLabels.push({
+                label: "Savings",
+                amount: Utils.convertValueToFloat(-100 * totalSavings),
+            })
+        }
+        return priceLabels
     }
 }
