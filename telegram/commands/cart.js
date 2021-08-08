@@ -38,15 +38,22 @@ module.exports = {
         await cart.decrement("quantity", { by: amount })
         await product.increment("quantity", { by: amount })     // Update available quantity in database
     },
-    sendMessage: async function (ctx, data) {
+    sendIndivCartMessage: async function (ctx, data) {
         return await ctx.replyWithHTML(Template.indivCartMessage(data), Template.cartButtons())
     },
-    editMessageByID: async function (ctx, categoryName, messageID) {
+    editIndivCartByID: async function (ctx, categoryName, messageID) {
         const cart = await Database.getPendingCartByCategory(ctx.botInfo.id, categoryName, ctx.from.id)
         return await ctx.telegram.editMessageText(ctx.chat.id, messageID, undefined, Template.indivCartMessage(cart), Template.cartButtons())
     },
-    sendOverallCartMessage: async function (ctx) {
+    sendOverallCartMessage: async function (ctx, voucher) {
         const cart = await Database.getPendingCartByShopID(ctx.botInfo.id, ctx.from.id)
-        return await ctx.replyWithHTML(Template.overallCartMessage(cart, ctx.botInfo.first_name), Template.paymentButtons())
+        const [templateMessage, isEmpty] = Template.overallCartMessage(cart, ctx.botInfo.first_name, voucher)
+        const message = await ctx.replyWithHTML(templateMessage, Template.paymentButtons())
+        return [message, isEmpty]
+    },
+    editOverallCartByID: async function (ctx, messageID) {
+        const cart = await Database.getPendingCartByShopID(ctx.botInfo.id, ctx.from.id)
+        const [templateMessage, isEmpty] = Template.overallCartMessage(cart, ctx.botInfo.first_name)
+        return await ctx.telegram.editMessageText(ctx.chat.id, messageID, undefined, templateMessage, Template.paymentButtons())
     }
 }

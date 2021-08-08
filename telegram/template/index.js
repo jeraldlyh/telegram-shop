@@ -1,11 +1,12 @@
 const _ = require("lodash")
 const { Markup } = require("telegraf")
 const numeral = require('numeral')
+const moment = require("moment")
 
 
 module.exports = {
-    welcomeMessage: function (botName) {
-        return `Welcome to ${botName}
+    welcomeMessage: function (shopName) {
+        return `Welcome to <b>${shopName}</b>
 
 insert shop description here
 
@@ -13,13 +14,13 @@ insert shop description here
 <i>If the keyboard has not opened, you can open it by pressing the button with four small squares in the message bar.</i>
 `
     },
-    categoryMessage: function (body, botName) {
+    categoryMessage: function (body, shopName) {
         return body + `
 <i>🟢 - Available</i>
 <i>🟡 - Low on stock</i>
 <i>🔴 - Out of stock</i>
 
-<i>Below is the list of categories that ${botName} offers.</i>
+<i>Below is the list of categories that <b>${shopName}</b> offers.</i>
 `
     },
     indivCartMessage: function (cart) {
@@ -34,18 +35,18 @@ insert shop description here
                 totalCost += productCost
             })
         } else {
-            message += "<i>You have yet to place any orders for this category.</i>\n\n"
+            message += "<i>You have yet to place any orders for this category.</i>\n"
         }
 
-        message += `Total cost: <b>${numeral(totalCost).format("$0,0.00")}</b>`
+        message += `\nTotal cost: <b>${numeral(totalCost).format("$0,0.00")}</b>`
         return message
     },
-    overallCartMessage: function (cart, shopName) {
+    overallCartMessage: function (cart, shopName, voucher) {
         var message = "🛒 Your cart contains the following products:\n\n"
         var totalCost = 0
+        var savedCost = 0
         const initialLength = message.length
-
-        console.log(cart)
+        var isEmpty = false
 
         for (const category of cart) {
             if (category.Products && category.Products.length !== 0) {
@@ -53,8 +54,14 @@ insert shop description here
                 for (const product of category.Products) {
                     const quantity = product.Orders[0].Cart.quantity
                     const productCost = quantity * product.price
-                    message += `${quantity}x ${product.name} - ${numeral(productCost).format("$0,0.00")}\n`
-                    totalCost += productCost
+                    const discount = voucher ? voucher.discount / 100 : 0
+
+                    message += voucher
+                        ? `${quantity}x ${product.name} - ${numeral(productCost * (1 - discount)).format("$0,0.00")} (-${numeral(productCost * discount).format("$0,0.00")})\n`
+                        : `${quantity}x ${product.name} - ${numeral(productCost).format("$0,0.00")}\n`
+
+                    totalCost += voucher ? productCost * (1 - discount) : productCost
+                    savedCost += voucher ? productCost * discount : 0
                 }
                 message += "\n"
             }
@@ -62,10 +69,15 @@ insert shop description here
 
         if (message.length === initialLength) {     // No message between header and footer
             message += `<i>You have yet to place any orders in ${shopName}.</i>\n\n`
+            isEmpty = true
         }
 
         message += `Total cost: <b>${numeral(totalCost).format("$0,0.00")}</b>`
-        return message
+        message += voucher
+            ? `\nTotal savings: <b>${numeral(savedCost).format("$0,0.00")}</b>`
+            : ""
+
+        return [message, isEmpty]
     },
     paymentButtons: function () {
         const extra = Markup
@@ -74,7 +86,7 @@ insert shop description here
                 ["💳 Proceed to Payment"],
             ])
             .resize()
-
+        extra.parse_mode = "HTML"
         return extra
     },
     cartButtons: function () {
@@ -125,12 +137,34 @@ Available quantity for purchase: <b>${numeral(available).format("0,0")}</b>
 <i>Type 'cancel' to exit this mode.</i>
 `
     },
+    inputVoucherMessage: function (shopName) {
+        return `
+Have a voucher code for <b>${shopName}</b>?
+
+Enter it right here and we'll apply it automatically into your cart.
+
+<i>You are currently in a text only input mode.</i>
+<i>Type 'cancel' to exit this mode.</i>
+`
+    },
     cancelInputMessage: function () {
         return `
 You have successfully exited the text input mode.
 
 You can now continue browsing the catalogue and select the quantity by <b><i>toggling</i></b> the add/remove buttons.
+
+<i>This message will be deleted after 10 seconds for a better user experience. Please do not be startled. 😊</i>
         `
+    },
+    invalidVoucherCode: function () {
+        return `
+This is an <b>invalid voucher</b> code! 
+
+Please try again or contact the seller to verify the voucher.
+
+<i>Note that voucher codes are case and symbols sensitive.</i>
+<i>Type 'cancel' to exit this mode.</i>
+`
     },
     inputSuccessMessage: function (productName, previous, current) {
         return `
@@ -139,6 +173,25 @@ You have successfully updated the quantity for <b>${productName}</b> from <b>${p
 You can now continue browsing the catalogue and select the quantity by <b><i>toggling</i></b> the add/remove buttons.
 
 <i>This message will be deleted after 10 seconds for a better user experience. Please do not be startled. 😊</i>
+`
+    },
+    claimedVoucherCode: function (voucherCode, claimedAt) {
+        const time = moment(claimedAt)
+        return `
+Are you sure this is the correct voucher code?
+
+You have already claimed this voucher (<i>${voucherCode}</i>) on <b>${time.format("Do MMMM YYYY")}</b> at <b>${time.format(" h:mm:ss a")}</b>!
+
+<i>Type 'cancel' to exit this mode.</i>
+`
+    },
+    voucherSuccessMessage: function (voucher) {
+        return `
+You have successfully applied <i>${voucher.code}</i> with <b>${voucher.discount}% discount</b> onto your cart.
+
+You may now proceed to checkout by pressing on '💳 Proceed to Payment' button below.
+
+<i>This message will be deleted after 5 seconds for a better user experience. Please do not be startled. 😊</i>
 `
     }
 }

@@ -20,6 +20,10 @@ const Voucher = db.define(
             type: DataTypes.INTEGER,
             allowNull: false,
         },
+        isValid: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
+        },
         shopID: {
             type: DataTypes.INTEGER,
             references: {

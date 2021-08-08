@@ -26,7 +26,8 @@ module.exports = {
             await Voucher.create({
                 code: faker.lorem.word(),
                 discount: Math.floor(Math.random() * (20 - 1 + 1) + 1),     // 1% - 20%
-                shopID: shop.toJSON().botID
+                shopID: shop.toJSON().botID,
+                isValid: true,
             })
         } catch (error) {
             user = await User.findByPk(ctx.from.id)

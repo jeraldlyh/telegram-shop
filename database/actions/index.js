@@ -118,5 +118,24 @@ module.exports = {
             }]
         })
         return data.Categories
+    },
+    getVoucherByCode: async function (shopID, voucherCode) {
+        return await Models.Voucher.findOne({
+            where: {
+                shopID: shopID,
+                code: voucherCode,
+                isValid: true
+            },
+            include: [{
+                model: Models.User,
+            }]
+        })
+    },
+    createVoucherUser: async function(voucherID, userID) {
+        return await Models.VoucherUser.create({
+            voucherID: voucherID,
+            isClaimed: true,
+            userID: userID
+        })
     }
 }

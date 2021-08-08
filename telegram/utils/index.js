@@ -48,5 +48,31 @@ module.exports = {
     },
     updateCleanUpState: function (ctx, data) {
         ctx.session.cleanUpState = _.concat(ctx.session.cleanUpState, data)
+    },
+    disableWaitingStatus: function (ctx) {
+        ctx.session.isWaiting.status = false
+    },
+    isTextMode: function (ctx) {
+        return ctx.session.isWaiting && ctx.session.isWaiting.status
+    },
+    getCartMessageByID: function (ctx) {
+        return _.find(ctx.session.cleanUpState, function (o) {
+            return o.type === "cart"
+        }).id
+    },
+    replaceCartMessageInState: function (ctx, data) {
+        ctx.session.cleanUpState = _.map(ctx.session.cleanUpState, function (message) {         // Convert old cart message ID into text to prune
+            if (message.type === "cart") {
+                message.type = "user"
+            }
+            return message
+        })
+        module.exports.updateCleanUpState(ctx, data)
+    },
+    updateSystemMessageInState: function (ctx, message) {
+        module.exports.updateCleanUpState(ctx, { id: message.message_id, type: "system" })
+    },
+    updateUserMessageInState: function (ctx, message) {
+        module.exports.updateCleanUpState(ctx, { id: message.message_id, type: "user" })
     }
 }
