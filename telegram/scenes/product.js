@@ -47,27 +47,31 @@ productScene.on("callback_query", async (ctx) => {
             const inlineKeyboardData = _.flatten(ctx.callbackQuery.message.reply_markup.inline_keyboard)
             const currentQuantity = inlineKeyboardData[2].text.split(" ")[1]        // i.e. Quantity: 23
 
-            if (action === "add") {                 // i.e. POST /cart/category/product/add
-                await Cart.addProduct(ctx, productName, 1)
-                await Product.editMessage(ctx, categoryName, productName, parseInt(currentQuantity) + 1)
-                await Cart.editMessageByID(ctx, categoryName, getCartMessageID(ctx))
-            } else if (action === "remove") {
-                if (currentQuantity > 0) {          // i.e. POST /cart/category/product/remove
-                    await Cart.removeProduct(ctx, productName, 1)
-                    await Product.editMessage(ctx, categoryName, productName, parseInt(currentQuantity) - 1)
+            try {
+                if (action === "add") {                 // i.e. POST /cart/category/product/add
+                    await Cart.addProduct(ctx, productName, 1)
+                    await Product.editMessage(ctx, categoryName, productName, parseInt(currentQuantity) + 1)
                     await Cart.editMessageByID(ctx, categoryName, getCartMessageID(ctx))
+                } else if (action === "remove") {
+                    if (currentQuantity > 0) {          // i.e. POST /cart/category/product/remove
+                        await Cart.removeProduct(ctx, productName, 1)
+                        await Product.editMessage(ctx, categoryName, productName, parseInt(currentQuantity) - 1)
+                        await Cart.editMessageByID(ctx, categoryName, getCartMessageID(ctx))
+                    }
+                } else if (action === "edit") {     // i.e. POST /cart/category/product/edit/?available=XXX&?current=YYY
+                    const parameters = Utils.getQueryParameters(pathData[4])        // i.e. ["?available", 10, "?current", 8]
+                    ctx.session.isWaiting = {
+                        status: true,
+                        available: parameters[1],
+                        current: parameters[3],
+                        productName: productName,
+                        categoryName: categoryName,
+                    }
+                    const inputMessage = await ctx.replyWithHTML(Template.inputQuantityMessage(parameters[1], parameters[3], productName))
+                    Utils.updateCleanUpState(ctx, { id: inputMessage.message_id, type: "system" })
                 }
-            } else if (action === "edit") {     // i.e. POST /cart/category/product/edit/?available=XXX&?current=YYY
-                const parameters = Utils.getQueryParameters(pathData[4])        // i.e. ["?available", 10, "?current", 8]
-                ctx.session.isWaiting = {
-                    status: true,
-                    available: parameters[1],
-                    current: parameters[3],
-                    productName: productName,
-                    categoryName: categoryName,
-                }
-                const inputMessage = await ctx.replyWithHTML(Template.inputQuantityMessage(parameters[1], parameters[3], productName))
-                Utils.updateCleanUpState(ctx, { id: inputMessage.message_id, type: "system" })
+            } catch (error) {
+                await ctx.replyWithHTML(error)
             }
             break
         default:

@@ -28,8 +28,4 @@ bot.command("start", async (ctx) => {
 
 bot.command("test", ctx => Dummy.createDummyData(ctx))
 
-// Listeners
-// bot.hears("View Categories", ctx => Category.getAllCategories(ctx))
-// bot.hears("Home", ctx => Menu.sendWelcomeMessage(ctx))
-
 bot.launch({ dropPendingUpdates: true })

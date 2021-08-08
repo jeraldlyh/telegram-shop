@@ -86,7 +86,8 @@ module.exports = {
                         },
                         required: true,
                         through: {
-                            attributes: ["quantity"]
+                            attributes: ["quantity"],
+                            where: { quantity: { [Op.ne]: 0 } },     // Retrieve orders that has a quantity
                         }
                     }],
                 }]
@@ -109,7 +110,8 @@ module.exports = {
                         },
                         required: true,
                         through: {
-                            attributes: ["quantity"]
+                            attributes: ["quantity"],
+                            where: { quantity: { [Op.ne]: 0 } },     // Retrieve orders that has a quantity
                         }
                     }],
                 }]

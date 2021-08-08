@@ -5,12 +5,19 @@ const Utils = require("../utils")
 const cartScene = new Scenes.BaseScene("CART_SCENE")
 
 cartScene.enter(async (ctx) => {
-    await Cart.sendOverallCartMessage(ctx)
+    const message = await Cart.sendOverallCartMessage(ctx)
+    ctx.session.cleanUpState = [{
+        id: message.message_id,
+        type: "cart",
+    }]
 })
 
 // Listener to clear message after scene ends
 cartScene.on("message", async (ctx) => {
-    Utils.updateCleanUpState(ctx, ctx.message.message_id)
+    Utils.updateCleanUpState(ctx, {
+        id: ctx.message.message_id,
+        type: "user"
+    })
 })
 
 cartScene.leave(async (ctx) => {

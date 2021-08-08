@@ -34,15 +34,18 @@ insert shop description here
                 totalCost += productCost
             })
         } else {
-            message += "<i>You have yet to place any orders for this category.</i>\n"
+            message += "<i>You have yet to place any orders for this category.</i>\n\n"
         }
 
-        message += `\nTotal cost: <b>${numeral(totalCost).format("$0,0.00")}</b>`
+        message += `Total cost: <b>${numeral(totalCost).format("$0,0.00")}</b>`
         return message
     },
-    overallCartMessage: function (cart) {
+    overallCartMessage: function (cart, shopName) {
         var message = "🛒 Your cart contains the following products:\n\n"
         var totalCost = 0
+        const initialLength = message.length
+
+        console.log(cart)
 
         for (const category of cart) {
             if (category.Products && category.Products.length !== 0) {
@@ -56,6 +59,11 @@ insert shop description here
                 message += "\n"
             }
         }
+
+        if (message.length === initialLength) {     // No message between header and footer
+            message += `<i>You have yet to place any orders in ${shopName}.</i>\n\n`
+        }
+
         message += `Total cost: <b>${numeral(totalCost).format("$0,0.00")}</b>`
         return message
     },
@@ -74,6 +82,7 @@ insert shop description here
             [{ text: "⬅️ Back to Categories", callback_data: "GET /category" }],
             [{ text: "✅ Proceed to Checkout", callback_data: "GET /checkout" }]
         ])
+        extra.parse_mode = "HTML"
         return extra
     },
     productCardMessage: function (product) {
