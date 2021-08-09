@@ -4,6 +4,7 @@ const moment = require("moment")
 const _ = require("lodash")
 const Cart = require("../commands/cart")
 const Utils = require("../utils")
+const Voucher = require("../commands/voucher")
 
 
 const paymentScene = new Scenes.BaseScene("PAYMENT_SCENE")
@@ -30,16 +31,20 @@ paymentScene.enter(async (ctx) => {
     Utils.updateSystemMessageInState(ctx, invoice)
 })
 
-paymentScene.on("successful_payment", ctx => {
+paymentScene.on("successful_payment", async (ctx) => {
     console.log("Success payment", ctx.message.successful_payment)
     const payment = ctx.message.successful_payment
     const invoice = JSON.parse(payment.invoice_payload)
     const hasVoucherApplied = invoice.voucherID
+
+    if (hasVoucherApplied) {
+        await Voucher.updateVoucherForUser(ctx, invoice.voucherID)
+    }
 })
 
 paymentScene.leave(async (ctx) => {
     console.log("Cleaning payment scene")
-    await Utils.cleanUpMessage(ctx, true)
+    await Utils.clearScene(ctx, true)
 })
 
 module.exports = {

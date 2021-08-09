@@ -11,9 +11,9 @@ module.exports = {
         const user = _.find(voucher.Users, function (user) {
             return user.telegramID === ctx.from.id
         })
-        // if (!user) {     // SHIFT TO PAYMENT CALLBACK
-        //     await Database.createVoucherUser(voucher.id, ctx.from.id)
-        // }
         return user ? user.VoucherUser.createdAt : null
     },
+    updateVoucherForUser: async function (ctx, voucherID) {
+        await Database.createVoucherUser(voucherID, ctx.from.id)
+    }
 }

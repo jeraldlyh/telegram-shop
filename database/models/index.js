@@ -34,7 +34,9 @@ Order.belongsToMany(Product, { through: "Cart", sourceKey: "id", foreignKey: "or
 Order.hasOne(Payment, { sourceKey: "id", foreignKey: "orderID" })
 
 Payment.belongsTo(Order, { foreignKey: "orderID" })
+Payment.belongsTo(Address, { foreignKey: "addressID" })
 
 Address.belongsTo(User, { foreignKey: "userID" })
+Address.hasMany(Payment, { sourceKey: "id", foreignKey: "addressID" })
 
 module.exports = { Shop, Category, Product, User, Address, Order, Cart, Payment, Voucher, VoucherUser }

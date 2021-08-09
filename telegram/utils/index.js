@@ -93,8 +93,10 @@ module.exports = {
         }, timeout * 1000))
     },
     clearScene: async function (ctx, isObjectState) {
-        for (const timeout of ctx.session.timeout) {
-            clearTimeout(timeout)
+        if (ctx.session.timeout) {      // Not every scene contains timeout
+            for (const timeout of ctx.session.timeout) {
+                clearTimeout(timeout)
+            }
         }
         module.exports.cleanUpMessage(ctx, isObjectState)
     }

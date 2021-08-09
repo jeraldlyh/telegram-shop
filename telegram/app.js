@@ -32,7 +32,6 @@ bot.command("start", async (ctx) => {
 
 bot.on("pre_checkout_query", async (ctx) => {
     await ctx.answerPreCheckoutQuery(true)
-    await ctx.deleteMessage()
 })
 
 bot.command("test", ctx => Dummy.createDummyData(ctx))
