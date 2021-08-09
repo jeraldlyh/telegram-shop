@@ -59,10 +59,12 @@ module.exports = {
         for (var i = 0; i < randomAddress; i++) {
             await Address.create({
                 userID: user.toJSON().telegramID,
-                address: faker.address.streetAddress(),
+                addressLineOne: faker.address.streetAddress(),
+                addressLineTwo: faker.address.streetAddress(),
                 city: faker.address.city(),
                 postalCode: faker.address.zipCode(),
-                country: faker.address.country()
+                country: faker.address.country(),
+                mobile:faker.phone.phoneNumber(),
             })
         }
     }

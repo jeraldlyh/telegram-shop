@@ -35,7 +35,7 @@ module.exports = {
                 }
             }]
         })
-        return data.Orders[0]
+        return data ? data.Orders[0] : data
     },
     getProductByName: async function (shopID, productName) {
         const data = await Models.Category.findOne({
@@ -131,11 +131,48 @@ module.exports = {
             }]
         })
     },
-    createVoucherUser: async function(voucherID, userID) {
+    createVoucherUser: async function (userID, voucherID) {
         return await Models.VoucherUser.create({
             voucherID: voucherID,
             isClaimed: true,
             userID: userID
+        })
+    },
+    createNewPayment: async function (orderID, addressID) {
+        return await Models.Payment.create({
+            orderID: orderID,
+            addressID: addressID
+        })
+    },
+    getAddress: async function (userID, orderDetails) {
+        return await Models.Address.findOne({
+            where: {
+                userID: userID,
+                addressLineOne: orderDetails.lineOne,
+                addressLineTwo: orderDetails.lineTwo,
+                city: orderDetails.city,
+                postalCode: orderDetails.postalCode,
+                country: orderDetails.country,
+                mobile: orderDetails.mobile
+            }
+        })
+    },
+    createAddress: async function (userID, orderDetails) {
+        return await Models.Address.create({
+            userID: userID,
+            addressLineOne: orderDetails.lineOne,
+            addressLineTwo: orderDetails.lineTwo,
+            city: orderDetails.city,
+            postalCode: orderDetails.postalCode,
+            country: orderDetails.country,
+            mobile: orderDetails.mobile
+        })
+    },
+    getShopByID: async function (shopID) {
+        return await Models.Shop.findOne({
+            where: {
+                botID: shopID
+            }
         })
     }
 }

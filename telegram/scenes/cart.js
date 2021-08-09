@@ -44,11 +44,16 @@ cartScene.hears("🏠 Back to Home", async (ctx) => {
 })
 
 cartScene.hears("⭐ Apply Voucher Code", async (ctx) => {
-    ctx.session.isWaiting = {
-        status: true
-    }
     Utils.updateUserMessageInState(ctx, ctx.message)
-    await Utils.sendSystemMessage(ctx, Template.inputVoucherMessage(ctx.botInfo.first_name))
+
+    if (ctx.session.cart.isEmpty) {
+        await Utils.sendSystemMessage(ctx, Template.emptyCartMessage())
+    } else {
+        ctx.session.isWaiting = {
+            status: true
+        }
+        await Utils.sendSystemMessage(ctx, Template.inputVoucherMessage(ctx.botInfo.first_name))
+    }
 })
 
 cartScene.hears("💳 Proceed to Payment", async (ctx) => {
@@ -67,7 +72,7 @@ cartScene.on("message", async (ctx) => {
 
     if (Utils.isTextMode(ctx)) {
         if (ctx.message.text === "cancel") {
-            await Utils.cancelInputMode(ctx, Template.cancelVoucherInputMessage(), 5)
+            return await Utils.cancelInputMode(ctx, Template.cancelVoucherInputMessage(), 5)
         }
         const voucher = await Voucher.getVoucher(ctx, ctx.message.text)
 

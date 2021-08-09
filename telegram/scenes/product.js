@@ -79,6 +79,7 @@ productScene.on("callback_query", async (ctx) => {
                         await Utils.sendSystemMessage(ctx, Template.inputQuantityMessage(parameters[1], parameters[3], productName))
                     }
                 } catch (error) {
+                    console.log(error)
                     await Utils.sendSystemMessage(ctx, error)
                 }
                 break
@@ -95,8 +96,7 @@ productScene.on("message", async (ctx) => {
 
     if (Utils.isTextMode(ctx)) {       // Checks if user enters text input option
         if (ctx.message.text.toLowerCase() === "cancel") {
-            Utils.cancelInputMode(ctx, Template.cancelQuantityInputMessage(), 5)
-            return
+            return await Utils.cancelInputMode(ctx, Template.cancelQuantityInputMessage(), 5)
         }
 
         const available = parseInt(ctx.session.isWaiting.available)

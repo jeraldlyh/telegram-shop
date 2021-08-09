@@ -20,8 +20,17 @@ const Address = db.define(
                 deferrable: Deferrable.INITIALLY_IMMEDIATE,
             },
         },
-        address: {
+        addressLineOne: {
             type: DataTypes.STRING(120),
+            allowNull: false,
+        },
+        addressLineTwo: {
+            type: DataTypes.STRING(120),
+            allowNull: false,
+        },
+        mobile: {
+            type: DataTypes.STRING(30),
+            unique: true,
             allowNull: false,
         },
         city: {

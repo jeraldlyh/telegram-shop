@@ -180,7 +180,7 @@ You can now continue browsing the catalogue and select the quantity by <b><i>tog
         return `
 Are you sure this is the correct voucher code?
 
-You have already claimed this voucher (<i>${voucherCode}</i>) on <b>${time.format("Do MMMM YYYY")}</b> at <b>${time.format(" h:mm:ss a")}</b>!
+You have already claimed this voucher (<i>${voucherCode}</i>) on <b>${time.format("Do MMMM YYYY")}</b> at <b>${time.format("h:mm:ss a")}</b>!
 
 <i>Type 'cancel' to exit this mode.</i>
 `
@@ -194,6 +194,13 @@ You may now proceed to checkout by pressing on '💳 Proceed to Payment' button 
 <i>This message will be deleted after 5 seconds for a better user experience. Please do not be startled. 😊</i>
 `
     },
+    emptyCartMessage: function () {
+        return `
+Your cart is currently empty. There's nothing for the voucher to be applied on. 
+
+Come back here again after adding items into your cart! 😊
+`
+    },
     checkoutErrorMessage: function () {
         return `
 You currently do not have any items in your cart to checkout!
@@ -201,6 +208,7 @@ You currently do not have any items in your cart to checkout!
 Perhaps, you're looking at the wrong place? 😶
 `
     },
+
     cancelVoucherInputMessage: function () {
         return `
 You have successfully exited the text input mode.

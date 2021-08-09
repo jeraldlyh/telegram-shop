@@ -5,12 +5,15 @@ const _ = require("lodash")
 const Cart = require("../commands/cart")
 const Utils = require("../utils")
 const Voucher = require("../commands/voucher")
+const Payment = require("../commands/payment")
 
 
 const paymentScene = new Scenes.BaseScene("PAYMENT_SCENE")
 
 paymentScene.enter(async (ctx) => {
-    const priceLabels = await Cart.getPriceLabelsOfCart(ctx, ctx.scene.state.voucher)
+    ctx.session.cleanUpState = []
+
+    const priceLabels = await Cart.getPriceLabelsOfCart(ctx.botInfo.id, ctx.from.id, ctx.scene.state.voucher)
     const totalCost = _.sumBy(priceLabels, function (label) {
         return label.amount
     })
@@ -27,8 +30,9 @@ paymentScene.enter(async (ctx) => {
             voucherID: ctx.scene.state.voucher ? ctx.scene.state.voucher.id : null
         },
         need_shipping_address: true,
+        need_phone_number: true,
     })
-    Utils.updateSystemMessageInState(ctx, invoice)
+    // Utils.updateSystemMessageInState(ctx, invoice)
 })
 
 paymentScene.on("successful_payment", async (ctx) => {
@@ -38,8 +42,19 @@ paymentScene.on("successful_payment", async (ctx) => {
     const hasVoucherApplied = invoice.voucherID
 
     if (hasVoucherApplied) {
-        await Voucher.updateVoucherForUser(ctx, invoice.voucherID)
+        await Voucher.updateVoucherForUser(invoice.id, invoice.voucherID)
     }
+    const orderDetails = {
+        lineOne: payment.order_info.shipping_address.street_line1,
+        lineTwo: payment.order_info.shipping_address.street_line2,
+        city: payment.order_info.shipping_address.city,
+        country: payment.order_info.shipping_address.country_code,
+        postalCode: payment.order_info.shipping_address.post_code,
+        mobile: payment.order_info.phone_number,
+    }
+
+    await Payment.createPayment(ctx, orderDetails)
+    ctx.scene.enter("WELCOME_SCENE")
 })
 
 paymentScene.leave(async (ctx) => {

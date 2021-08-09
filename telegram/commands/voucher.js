@@ -13,7 +13,7 @@ module.exports = {
         })
         return user ? user.VoucherUser.createdAt : null
     },
-    updateVoucherForUser: async function (ctx, voucherID) {
-        await Database.createVoucherUser(voucherID, ctx.from.id)
+    updateVoucherForUser: async function (userID, voucherID) {
+        await Database.createVoucherUser(userID, voucherID)
     }
 }
