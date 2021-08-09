@@ -3,32 +3,33 @@ const { Op } = require("sequelize")
 
 
 module.exports = {
-    createShop: async function (botID, shopName, ownerID) {
+    createShop: async function (botID, shopName, ownerID, botToken) {
         return await Models.Shop.create({
             botID: botID,
             name: shopName,
             image: null,
-            ownerID: ownerID
+            ownerID: ownerID,
+            botToken: botToken,
         })
     },
     createOrder: async function (userID, shopID) {
         return await Models.Order.create({
             userID: userID,
-            shopID: shopID
+            shopID: shopID,
         })
     },
     createCart: async function (orderID, productID, quantity) {
         return await Models.Cart.create({
             orderID: orderID,
             productID: productID,
-            quantity: quantity
+            quantity: quantity,
         })
     },
     getCartByProductOrder: async function (orderID, productID) {
         return await Models.Cart.findOne({
             where: {
                 orderID: orderID,
-                productID: productID
+                productID: productID,
             }
         })
     },
@@ -59,7 +60,7 @@ module.exports = {
         const data = await Models.Category.findOne({
             where: {
                 name: categoryName,
-                shopID: shopID
+                shopID: shopID,
             },
             include: [{
                 model: Models.Product,

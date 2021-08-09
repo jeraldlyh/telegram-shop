@@ -19,6 +19,10 @@ const Shop = db.define(
             type: DataTypes.STRING(100),
             allowNull: true,
         },
+        botToken: {
+            type: DataTypes.STRING(60),
+            allowNull: false
+        },
         ownerID: {
             type: DataTypes.INTEGER,
             references: {
