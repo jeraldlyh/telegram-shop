@@ -6,6 +6,7 @@ const Models = require("../database/models")
 const Database = require("../database/actions")
 const Utils = require("./utils")
 const faker = require("faker")
+const Template = require("./template")
 
 
 const bot = new Telegraf(process.env.BOT_TOKEN)
@@ -30,17 +31,19 @@ bot.use(stage.middleware())
 
 // Commands
 bot.command("start", ctx => {
-    validateUserAccount(ctx)          // Validate user accounts upon entering a shop
+    validateUserAccount(ctx.from.id, ctx.from.first_name)          // Validate user accounts upon entering a shop
     ctx.deleteMessage()
-    Utils.clearScene(ctx, false)
+    Utils.clearScene(ctx, true)
     ctx.scene.enter("WELCOME_SCENE")
 })
 
+// TO DELETE
 bot.command("test", ctx => {
     Dummy.createDummyData(ctx)
     ctx.deleteMessage()
 })
 
+// TO DELETE
 bot.command("voucher", async (ctx) => {
     const shop = await Database.getShopByID(ctx.botInfo.id)
 
@@ -53,12 +56,23 @@ bot.command("voucher", async (ctx) => {
     ctx.reply(voucher.code)
 })
 
+bot.command("setup", async (ctx) => {
+    const shop = await Database.getShopByID(ctx.botInfo.id)
+    if (!shop) {
+        const user = await validateUserAccount(ctx.from.id, ctx.from.first_name)
+        user.update({
+            isOwner: true
+        })
+        await Database.createShop(ctx.botInfo.id, ctx.botInfo.first_name, ctx.from.id)
+        await Utils.sendSystemMessage(Template.registrationSuccessMessage(ctx.from.id, ctx.from.username, ctx.botInfo.first_name))
+    }
+})
+
 bot.on("message", ctx => {
-    console.log(ctx.message.message_id)
     if (ctx.session.cleanUpState && ctx.session.cleanUpState.length > 0) {
-        Utils.updateCleanUpState(ctx, ctx.message.message_id)
+        Utils.updateUserMessageInState(ctx, ctx.message)
     } else {
-        ctx.session.cleanUpState = [ctx.message.message_id]
+        ctx.session.cleanUpState = [{ id: ctx.message.message_id, type: "user" }]
     }
 })
 
@@ -70,12 +84,10 @@ bot.launch({ dropPendingUpdates: true })
 process.once('SIGINT', () => bot.stop('SIGINT'))
 process.once('SIGTERM', () => bot.stop('SIGTERM'))
 
-const validateUserAccount = async (ctx) => {
-    const user = await Database.getUserByID(ctx.from.id)
+const validateUserAccount = async (userID, userName) => {
+    const user = await Database.getUserByID(userID)
     if (!user) {
-        await Database.createUser({
-            telegramID: ctx.from.id,
-            name: ctx.from.first_name
-        })
+        return await Database.createUser(userID, userName)
     }
+    return user
 }

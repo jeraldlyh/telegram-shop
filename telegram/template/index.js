@@ -218,4 +218,9 @@ You may now proceed to checkout.
 <i>This message will be deleted after 5 seconds for a better user experience. Please do not be startled. 😊</i>
         `
     },
+    registrationSuccessMessage: function (userID, username, shopName) {
+        return `
+Congraluations <a href="tg://user?id=${userID}">@${username}</a>! You have just successfully setup ${shopName}. You may now proceed to XXX url to add products and configure your store!
+`
+    }
 }

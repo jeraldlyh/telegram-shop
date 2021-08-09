@@ -1,8 +1,16 @@
 const Models = require("../models")
-const { Op, Model } = require("sequelize")
+const { Op } = require("sequelize")
 
 
 module.exports = {
+    createShop: async function (botID, shopName, ownerID) {
+        return await Models.Shop.create({
+            botID: botID,
+            name: shopName,
+            image: null,
+            ownerID: ownerID
+        })
+    },
     createOrder: async function (userID, shopID) {
         return await Models.Order.create({
             userID: userID,
@@ -182,7 +190,7 @@ module.exports = {
             }
         })
     },
-    createUser: async function (telegramID, name, isOwner) {
+    createUser: async function (telegramID, name) {
         return await Models.User.create({
             telegramID: telegramID,
             name: name,
