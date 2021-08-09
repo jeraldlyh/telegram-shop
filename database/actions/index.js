@@ -187,7 +187,7 @@ module.exports = {
     getUserByID: async function (userID) {
         return await Models.User.findOne({
             where: {
-                telegramID: userID
+                telegramID: userID,
             }
         })
     },
@@ -196,5 +196,19 @@ module.exports = {
             telegramID: telegramID,
             name: name,
         })
-    }
+    },
+    getChat: async function (shopID, userID) {
+        return await Models.Chat.findOne({
+            where: {
+                shopID: shopID,
+                userID: userID,
+            }
+        })
+    },
+    createChat: async function (shopID, userID) {
+        return await Models.Chat.create({
+            shopID: shopID,
+            userID: userID,
+        })
+    },
 }

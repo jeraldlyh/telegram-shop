@@ -1,5 +1,4 @@
 const { Telegraf, session, Scenes } = require("telegraf")
-const cron = require("node-cron")
 const faker = require("faker")
 const CustomScenes = require("./scenes")
 const db = require("../database")
@@ -50,13 +49,19 @@ bot.command("voucher", async (ctx) => {
 })
 
 bot.command("start", ctx => {
-    validateUserAccount(ctx.from.id, ctx.from.first_name)          // Validate user accounts upon entering a shop
+    validateUserAccount(ctx.from.id, ctx.from.first_name, ctx.botInfo.id)          // Validate user accounts upon entering a shop
     ctx.deleteMessage()
     Utils.clearScene(ctx, true)
     ctx.scene.enter("WELCOME_SCENE")
 })
 
 bot.command("setup", async (ctx) => {
+    /**
+     * 1. Validate token
+     * 2. Create shop
+     * 3. Validate user account and creates a chat record
+     */
+
     try {
         const shop = await Database.getShopByID(ctx.botInfo.id)
         if (!shop) {
@@ -67,11 +72,12 @@ bot.command("setup", async (ctx) => {
                 console.log(token, process.env.BOT_TOKEN)
                 throw "This is an <b>invalid</b> bot token. Retrieve the token from @BotFather and use the command again <i>(i.e. /setup SECRET_BOT_TOKEN)</i>"
             }
-            const user = await validateUserAccount(ctx.from.id, ctx.from.first_name)
+            
+            await Database.createShop(ctx.botInfo.id, ctx.botInfo.first_name, ctx.from.id, token)
+            const user = await validateUserAccount(ctx.from.id, ctx.from.first_name, ctx.botInfo.id)
             user.update({
                 isOwner: true
             })
-            await Database.createShop(ctx.botInfo.id, ctx.botInfo.first_name, ctx.from.id, token)
             await Utils.sendSystemMessage(ctx, Template.registrationSuccessMessage(ctx.from.id, ctx.from.username, ctx.botInfo.first_name))
         }
     } catch (error) {
@@ -79,7 +85,7 @@ bot.command("setup", async (ctx) => {
     }
 })
 
-bot.on("message", async(ctx) => {
+bot.on("message", async (ctx) => {
     if (ctx.session.cleanUpState && ctx.session.cleanUpState.length > 0) {
         Utils.updateUserMessageInState(ctx, ctx.message)
     } else {
@@ -93,17 +99,18 @@ bot.on("pre_checkout_query", async (ctx) => {
 
 bot.launch({ dropPendingUpdates: true })
 
-process.once('SIGINT', () => bot.stop('SIGINT'))
-process.once('SIGTERM', () => bot.stop('SIGTERM'))
+process.once("SIGINT", () => bot.stop("SIGINT"))
+process.once("SIGTERM", () => bot.stop("SIGTERM"))
 
-// cron.schedule("10 * * * *", () => {
-    
-// })
-
-const validateUserAccount = async (userID, userName) => {
-    const user = await Database.getUserByID(userID)
+const validateUserAccount = async (userID, userName, shopID) => {
+    var user = await Database.getUserByID(userID)
     if (!user) {
-        return await Database.createUser(userID, userName)
+        user = await Database.createUser(userID, userName)
+    }
+
+    const chat = await Database.getChat(shopID, userID)
+    if (!chat) {
+        await Database.createChat(shopID, userID)
     }
     return user
 }
