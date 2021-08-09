@@ -205,10 +205,11 @@ module.exports = {
             }
         })
     },
-    createChat: async function (shopID, userID) {
+    createChat: async function (shopID, userID, chatID) {
         return await Models.Chat.create({
             shopID: shopID,
             userID: userID,
+            chatID: chatID,
         })
     },
 }

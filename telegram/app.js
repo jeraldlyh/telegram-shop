@@ -49,7 +49,7 @@ bot.command("voucher", async (ctx) => {
 })
 
 bot.command("start", ctx => {
-    validateUserAccount(ctx.from.id, ctx.from.first_name, ctx.botInfo.id)          // Validate user accounts upon entering a shop
+    validateUserAccount(ctx.from.id, ctx.from.first_name, ctx.botInfo.id, ctx.chat.id)          // Validate user accounts upon entering a shop
     ctx.deleteMessage()
     Utils.clearScene(ctx, true)
     ctx.scene.enter("WELCOME_SCENE")
@@ -74,7 +74,7 @@ bot.command("setup", async (ctx) => {
             }
             
             await Database.createShop(ctx.botInfo.id, ctx.botInfo.first_name, ctx.from.id, token)
-            const user = await validateUserAccount(ctx.from.id, ctx.from.first_name, ctx.botInfo.id)
+            const user = await validateUserAccount(ctx.from.id, ctx.from.first_name, ctx.botInfo.id, ctx.chat.id)
             user.update({
                 isOwner: true
             })
@@ -102,7 +102,7 @@ bot.launch({ dropPendingUpdates: true })
 process.once("SIGINT", () => bot.stop("SIGINT"))
 process.once("SIGTERM", () => bot.stop("SIGTERM"))
 
-const validateUserAccount = async (userID, userName, shopID) => {
+const validateUserAccount = async (userID, userName, shopID, chatID) => {
     var user = await Database.getUserByID(userID)
     if (!user) {
         user = await Database.createUser(userID, userName)
@@ -110,7 +110,7 @@ const validateUserAccount = async (userID, userName, shopID) => {
 
     const chat = await Database.getChat(shopID, userID)
     if (!chat) {
-        await Database.createChat(shopID, userID)
+        await Database.createChat(shopID, userID, chatID)
     }
     return user
 }

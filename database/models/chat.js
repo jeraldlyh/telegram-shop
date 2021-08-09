@@ -23,6 +23,10 @@ const Chat = db.define(
                 deferrable: Deferrable.INITIALLY_IMMEDIATE,
             },
         },
+        chatID: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        }
     },
     {
         timestamps: true,
