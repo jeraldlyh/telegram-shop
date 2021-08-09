@@ -1,5 +1,5 @@
 const Models = require("../models")
-const { Op } = require("sequelize")
+const { Op, Model } = require("sequelize")
 
 
 module.exports = {
@@ -173,6 +173,19 @@ module.exports = {
             where: {
                 botID: shopID
             }
+        })
+    },
+    getUserByID: async function (userID) {
+        return await Models.User.findOne({
+            where: {
+                telegramID: userID
+            }
+        })
+    },
+    createUser: async function (telegramID, name, isOwner) {
+        return await Models.User.create({
+            telegramID: telegramID,
+            name: name,
         })
     }
 }

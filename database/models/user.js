@@ -14,16 +14,11 @@ const User = db.define(
             type: DataTypes.STRING(120),
             allowNull: false,
         },
-        email: {
-            type: DataTypes.STRING(320),
-            unique: true,
-            allowNull: false,
-        },
-        mobile: {
-            type: DataTypes.STRING(30),
-            unique: true,
-            allowNull: false,
-        },
+        // email: {
+        //     type: DataTypes.STRING(320),
+        //     unique: true,
+        //     allowNull: false,
+        // },
         isOwner: {
             type: DataTypes.BOOLEAN,
             allowNull: false,

@@ -29,13 +29,18 @@ bot.use(session())
 bot.use(stage.middleware())
 
 // Commands
-bot.command("start", async (ctx) => {
+bot.command("start", ctx => {
+    validateUserAccount(ctx)          // Validate user accounts upon entering a shop
     ctx.deleteMessage()
     Utils.clearScene(ctx, false)
     ctx.scene.enter("WELCOME_SCENE")
 })
 
-bot.command("test", ctx => Dummy.createDummyData(ctx))
+bot.command("test", ctx => {
+    Dummy.createDummyData(ctx)
+    ctx.deleteMessage()
+})
+
 bot.command("voucher", async (ctx) => {
     const shop = await Database.getShopByID(ctx.botInfo.id)
 
@@ -64,3 +69,13 @@ bot.on("pre_checkout_query", async (ctx) => {
 bot.launch({ dropPendingUpdates: true })
 process.once('SIGINT', () => bot.stop('SIGINT'))
 process.once('SIGTERM', () => bot.stop('SIGTERM'))
+
+const validateUserAccount = async (ctx) => {
+    const user = await Database.getUserByID(ctx.from.id)
+    if (!user) {
+        await Database.createUser({
+            telegramID: ctx.from.id,
+            name: ctx.from.first_name
+        })
+    }
+}

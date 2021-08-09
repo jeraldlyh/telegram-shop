@@ -26,22 +26,24 @@ module.exports = {
         return _.flatten(data)
     },
     cleanUpMessage: function (ctx, isObjectState, condition, update) {     // isObjectState to handle special cases in product scene
-        for (const message of ctx.session.cleanUpState) {
-            if (condition) {
-                if (condition.includes(message.type)) {
+        if (ctx.session.cleanUpState) {                                    // Root page does not initialize cleanUpState
+            for (const message of ctx.session.cleanUpState) {
+                if (condition) {
+                    if (condition.includes(message.type)) {
+                        ctx.telegram.deleteMessage(ctx.chat.id, isObjectState ? message.id : message)
+                    }
+                } else {
                     ctx.telegram.deleteMessage(ctx.chat.id, isObjectState ? message.id : message)
                 }
-            } else {
-                ctx.telegram.deleteMessage(ctx.chat.id, isObjectState ? message.id : message)
             }
-        }
-
-        if (update) {           // Update clean up state to prevent deletion errors
-            ctx.session.cleanUpState = _.filter(ctx.session.cleanUpState, function (message) {
-                if (!condition.includes(message.type)) {
-                    return message
-                }
-            })
+    
+            if (update) {           // Update clean up state to prevent deletion errors
+                ctx.session.cleanUpState = _.filter(ctx.session.cleanUpState, function (message) {
+                    if (!condition.includes(message.type)) {
+                        return message
+                    }
+                })
+            }
         }
     },
     updateCleanUpState: function (ctx, data) {
