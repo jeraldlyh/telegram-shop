@@ -1,34 +1,45 @@
-const { Scenes, Composer } = require("telegraf")
+const { Scenes } = require("telegraf")
+const numeral = require("numeral")
+const moment = require("moment")
 const _ = require("lodash")
 const Cart = require("../commands/cart")
 const Utils = require("../utils")
+
 
 const paymentScene = new Scenes.BaseScene("PAYMENT_SCENE")
 
 paymentScene.enter(async (ctx) => {
     const priceLabels = await Cart.getPriceLabelsOfCart(ctx, ctx.scene.state.voucher)
+    const totalCost = _.sumBy(priceLabels, function (label) {
+        return label.amount
+    })
     const invoice = await ctx.replyWithInvoice({
         chat_id: ctx.chat.id,
         provider_token: process.env.PROVIDER_TOKEN,
         start_parameter: "get_access",
-        title: `Invoice for ${ctx.from.first_name}`,
-        description: `You are about to make payment to ${ctx.botInfo.first_name}`,
-        currency: "sgd",
+        title: `Invoice (${moment().format("HH:mm A, DD/MM/YYYY")})`,
+        description: `Your total order amounts to ${numeral(totalCost / 100).format("$0,0.00")}.`,
+        currency: "SGD",
         prices: priceLabels,
         payload: {
-            id: ctx.from.id
-        }
+            id: ctx.from.id,
+            voucherID: ctx.scene.state.voucher ? ctx.scene.state.voucher.id : null
+        },
+        need_shipping_address: true,
     })
     Utils.updateSystemMessageInState(ctx, invoice)
 })
 
 paymentScene.on("successful_payment", ctx => {
-    console.log("Success payment")
+    console.log("Success payment", ctx.message.successful_payment)
+    const payment = ctx.message.successful_payment
+    const invoice = JSON.parse(payment.invoice_payload)
+    const hasVoucherApplied = invoice.voucherID
 })
 
 paymentScene.leave(async (ctx) => {
     console.log("Cleaning payment scene")
-    await Utils.cleanUpMessage(ctx)
+    await Utils.cleanUpMessage(ctx, true)
 })
 
 module.exports = {

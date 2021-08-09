@@ -9,15 +9,13 @@ module.exports = {
         return "🔴"
     },
     getPathData: function (path) {
-        if (path === "/") {
-            return [path]
-        }
-        return path.slice(1).split("/")     // Slice to remove preceding path
+        // Slice to remove preceding path i.e. /category/Electronics
+        return path.length > 1 ? path.slice(1).split("/") : path
     },
     getRouteData: function (ctx) {
         const callbackData = ctx.callbackQuery.data.split(" ")
         const method = callbackData[0]
-        const data = callbackData[1]
+        const data = callbackData[1] ? callbackData[1] : callbackData
         return [method, data]
     },
     getQueryParameters: function (query) {
@@ -27,7 +25,7 @@ module.exports = {
         })
         return _.flatten(data)
     },
-    cleanUpMessage: async function (ctx, isObjectState, condition, update) {     // isObjectState to handle special cases in product scene
+    cleanUpMessage: function (ctx, isObjectState, condition, update) {     // isObjectState to handle special cases in product scene
         for (const message of ctx.session.cleanUpState) {
             if (condition) {
                 if (condition.includes(message.type)) {
@@ -78,12 +76,26 @@ module.exports = {
     convertValueToFloat: function (value) {
         return parseFloat(value.toFixed(2))
     },
-    addTimeout: function (ctx, timeout) {
-        ctx.session.timeout.push(timeout)
-    },
     clearTimeout: function (ctx) {
         for (const timeout of ctx.session.timeout) {
             clearTimeout(timeout)
         }
+    },
+    sendSystemMessage: async function (ctx, message) {
+        const system = await ctx.replyWithHTML(message)
+        module.exports.updateSystemMessageInState(ctx, system)
+    },
+    cancelInputMode: async function (ctx, message, timeout) {
+        module.exports.disableWaitingStatus(ctx)
+        await module.exports.sendSystemMessage(ctx, message)
+        ctx.session.timeout.push(setTimeout(() => {
+            module.exports.cleanUpMessage(ctx, true, ["system", "user"], true)
+        }, timeout * 1000))
+    },
+    clearScene: async function (ctx, isObjectState) {
+        for (const timeout of ctx.session.timeout) {
+            clearTimeout(timeout)
+        }
+        module.exports.cleanUpMessage(ctx, isObjectState)
     }
 }

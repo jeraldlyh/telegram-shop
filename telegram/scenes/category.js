@@ -10,11 +10,6 @@ categoryScene.enter(async (ctx) => {
     ctx.session.cleanUpState = [message.message_id]
 })
 
-categoryScene.action("/", async (ctx) => {
-    await ctx.answerCbQuery()
-    ctx.scene.enter("WELCOME_SCENE")
-})
-
 categoryScene.on("callback_query", async (ctx) => {
     const [method, data] = Utils.getRouteData(ctx)
     const pathData = Utils.getPathData(data)
@@ -41,7 +36,7 @@ categoryScene.on("message", async (ctx) => {
 
 categoryScene.leave(async (ctx) => {
     console.log("Cleaning category scene")
-    await Utils.cleanUpMessage(ctx)
+    await Utils.clearScene(ctx, false)
 })
 
 module.exports = {

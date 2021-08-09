@@ -34,7 +34,4 @@ module.exports = {
 
         return productMessageID
     },
-    sendInputQuantityMessage: async function (ctx, available, current, productName) {
-        return await ctx.replyWithHTML(Template.inputQuantityMessage(available, current, productName))
-    }
 }

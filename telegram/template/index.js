@@ -15,12 +15,11 @@ insert shop description here
 `
     },
     categoryMessage: function (body, shopName) {
-        return body + `
-<i>🟢 - Available</i>
+        return body + `<i>🟢 - Available</i>
 <i>🟡 - Low on stock</i>
 <i>🔴 - Out of stock</i>
 
-<i>Below is the list of categories that <b>${shopName}</b> offers.</i>
+<i>Navigate to the individual category using the buttons below that <b>${shopName}</b> offers.</i>
 `
     },
     indivCartMessage: function (cart) {
@@ -148,13 +147,13 @@ Enter it right here and we'll apply it automatically into your cart.
 <i>Type 'cancel' to exit this mode.</i>
 `
     },
-    cancelInputMessage: function () {
+    cancelQuantityInputMessage: function () {
         return `
 You have successfully exited the text input mode.
 
 You can now continue browsing the catalogue and select the quantity by <b><i>toggling</i></b> the add/remove buttons.
 
-<i>This message will be deleted after 10 seconds for a better user experience. Please do not be startled. 😊</i>
+<i>This message will be deleted after 5 seconds for a better user experience. Please do not be startled. 😊</i>
         `
     },
     invalidVoucherCode: function () {
@@ -173,7 +172,7 @@ You have successfully updated the quantity for <b>${productName}</b> from <b>${p
 
 You can now continue browsing the catalogue and select the quantity by <b><i>toggling</i></b> the add/remove buttons.
 
-<i>This message will be deleted after 10 seconds for a better user experience. Please do not be startled. 😊</i>
+<i>This message will be deleted after 5 seconds for a better user experience. Please do not be startled. 😊</i>
 `
     },
     claimedVoucherCode: function (voucherCode, claimedAt) {
@@ -201,5 +200,14 @@ You currently do not have any items in your cart to checkout!
 
 Perhaps, you're looking at the wrong place? 😶
 `
-    }
+    },
+    cancelVoucherInputMessage: function () {
+        return `
+You have successfully exited the text input mode.
+
+You may now proceed to checkout.
+
+<i>This message will be deleted after 5 seconds for a better user experience. Please do not be startled. 😊</i>
+        `
+    },
 }

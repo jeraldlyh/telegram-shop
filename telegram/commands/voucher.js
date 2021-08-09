@@ -16,7 +16,4 @@ module.exports = {
         // }
         return user ? user.VoucherUser.createdAt : null
     },
-    sendInputVoucherMessage: async function (ctx) {
-        return await ctx.replyWithHTML(Template.inputVoucherMessage(ctx.botInfo.first_name))
-    }
 }

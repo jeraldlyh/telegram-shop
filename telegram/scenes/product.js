@@ -76,11 +76,10 @@ productScene.on("callback_query", async (ctx) => {
                             productName: productName,
                             categoryName: categoryName,
                         }
-                        const inputMessage = await Product.sendInputQuantityMessage(ctx, parameters[1], parameters[3], productName)
-                        Utils.updateSystemMessageInState(ctx, inputMessage)
+                        await Utils.sendSystemMessage(ctx, Template.inputQuantityMessage(parameters[1], parameters[3], productName))
                     }
                 } catch (error) {
-                    await ctx.replyWithHTML(error)
+                    await Utils.sendSystemMessage(ctx, error)
                 }
                 break
             default:
@@ -96,14 +95,7 @@ productScene.on("message", async (ctx) => {
 
     if (Utils.isTextMode(ctx)) {       // Checks if user enters text input option
         if (ctx.message.text.toLowerCase() === "cancel") {
-            Utils.disableWaitingStatus(ctx)
-
-            const cancel = await ctx.replyWithHTML(Template.cancelInputMessage())
-            Utils.updateSystemMessageInState(ctx, cancel)
-
-            Utils.addTimeout(ctx, setTimeout(() => {
-                Utils.cleanUpMessage(ctx, true, ["system", "user"], true)
-            }, 5 * 1000))
+            Utils.cancelInputMode(ctx, Template.cancelQuantityInputMessage(), 5)
             return
         }
 
@@ -131,25 +123,14 @@ productScene.on("message", async (ctx) => {
                 await Product.editMessageByID(ctx, categoryName, productName, quantity, messageID)
             }
 
-            // REFACTOR CODE
-            Utils.disableWaitingStatus(ctx)
-
             // Send new cart message and replace the id of old cart message
             const cart = await Database.getPendingCartByCategory(ctx.botInfo.id, categoryName, ctx.from.id)
             const message = await Cart.sendIndivCartMessage(ctx, cart)
             Utils.replaceCartMessageInState(ctx, { id: message.message_id, type: "cart" })
 
-            // Clean up text messages after 10 seconds
-            const success = await ctx.replyWithHTML(Template.inputSuccessMessage(productName, current, quantity))
-            Utils.updateSystemMessageInState(ctx, success)
-
-            Utils.addTimeout(ctx, setTimeout(() => {
-                Utils.cleanUpMessage(ctx, true, ["system", "user"], true)
-            }, 10 * 1000))
-
+            await Utils.cancelInputMode(ctx, Template.inputSuccessMessage(productName, current, quantity), 10)
         } catch (error) {
-            const errorMessage = await ctx.replyWithHTML(error)
-            Utils.updateSystemMessageInState(ctx, errorMessage)
+            await Utils.sendSystemMessage(ctx, error)
         }
     }
 })
@@ -160,8 +141,7 @@ const getProductMessageID = (ctx, productName) => {
 
 productScene.leave(async (ctx) => {
     console.log("Clearing product scene")
-    Utils.clearTimeout(ctx)
-    await Utils.cleanUpMessage(ctx, true)
+    Utils.clearScene(ctx, true)
 })
 
 module.exports = {

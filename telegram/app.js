@@ -20,7 +20,6 @@ const stage = new Scenes.Stage([
     CustomScenes.paymentScene,
 ], {
     default: CustomScenes.welcomeScene,
-    ttl: 60 * 5
 })
 bot.use(session())
 bot.use(stage.middleware())
@@ -31,9 +30,9 @@ bot.command("start", async (ctx) => {
     ctx.scene.enter("WELCOME_SCENE")
 })
 
-bot.on("pre_checkout_query", ctx => {
-    ctx.answerPreCheckoutQuery(true)
-    console.log("Answered checkout query")
+bot.on("pre_checkout_query", async (ctx) => {
+    await ctx.answerPreCheckoutQuery(true)
+    await ctx.deleteMessage()
 })
 
 bot.command("test", ctx => Dummy.createDummyData(ctx))

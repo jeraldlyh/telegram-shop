@@ -34,7 +34,7 @@ welcomeScene.on("message", async (ctx) => {
 
 welcomeScene.leave(async (ctx) => {
     console.log("Cleaning welcome scene")
-    await Utils.cleanUpMessage(ctx)
+    await Utils.clearScene(ctx, false)
 })
 
 module.exports = {

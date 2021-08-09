@@ -48,16 +48,14 @@ cartScene.hears("⭐ Apply Voucher Code", async (ctx) => {
         status: true
     }
     Utils.updateUserMessageInState(ctx, ctx.message)
-    const inputVoucher = await Voucher.sendInputVoucherMessage(ctx)
-    Utils.updateSystemMessageInState(ctx, inputVoucher)
+    await Utils.sendSystemMessage(ctx, Template.inputVoucherMessage(ctx.botInfo.first_name))
 })
 
 cartScene.hears("💳 Proceed to Payment", async (ctx) => {
     Utils.updateUserMessageInState(ctx, ctx.message)
 
     if (ctx.session.cart.isEmpty) {
-        const error = await ctx.replyWithHTML(Template.checkoutErrorMessage())
-        Utils.updateSystemMessageInState(ctx, error)
+        await Utils.sendSystemMessage(ctx, Template.checkoutErrorMessage())
     } else {
         ctx.scene.enter("PAYMENT_SCENE", { voucher: ctx.session.cart.voucher })
     }
@@ -68,37 +66,29 @@ cartScene.on("message", async (ctx) => {
     Utils.updateUserMessageInState(ctx, ctx.message)        // Append normal messages into session clean up state
 
     if (Utils.isTextMode(ctx)) {
+        if (ctx.message.text === "cancel") {
+            await Utils.cancelInputMode(ctx, Template.cancelVoucherInputMessage(), 5)
+        }
         const voucher = await Voucher.getVoucher(ctx, ctx.message.text)
 
         if (voucher) {
             const claimedAt = await Voucher.validateVoucher(ctx, voucher)
             if (claimedAt) {
-                const voucher = await ctx.replyWithHTML(Template.claimedVoucherCode(voucher.code, claimedAt))
-                Utils.updateSystemMessageInState(ctx, voucher)
+                await Utils.sendSystemMessage(ctx, Template.claimedVoucherCode(voucher.code, claimedAt))
             } else {
-                Utils.disableWaitingStatus(ctx)
                 ctx.session.cart.voucher = voucher          // Update session data to be passed into payment scene as a prop
-
-                const success = await ctx.replyWithHTML(Template.voucherSuccessMessage(voucher))
-                Utils.updateSystemMessageInState(ctx, success)
 
                 // Send updated cart message with discount code applied
                 const [message, isEmpty] = await Cart.sendOverallCartMessage(ctx, voucher)
                 Utils.replaceCartMessageInState(ctx, { id: message.message_id, type: "cart" })
 
-                // Clean up text messages after 10 seconds
-                Utils.addTimeout(ctx, setTimeout(() => {
-                    Utils.cleanUpMessage(ctx, true, ["system", "user"], true)
-                }, 5 * 1000))
+                await Utils.cancelInputMode(ctx, Template.voucherSuccessMessage(voucher), 5)
             }
         } else {
-            const error = await ctx.replyWithHTML(Template.invalidVoucherCode())
-            Utils.updateSystemMessageInState(ctx, error)
+            await Utils.sendSystemMessage(ctx, Template.invalidVoucherCode())
         }
     }
 })
-
-
 
 cartScene.leave(async (ctx) => {
     console.log("Cleaning cart scene")
