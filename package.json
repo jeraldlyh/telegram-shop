@@ -4,7 +4,8 @@
     "description": "",
     "main": "app.js",
     "scripts": {
-        "dev:telegram": "cd telegram && npm run dev"
+        "dev:telegram": "cd telegram && npm run dev",
+        "dev:frontend": "cd frontend && npm run dev"
     },
     "repository": {
         "type": "git",
