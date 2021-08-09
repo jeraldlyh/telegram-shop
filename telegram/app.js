@@ -48,20 +48,19 @@ bot.command("voucher", async (ctx) => {
     ctx.reply(voucher.code)
 })
 
-bot.command("start", ctx => {
-    validateUserAccount(ctx.from.id, ctx.from.first_name, ctx.botInfo.id, ctx.chat.id)          // Validate user accounts upon entering a shop
+bot.command("start", async (ctx) => {
+    const shop = await Database.getShopByID(ctx.botInfo.id)
+    if (!shop) {
+        return await Utils.sendSystemMessage(ctx, "The shop has not yet been setup!")
+    }
+    await validateUserAccount(ctx.from.id, ctx.from.first_name, ctx.botInfo.id, ctx.chat.id)          // Validate user accounts upon entering a shop
+    await validateChatRecord(ctx.botInfo.id, ctx.from.id, ctx.chat.id)
     ctx.deleteMessage()
     Utils.clearScene(ctx, true)
     ctx.scene.enter("WELCOME_SCENE")
 })
 
 bot.command("setup", async (ctx) => {
-    /**
-     * 1. Validate token
-     * 2. Create shop
-     * 3. Validate user account and creates a chat record
-     */
-
     try {
         const shop = await Database.getShopByID(ctx.botInfo.id)
         if (!shop) {
@@ -72,16 +71,23 @@ bot.command("setup", async (ctx) => {
                 console.log(token, process.env.BOT_TOKEN)
                 throw "This is an <b>invalid</b> bot token. Retrieve the token from @BotFather and use the command again <i>(i.e. /setup SECRET_BOT_TOKEN)</i>"
             }
-            
-            await Database.createShop(ctx.botInfo.id, ctx.botInfo.first_name, ctx.from.id, token)
-            const user = await validateUserAccount(ctx.from.id, ctx.from.first_name, ctx.botInfo.id, ctx.chat.id)
+
+            // Validation of user account
+            var user = await validateUserAccount(ctx.from.id, ctx.from.username)
             user.update({
                 isOwner: true
             })
+
+            // Creation of shop
+            await Database.createShop(ctx.botInfo.id, ctx.botInfo.first_name, ctx.from.id, token)
+
+            // Validation of chat
+            validateChatRecord(ctx.botInfo.id, ctx.from.id, ctx.chat.id)
             await Utils.sendSystemMessage(ctx, Template.registrationSuccessMessage(ctx.from.id, ctx.from.username, ctx.botInfo.first_name))
         }
     } catch (error) {
-        await Utils.sendSystemMessage(ctx, error)
+        // await Utils.sendSystemMessage(ctx, error)
+        console.log(error)
     }
 })
 
@@ -102,15 +108,17 @@ bot.launch({ dropPendingUpdates: true })
 process.once("SIGINT", () => bot.stop("SIGINT"))
 process.once("SIGTERM", () => bot.stop("SIGTERM"))
 
-const validateUserAccount = async (userID, userName, shopID, chatID) => {
+const validateUserAccount = async (userID, userName) => {
     var user = await Database.getUserByID(userID)
     if (!user) {
         user = await Database.createUser(userID, userName)
     }
+    return user
+}
 
+const validateChatRecord = async function (shopID, userID, chatID) {
     const chat = await Database.getChat(shopID, userID)
     if (!chat) {
         await Database.createChat(shopID, userID, chatID)
     }
-    return user
 }

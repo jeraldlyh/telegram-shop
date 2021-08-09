@@ -1,0 +1,20 @@
+{
+    "name": "cron",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "node -r dotenv/config index.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "axios": "^0.21.1",
+        "dotenv": "^10.0.0",
+        "lodash": "^4.17.21",
+        "node-cron": "^3.0.0",
+        "pg": "^8.7.1",
+        "pg-hstore": "^2.3.4",
+        "sequelize": "^6.6.5"
+    }
+}

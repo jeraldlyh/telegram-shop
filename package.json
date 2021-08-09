@@ -5,7 +5,8 @@
     "main": "app.js",
     "scripts": {
         "dev:telegram": "cd telegram && npm run dev",
-        "dev:frontend": "cd frontend && npm run dev"
+        "dev:frontend": "cd frontend && npm run dev",
+        "dev:cron": "cd cron && npm run dev"
     },
     "repository": {
         "type": "git",
@@ -18,7 +19,6 @@
     },
     "homepage": "https://github.com/jeraldlyh/TeleShop#readme",
     "dependencies": {
-        "node-cron": "^3.0.0",
         "pg": "^8.7.1",
         "pg-hstore": "^2.3.4",
         "sequelize": "^6.6.5"

@@ -30,7 +30,6 @@ module.exports = {
                 isValid: true,
             })
         } catch (error) {
-            console.log(error)
             user = await User.findByPk(ctx.from.id)
             shop = await Shop.findOne({ where: { name: ctx.botInfo.first_name } })
         }

@@ -1,5 +1,6 @@
 const Models = require("../models")
 const { Op } = require("sequelize")
+const moment = require("moment")
 
 
 module.exports = {
@@ -211,5 +212,30 @@ module.exports = {
             userID: userID,
             chatID: chatID,
         })
+    },
+    getExpiredOrders: async function (minutes) {
+        const before = moment().subtract(minutes, "minutes").tz("Asia/Singapore").format("YYYY-MM-DD HH:mm:ss")
+        return await Models.Order.findAll({
+            where: {
+                createdAt: {
+                    // [Op.gte]: new Date(new Date() - minutes *  * 1000)        // 1 seconds = 1000 milliseconds
+                    [Op.lte]: before
+                },
+                status: "PENDING",
+            }
+        })
+    },
+    deleteExpiredOrders: async function (minutes) {
+        console.log("deleting nowww")
+        const before = moment().subtract(minutes, "minutes").tz("Asia/Singapore").format("YYYY-MM-DD HH:mm:ss")
+        const amount = await Models.Order.destroy({
+            where: {
+                createdAt: {
+                    [Op.lte]: before
+                },
+                status: "PENDING",
+            }
+        })
+        console.log(`Deleted ${amount} expired orders | ${moment().tz("Asia/Singapore").format("YYYY-MM-DD HH:mm:ss")}`)
     },
 }

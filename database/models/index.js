@@ -34,7 +34,7 @@ Product.belongsToMany(Order, { through: "Cart", sourceKey: "id", foreignKey: "pr
 
 Order.belongsTo(Shop, { foreignKey: "shopID" })
 Order.belongsToMany(Product, { through: "Cart", sourceKey: "id", foreignKey: "orderID" })
-Order.hasOne(Payment, { sourceKey: "id", foreignKey: "orderID" })
+Order.hasOne(Payment, { sourceKey: "id", foreignKey: "orderID"})
 
 Payment.belongsTo(Order, { foreignKey: "orderID" })
 Payment.belongsTo(Address, { foreignKey: "addressID" })
