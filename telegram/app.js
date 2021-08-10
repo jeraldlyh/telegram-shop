@@ -7,6 +7,7 @@ const Models = require("../database/models")
 const Database = require("../database/actions")
 const Utils = require("./utils")
 const Template = require("./template")
+const Calendar =require("./modules/calendar")
 
 
 const bot = new Telegraf(process.env.BOT_TOKEN)
@@ -34,6 +35,8 @@ bot.command("test", ctx => {
     Dummy.createDummyData(ctx)
     ctx.deleteMessage()
 })
+
+bot.command("a", ctx => Calendar.getCalendar(ctx))
 
 // TO DELETE
 bot.command("voucher", async (ctx) => {
