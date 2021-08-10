@@ -1,7 +1,7 @@
 const { Scenes } = require("telegraf")
-const Cart = require("../commands/cart")
+const Cart = require("../modules/cart")
 const Utils = require("../utils")
-const Voucher = require("../commands/voucher")
+const Voucher = require("../modules/voucher")
 const Template = require("../template")
 
 

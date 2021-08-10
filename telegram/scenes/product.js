@@ -1,6 +1,6 @@
 const { Scenes } = require("telegraf")
-const Product = require("../commands/product")
-const Cart = require("../commands/cart")
+const Product = require("../modules/product")
+const Cart = require("../modules/cart")
 const Utils = require("../utils")
 const _ = require("lodash")
 const Database = require("../../database/actions")

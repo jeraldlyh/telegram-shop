@@ -1,5 +1,5 @@
 const { Scenes } = require("telegraf")
-const Category = require("../commands/category")
+const Category = require("../modules/category")
 const Utils = require("../utils")
 
 

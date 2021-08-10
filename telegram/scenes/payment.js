@@ -2,10 +2,10 @@ const { Scenes } = require("telegraf")
 const numeral = require("numeral")
 const moment = require("moment")
 const _ = require("lodash")
-const Cart = require("../commands/cart")
+const Cart = require("../modules/cart")
 const Utils = require("../utils")
-const Voucher = require("../commands/voucher")
-const Payment = require("../commands/payment")
+const Voucher = require("../modules/voucher")
+const Payment = require("../modules/payment")
 
 
 const paymentScene = new Scenes.BaseScene("PAYMENT_SCENE")
