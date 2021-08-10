@@ -71,7 +71,7 @@ module.exports = {
 
         // Populate overflow dates from previous month
         for (var i = firstWeekday; i > 0; i--) {
-            if (buffer.length > 7) {
+            if (buffer.length === 7) {
                 results.push(buffer)
                 buffer= []
             }
@@ -87,7 +87,7 @@ module.exports = {
 
         // Populate dates of current month
         for (var j = 1; j <= daysInMonth; j++) {
-            if (buffer.length > 7) {
+            if (buffer.length === 7) {
                 results.push(buffer)
                 buffer= []
             }
@@ -102,12 +102,12 @@ module.exports = {
         }
 
         // Each calendar view has 42 dates, inclusive of overflow from previous and next month
-        if (results.length < 42) {
-            const daysToAdd = 42 - results.length
+        if (_.size(_.flatten(results)) < 42) {
+            const daysToAdd = 42 - _.size(_.flatten(results))
             const nextMonthYear = module.exports.getNextMonthYear(month, year)
 
             for (var k = 1; k <= daysToAdd; k++) {
-                if (buffer.length > 7) {
+                if (buffer.length === 7) {
                     results.push(buffer)
                     buffer= []
                 }
