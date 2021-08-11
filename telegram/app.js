@@ -1,4 +1,4 @@
-const { Telegraf, session, Scenes } = require("telegraf")
+const { Telegraf, session, Scenes, Markup } = require("telegraf")
 const faker = require("faker")
 const CustomScenes = require("./scenes")
 const db = require("../database")
@@ -7,7 +7,7 @@ const Models = require("../database/models")
 const Database = require("../database/actions")
 const Utils = require("./utils")
 const Template = require("./template")
-const Calendar =require("./modules/calendar")
+const Calendar = require("./modules/calendar")
 
 
 const bot = new Telegraf(process.env.BOT_TOKEN)
@@ -24,6 +24,8 @@ const stage = new Scenes.Stage([
     CustomScenes.productScene,
     CustomScenes.cartScene,
     CustomScenes.paymentScene,
+    CustomScenes.dateScene,
+    CustomScenes.noteScene,
 ], {
     default: CustomScenes.welcomeScene,
 })
@@ -36,7 +38,9 @@ bot.command("test", ctx => {
     ctx.deleteMessage()
 })
 
-bot.command("a", ctx => Calendar.getCalendar(ctx))
+bot.command("a", ctx => {
+    ctx.reply("Choose a date", Markup.inlineKeyboard(Calendar.getCalendar()))
+})
 
 // TO DELETE
 bot.command("voucher", async (ctx) => {

@@ -35,13 +35,13 @@ module.exports = {
     sendOverallCartMessage: async function (ctx, voucher) {
         const cart = await Database.getPendingCartByShopID(ctx.botInfo.id, ctx.from.id)
         const [templateMessage, isEmpty] = Template.overallCartMessage(cart, ctx.botInfo.first_name, voucher)
-        const message = await ctx.replyWithHTML(templateMessage, Template.paymentButtons())
+        const message = await ctx.replyWithHTML(templateMessage)
         return [message, isEmpty]
     },
-    editOverallCartByID: async function (ctx, messageID) {
+    editOverallCartByID: async function (ctx, messageID, voucher, deliveryDate, note) {
         const cart = await Database.getPendingCartByShopID(ctx.botInfo.id, ctx.from.id)
-        const [templateMessage, isEmpty] = Template.overallCartMessage(cart, ctx.botInfo.first_name)
-        return await ctx.telegram.editMessageText(ctx.chat.id, messageID, undefined, templateMessage, Template.paymentButtons())
+        const [templateMessage, isEmpty] = Template.overallCartMessage(cart, ctx.botInfo.first_name, voucher, deliveryDate, note)
+        return await ctx.telegram.editMessageText(ctx.chat.id, messageID, undefined, templateMessage, Template.htmlMode())
     },
     getPriceLabelsOfCart: async function (shopID, userID, voucher) {
         const cart = await Database.getPendingCartByShopID(shopID, userID)

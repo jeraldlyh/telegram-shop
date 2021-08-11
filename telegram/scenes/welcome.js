@@ -6,15 +6,7 @@ const Template = require("../template")
 const welcomeScene = new Scenes.BaseScene("WELCOME_SCENE")
 
 welcomeScene.enter(async (ctx) => {
-    const text = Template.welcomeMessage(ctx.botInfo.first_name)
-
-    const message = await ctx.replyWithHTML(text, Markup
-        .keyboard([
-            ["📚 View Categories", "🛒 View Cart"]
-        ])
-        .resize()
-    )
-    ctx.session.cleanUpState = [message.message_id]
+    Utils.sendSystemMessage(ctx, Template.welcomeMessage(ctx.botInfo.first_name), Template.welcomeMenuButtons())
 })
 
 welcomeScene.hears("📚 View Categories", async (ctx) => {
@@ -29,12 +21,12 @@ welcomeScene.hears("🛒 View Cart", async (ctx) => {
 
 // Listener to clear message after scene ends
 welcomeScene.on("message", async (ctx) => {
-    Utils.updateCleanUpState(ctx, ctx.message.message_id)
+    Utils.updateUserMessageInState(ctx, ctx.message)
 })
 
 welcomeScene.leave(async (ctx) => {
     console.log("Cleaning welcome scene")
-    await Utils.clearScene(ctx, false)
+    await Utils.clearScene(ctx, true)
 })
 
 module.exports = {

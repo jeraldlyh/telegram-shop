@@ -10,6 +10,8 @@ const Template = require("../template")
 const productScene = new Scenes.BaseScene("PRODUCT_SCENE")
 
 /**
+ * Upon entering, this scene contains route params passed from category (i.e. categoryName)
+ * 
  * cleanUpState: [
  *      { id: 1234, type: "cart" },             // Cart message
  *      { id: 2445, productName: "Bike" },      // Product messages
@@ -38,7 +40,7 @@ productScene.enter(async (ctx) => {
 
 productScene.on("callback_query", async (ctx) => {
     if (!Utils.isTextMode(ctx)) {         // Ignore all callbacks if user is in text mode
-        const [method, data] = Utils.getRouteData(ctx)
+        const [method, data] = Utils.getRouteData(ctx.callbackQuery.data)
         const pathData = Utils.getPathData(data)
 
         switch (method) {
@@ -79,7 +81,6 @@ productScene.on("callback_query", async (ctx) => {
                         await Utils.sendSystemMessage(ctx, Template.inputQuantityMessage(parameters[1], parameters[3], productName))
                     }
                 } catch (error) {
-                    console.log(error)
                     await Utils.sendSystemMessage(ctx, error)
                 }
                 break
@@ -87,7 +88,7 @@ productScene.on("callback_query", async (ctx) => {
                 break
         }
     }
-    await ctx.answerCbQuery().catch(err => console.log(err))
+    await ctx.answerCbQuery()
 })
 
 // Listener to clear message after scene ends
@@ -103,7 +104,7 @@ productScene.on("message", async (ctx) => {
         const current = parseInt(ctx.session.isWaiting.current)
         const productName = ctx.session.isWaiting.productName
         const categoryName = ctx.session.isWaiting.categoryName
-        const messageID = getProductMessageID(ctx, productName)
+        const messageID = Utils.getProductMessageID(ctx, productName)
 
         try {
             const quantity = parseInt(ctx.message.text)
@@ -134,10 +135,6 @@ productScene.on("message", async (ctx) => {
         }
     }
 })
-
-const getProductMessageID = (ctx, productName) => {
-    return _.find(ctx.session.cleanUpState, function (o) { return o.productName === productName }).id
-}
 
 productScene.leave(async (ctx) => {
     console.log("Clearing product scene")

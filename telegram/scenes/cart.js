@@ -23,11 +23,10 @@ const cartScene = new Scenes.BaseScene("CART_SCENE")
  */
 
 cartScene.enter(async (ctx) => {
+    Utils.sendSystemMessage(ctx, Template.cartWelcomeMessage(), Template.cartMenuButtons())
     const [message, isEmpty] = await Cart.sendOverallCartMessage(ctx)
-    ctx.session.cleanUpState = [{
-        id: message.message_id,
-        type: "cart",
-    }]
+    Utils.updateCleanUpState(ctx, { id: message.message_id, type: "cart" })
+
     ctx.session.isWaiting = {
         status: false
     }
@@ -62,7 +61,13 @@ cartScene.hears("💳 Proceed to Payment", async (ctx) => {
     if (ctx.session.cart.isEmpty) {
         await Utils.sendSystemMessage(ctx, Template.checkoutErrorMessage())
     } else {
-        ctx.scene.enter("PAYMENT_SCENE", { voucher: ctx.session.cart.voucher })
+        ctx.scene.enter("DATE_SCENE", {
+            voucher: ctx.session.cart.voucher,
+            cartMessage: {
+                id: Utils.getCartMessageByID(ctx),
+                type: "cart"
+            },       // Pass down cart message into option scene for editing
+        })
     }
 })
 
@@ -81,7 +86,7 @@ cartScene.on("message", async (ctx) => {
             if (claimedAt) {
                 await Utils.sendSystemMessage(ctx, Template.claimedVoucherCode(voucher.code, claimedAt))
             } else {
-                ctx.session.cart.voucher = voucher          // Update session data to be passed into payment scene as a prop
+                ctx.session.cart.voucher = voucher          // Update session data to be passed into next scene as a prop
 
                 // Send updated cart message with discount code applied
                 const [message, isEmpty] = await Cart.sendOverallCartMessage(ctx, voucher)
@@ -96,9 +101,10 @@ cartScene.on("message", async (ctx) => {
 })
 
 cartScene.leave(async (ctx) => {
+    // Manual clearing of scene to prevent cart message from being deleted
     console.log("Cleaning cart scene")
     Utils.clearTimeout(ctx)
-    await Utils.cleanUpMessage(ctx, true)
+    Utils.cleanUpMessage(ctx, true, ["user", "system"], true)
 })
 
 module.exports = {

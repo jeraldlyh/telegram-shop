@@ -11,8 +11,6 @@ const Payment = require("../modules/payment")
 const paymentScene = new Scenes.BaseScene("PAYMENT_SCENE")
 
 paymentScene.enter(async (ctx) => {
-    ctx.session.cleanUpState = []
-
     const priceLabels = await Cart.getPriceLabelsOfCart(ctx.botInfo.id, ctx.from.id, ctx.scene.state.voucher)
     const totalCost = _.sumBy(priceLabels, function (label) {
         return label.amount
@@ -57,9 +55,13 @@ paymentScene.on("successful_payment", async (ctx) => {
     ctx.scene.enter("WELCOME_SCENE")
 })
 
+paymentScene.on("message", async (ctx) => {
+    Utils.updateCleanUpState(ctx, ctx.message.message_id)
+})
+
 paymentScene.leave(async (ctx) => {
     console.log("Cleaning payment scene")
-    await Utils.clearScene(ctx, true)
+    await Utils.clearScene(ctx, false)
 })
 
 module.exports = {

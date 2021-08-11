@@ -14,6 +14,13 @@ insert shop description here
 <i>If the keyboard has not opened, you can open it by pressing the button with four small squares in the message bar.</i>
 `
     },
+    welcomeMenuButtons: function () {
+        return Markup
+            .keyboard([
+                ["📚 View Categories", "🛒 View Cart"]
+            ])
+            .resize()
+    },
     categoryMessage: function (body, shopName) {
         return body + `<i>🟢 - Available</i>
 <i>🟡 - Low on stock</i>
@@ -40,7 +47,7 @@ insert shop description here
         message += `\nTotal cost: <b>${numeral(totalCost).format("$0,0.00")}</b>`
         return message
     },
-    overallCartMessage: function (cart, shopName, voucher) {
+    overallCartMessage: function (cart, shopName, voucher, deliveryDate, note) {
         var message = "🛒 Your cart contains the following products:\n\n"
         var totalCost = 0
         var savedCost = 0
@@ -71,6 +78,14 @@ insert shop description here
             isEmpty = true
         }
 
+        if (deliveryDate) {
+            message += `Delivery date: <b>${deliveryDate}</b>\n`
+        }
+
+        if (note) {
+            message += `Note for seller: ${note}`
+        }
+
         message += `Total cost: <b>${numeral(totalCost).format("$0,0.00")}</b>`
         message += voucher
             ? `\nTotal savings: <b>${numeral(savedCost).format("$0,0.00")}</b>`
@@ -78,7 +93,14 @@ insert shop description here
 
         return [message, isEmpty]
     },
-    paymentButtons: function () {
+    cartWelcomeMessage: function () {
+        return `
+Welcome to the checkout page.
+
+Have a voucher code to apply? If not, proceed to checkout.
+`
+    },
+    cartMenuButtons: function () {
         const extra = Markup
             .keyboard([
                 ["⭐ Apply Voucher Code"],
@@ -223,4 +245,35 @@ You may now proceed to checkout.
 Congraluations <a href="tg://user?id=${userID}">@${username}</a>! You have just successfully setup <b>${shopName}</b>. You may now proceed to XXX url to add products and configure your store!
 `
     },
+    calendarMessage: function () {
+        return `
+Kindly select your preferred delivery date 🚚
+`
+    },
+    dateConfirmationMessage: function (date) {
+        return `
+You've selected <b>${moment(date, "DD-MM-YYYY").format("DD-MM-YYYY")}</b>. Are you sure?
+`
+    },
+    confirmationButtons: function () {
+        return Markup.inlineKeyboard([
+            [
+                { text: "Confirm ✅", callback_data: "Yes" },
+                { text: "Cancel ❌", callback_data: "No" },
+            ],
+        ])
+    },
+    cancelDateMessage: function () {
+        return `
+You have just cancelled your selection. Please choose another date.
+`
+    },
+    htmlMode: function () {
+        return { parse_mode: "HTML" }
+    },
+    successDateMessage: function (date) {
+        return `
+You've successfully selected <b>${moment(date, "DD-MM-YYYY").format("DD-MM-YYYY")}</b> as your delivery date!
+`
+    }
 }
