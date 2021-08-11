@@ -39,7 +39,7 @@ productScene.enter(async (ctx) => {
 })
 
 productScene.on("callback_query", async (ctx) => {
-    if (!Utils.isTextMode(ctx)) {         // Ignore all callbacks if user is in text mode
+    if (!Utils.isInputMode(ctx)) {         // Ignore all callbacks if user is in text mode
         const [method, data] = Utils.getRouteData(ctx.callbackQuery.data)
         const pathData = Utils.getPathData(data)
 
@@ -96,7 +96,7 @@ productScene.on("message", async (ctx) => {
     Utils.updateUserMessageInState(ctx, ctx.message)        // Append normal messages into session clean up state
     Utils.checkForHomeButton(ctx, ctx.message.text)
 
-    if (Utils.isTextMode(ctx)) {       // Checks if user enters text input option
+    if (Utils.isInputMode(ctx)) {       // Checks if user enters text input option
         if (ctx.message.text.toLowerCase() === "cancel") {
             return await Utils.cancelInputMode(ctx, Template.cancelQuantityInputMessage(), 5)
         }
