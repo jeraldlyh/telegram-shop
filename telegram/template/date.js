@@ -27,7 +27,7 @@ Kindly select your preferred delivery date 🚚
 You've selected <b>${moment(date, "DD-MM-YYYY").format("DD-MM-YYYY")}</b>. Are you sure?
 `
     },
-    dateConfirmationButtons: function () {
+    confirmationButtons: function () {
         return Markup.inlineKeyboard([
             [
                 { text: "Confirm ✅", callback_data: "Yes" },

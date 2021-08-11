@@ -57,6 +57,11 @@ module.exports = {
             return o.productName === productName
         }).id
     },
+    getCalendarMessageID: function (ctx) {
+        return _.find(ctx.session.cleanUpState, function (o) {
+            return o.type === "calendar"
+        }).id
+    },
     replaceCartMessageInState: function (ctx, data) {
         ctx.session.cleanUpState = _.map(ctx.session.cleanUpState, function (message) {         // Convert old cart message ID into text to prune
             if (message.type === "cart") {

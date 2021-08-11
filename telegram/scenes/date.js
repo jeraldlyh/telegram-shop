@@ -19,6 +19,8 @@ const dateScene = new Scenes.BaseScene("DATE_SCENE")
 
 dateScene.enter(async (ctx) => {
     Utils.initializeScene(ctx)
+    ctx.session.isWaiting.date = Calendar.getTodayDate()
+
     Utils.sendWelcomeMessage(ctx, Template.dateWelcomeMessage(), Template.dateMenuButtons())
     const calendar = await Calendar.sendCalendarMessage(ctx)
     Utils.updateCleanUpState(ctx, { id: calendar.message_id, type: "calendar" })     // Update as calendar type to prevent message from deletion in midst of selecting a date
@@ -32,11 +34,21 @@ dateScene.on("callback_query", async (ctx) => {
 
     if (data !== "NIL") {
         if (!Utils.isInputMode(ctx)) {
-            const message = await Calendar.sendConfirmationMessage(ctx, data)
-            Utils.updateSystemMessageInState(ctx, message)
-            ctx.session.isWaiting = {       // Activate input mode
-                status: true,
-                date: data
+            if (data === "Previous") {
+                const month = parseInt(ctx.session.isWaiting.date.split("-")[1]) - 1
+                Calendar.updateDateInState(ctx, month)
+                await Calendar.editMessageByID(ctx, Utils.getCalendarMessageID(ctx), month)
+            } else if (data === "Next") {
+                const month = parseInt(ctx.session.isWaiting.date.split("-")[1]) + 1
+                Calendar.updateDateInState(ctx, month)
+                await Calendar.editMessageByID(ctx, Utils.getCalendarMessageID(ctx), month)
+            } else {
+                const message = await Calendar.sendConfirmationMessage(ctx, data)
+                Utils.updateSystemMessageInState(ctx, message)
+                ctx.session.isWaiting = {       // Activate input mode
+                    status: true,
+                    date: data
+                }
             }
         } else {
             if (data === "Yes") {

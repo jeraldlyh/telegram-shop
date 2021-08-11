@@ -7,13 +7,25 @@ const Template = require("../template")
 
 module.exports = {
     sendCalendarMessage: async function (ctx) {
-        return await ctx.reply(Template.calendarMessage(), Markup.inlineKeyboard(module.exports.getCalendar()))
+        return await ctx.replyWithHTML(Template.calendarMessage(), module.exports.calendarButtons(null))
     },
     sendConfirmationMessage: async function (ctx, date) {
         return await ctx.replyWithHTML(Template.dateConfirmationMessage(date), Template.confirmationButtons())
     },
+    editMessageByID: async function (ctx, messageID, month) {
+        console.log(month)
+        return await ctx.telegram.editMessageText(ctx.chat.id, messageID, undefined, Template.calendarMessage(), module.exports.calendarButtons(month - 1))
+    },
     getCalendar: function (month) {
-        const now = month ? moment().add(1, "months") : moment()
+        var now = moment()
+        if (month) {
+            const difference = month - now.month()
+            if (difference < 0) {
+                now = now.subtract(Math.abs(difference), "months")
+            } else {
+                now = now.add(difference, "months")
+            }
+        }
 
         var calendar = [[{
             text: `${now.format("MMMM")} ${now.year()}`,
@@ -36,6 +48,11 @@ module.exports = {
         calendar = _.concat(calendar, dates, toggleButtons)
 
         return calendar
+    },
+    calendarButtons: function (month) {
+        const extra = Markup.inlineKeyboard(module.exports.getCalendar(month))
+        extra.parse_mode = "HTML"
+        return extra
     },
     getToggleButtons: function () {
         const buttons = [[
@@ -116,8 +133,8 @@ module.exports = {
             buffer.push({
                 text: j,
                 callback_data: module.exports.getSpecificDate(
-                    month,
                     j,
+                    month,
                     year,
                 ),
             })
@@ -146,10 +163,19 @@ module.exports = {
         }
         return results
     },
-    getSpecificDate: function (month, day, year) {
+    getSpecificDate: function (day, month, year) {
         // return moment(`${month}-${day}-${year}`, "MM-DD-YYYY").toDate()
         month = month < 10 ? "0" + month : month
         day = day < 10 ? "0" + day : day
         return `${day}-${month}-${year}`
+    },
+    getTodayDate: function () {
+        const now = moment()
+        return module.exports.getSpecificDate(now.day(), now.month() + 1, now.year())
+    },
+    updateDateInState: function (ctx, month) {
+        var tempDate = _.split(ctx.session.isWaiting.date, "-")
+        tempDate[1] = month
+        ctx.session.isWaiting.date = _.join(tempDate, "-")
     },
 }
