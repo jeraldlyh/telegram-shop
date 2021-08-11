@@ -1,13 +1,16 @@
 const { Scenes } = require("telegraf")
 const Category = require("../modules/category")
 const Utils = require("../utils")
+const Template = require("../template")
 
 
 const categoryScene = new Scenes.BaseScene("CATEGORY_SCENE")
 
 categoryScene.enter(async (ctx) => {
+    Utils.initializeScene(ctx)
+    Utils.sendSystemMessage(ctx, Template.categoryWelcomeMessage(ctx.botInfo.first_name), Template.categoryMenuButtons())
     const message = await Category.getAllCategories(ctx)
-    ctx.session.cleanUpState = [message.message_id]
+    Utils.updateCleanUpState(ctx, { id: message.message_id, type: "system" })
 })
 
 categoryScene.on("callback_query", async (ctx) => {
@@ -16,27 +19,24 @@ categoryScene.on("callback_query", async (ctx) => {
 
     switch (method) {
         case "GET":
-            if (pathData.length == 1) {
-                await ctx.scene.enter("WELCOME_SCENE")
-            } else {
-                await ctx.scene.enter("PRODUCT_SCENE", { category: pathData[1] })
-            }
+            ctx.scene.enter("PRODUCT_SCENE", { category: pathData[1] })
             break
         default:
             break
     }
-
     await ctx.answerCbQuery().catch(err => console.log(err))
 })
 
+
 // Listener to clear message after scene ends
 categoryScene.on("message", async (ctx) => {
-    Utils.updateCleanUpState(ctx, ctx.message.message_id)
+    Utils.updateUserMessageInState(ctx, ctx.message)
+    Utils.checkForHomeButton(ctx, ctx.message)
 })
 
 categoryScene.leave(async (ctx) => {
     console.log("Cleaning category scene")
-    await Utils.clearScene(ctx, false)
+    await Utils.clearScene(ctx, true)
 })
 
 module.exports = {

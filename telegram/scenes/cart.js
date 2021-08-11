@@ -23,18 +23,15 @@ const cartScene = new Scenes.BaseScene("CART_SCENE")
  */
 
 cartScene.enter(async (ctx) => {
-    Utils.sendSystemMessage(ctx, Template.cartWelcomeMessage(), Template.cartMenuButtons())
+    Utils.initializeScene(ctx)
+    Utils.sendWelcomeMessage(ctx, Template.cartWelcomeMessage(), Template.cartMenuButtons())
     const [message, isEmpty] = await Cart.sendOverallCartMessage(ctx)
     Utils.updateCleanUpState(ctx, { id: message.message_id, type: "cart" })
 
-    ctx.session.isWaiting = {
-        status: false
-    }
     ctx.session.cart = {
         isEmpty: isEmpty,
         voucher: null
     }
-    ctx.session.timeout = []
 })
 
 cartScene.hears("🏠 Back to Home", async (ctx) => {
@@ -88,10 +85,8 @@ cartScene.on("message", async (ctx) => {
             } else {
                 ctx.session.cart.voucher = voucher          // Update session data to be passed into next scene as a prop
 
-                // Send updated cart message with discount code applied
-                const [message, isEmpty] = await Cart.sendOverallCartMessage(ctx, voucher)
-                Utils.replaceCartMessageInState(ctx, { id: message.message_id, type: "cart" })
-
+                // Update cart message with discount code applied
+                await Cart.editOverallCartByID(ctx, Utils.getCartMessageByID(ctx), voucher, null, null)
                 await Utils.cancelInputMode(ctx, Template.voucherSuccessMessage(voucher), 5)
             }
         } else {
@@ -101,10 +96,8 @@ cartScene.on("message", async (ctx) => {
 })
 
 cartScene.leave(async (ctx) => {
-    // Manual clearing of scene to prevent cart message from being deleted
     console.log("Cleaning cart scene")
-    Utils.clearTimeout(ctx)
-    Utils.cleanUpMessage(ctx, true, ["user", "system"], true)
+    Utils.clearScene(ctx, true)
 })
 
 module.exports = {

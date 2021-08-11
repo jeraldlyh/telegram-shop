@@ -1,4 +1,4 @@
-const { Scenes, Markup } = require("telegraf")
+const { Scenes } = require("telegraf")
 const Utils = require("../utils")
 const Template = require("../template")
 
@@ -6,22 +6,18 @@ const Template = require("../template")
 const welcomeScene = new Scenes.BaseScene("WELCOME_SCENE")
 
 welcomeScene.enter(async (ctx) => {
+    Utils.initializeScene(ctx)
     Utils.sendSystemMessage(ctx, Template.welcomeMessage(ctx.botInfo.first_name), Template.welcomeMenuButtons())
 })
 
-welcomeScene.hears("📚 View Categories", async (ctx) => {
-    await ctx.deleteMessage()
-    ctx.scene.enter("CATEGORY_SCENE")
-})
-
-welcomeScene.hears("🛒 View Cart", async (ctx) => {
-    await ctx.deleteMessage()
-    ctx.scene.enter("CART_SCENE")
-})
-
-// Listener to clear message after scene ends
 welcomeScene.on("message", async (ctx) => {
     Utils.updateUserMessageInState(ctx, ctx.message)
+
+    if (ctx.message.text === "📚 View Categories") {
+        ctx.scene.enter("CATEGORY_SCENE")
+    } else if (ctx.message.text === "🛒 View Cart") {
+        ctx.scene.enter("CART_SCENE")
+    }
 })
 
 welcomeScene.leave(async (ctx) => {

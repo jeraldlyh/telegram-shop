@@ -111,14 +111,6 @@ Have a voucher code to apply? If not, proceed to checkout.
         extra.parse_mode = "HTML"
         return extra
     },
-    cartButtons: function () {
-        const extra = Markup.inlineKeyboard([
-            [{ text: "⬅️ Back to Categories", callback_data: "GET /category" }],
-            [{ text: "✅ Proceed to Checkout", callback_data: "GET /checkout" }]
-        ])
-        extra.parse_mode = "HTML"
-        return extra
-    },
     productCardMessage: function (product) {
         const caption = `
 <b><u>${product.name}</u></b>
@@ -275,5 +267,47 @@ You have just cancelled your selection. Please choose another date.
         return `
 You've successfully selected <b>${moment(date, "DD-MM-YYYY").format("DD-MM-YYYY")}</b> as your delivery date!
 `
-    }
+    },
+    categoryWelcomeMessage: function (shopName) {
+        return `
+Welcome to <b>${shopName}'s</b> catalogue!
+`
+    },
+    categoryMenuButtons: function () {
+        const extra = Markup
+            .keyboard([
+                ["🏠 Back to Home"]
+            ])
+            .resize()
+        extra.parse_mode = "HTML"
+        return extra
+    },
+    productWelcomeMessage: function(categoryName, shopName) {
+        return `
+Below are a list of products from ${categoryName} that <b>${shopName}</b> offers.
+`
+    },
+    productMenuButtons: function () {
+        const extra = Markup
+            .keyboard([
+                ["🏠 Back to Home"]
+            ])
+            .resize()
+        extra.parse_mode = "HTML"
+        return extra
+    },
+    dateWelcomeMessage: function() {
+        return `
+Just two more steps before we're able to generate your invoice! 🙂
+`
+    },
+    dateMenuButtons: function () {
+        const extra = Markup
+            .keyboard([
+                ["🏠 Back to Home"]
+            ])
+            .resize()
+        extra.parse_mode = "HTML"
+        return extra
+    },
 }

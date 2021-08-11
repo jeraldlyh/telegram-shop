@@ -94,7 +94,7 @@ module.exports = {
         for (var i = firstWeekday; i > 0; i--) {
             if (buffer.length === 7) {
                 results.push(buffer)
-                buffer.length = 0
+                buffer = []
             }
             buffer.push({
                 text: " ",
@@ -111,7 +111,7 @@ module.exports = {
         for (var j = 1; j <= daysInMonth; j++) {
             if (buffer.length === 7) {
                 results.push(buffer)
-                buffer.length = 0
+                buffer = []
             }
             buffer.push({
                 text: j,
@@ -131,7 +131,7 @@ module.exports = {
             for (var k = 1; k <= daysToAdd; k++) {
                 if (buffer.length === 7) {
                     results.push(buffer)
-                    buffer.length = 0
+                    buffer = []
                 }
                 buffer.push({
                     text: " ",

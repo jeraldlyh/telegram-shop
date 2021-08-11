@@ -37,8 +37,6 @@ module.exports = {
             inlineKeyboard.push(buffer)
         }
 
-        inlineKeyboard.push([{ text: "🏠 Back to Home", callback_data: "GET /home" }])
-
         return await ctx.replyWithHTML(Template.categoryMessage(bodyMessage, ctx.botInfo.first_name), Markup
             .inlineKeyboard(inlineKeyboard)
             .oneTime()

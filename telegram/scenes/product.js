@@ -28,14 +28,14 @@ const productScene = new Scenes.BaseScene("PRODUCT_SCENE")
  */
 
 productScene.enter(async (ctx) => {
-    ctx.session.timeout = []        // Initialize empty array for timeouts
+    Utils.initializeScene(ctx)
+    await Utils.sendWelcomeMessage(ctx, Template.productWelcomeMessage(ctx.scene.state.category, ctx.botInfo.first_name), Template.productMenuButtons())
+
     const cart = await Database.getPendingCartByCategory(ctx.botInfo.id, ctx.scene.state.category, ctx.from.id)
-
     const productMessageID = await Product.sendCatalogue(ctx, ctx.scene.state.category, cart)
-    ctx.session.cleanUpState = productMessageID
+    ctx.session.cleanUpState = _.concat(ctx.session.cleanUpState, productMessageID)
 
-    const message = await Cart.sendIndivCartMessage(ctx, cart)
-    Utils.updateCleanUpState(ctx, { id: message.message_id, type: "cart" })       // Append cart message into session clean up state
+    await Utils.sendCartMessage(ctx, Template.indivCartMessage(cart))
 })
 
 productScene.on("callback_query", async (ctx) => {
@@ -94,6 +94,7 @@ productScene.on("callback_query", async (ctx) => {
 // Listener to clear message after scene ends
 productScene.on("message", async (ctx) => {
     Utils.updateUserMessageInState(ctx, ctx.message)        // Append normal messages into session clean up state
+    Utils.checkForHomeButton(ctx, ctx.message.text)
 
     if (Utils.isTextMode(ctx)) {       // Checks if user enters text input option
         if (ctx.message.text.toLowerCase() === "cancel") {
@@ -124,12 +125,8 @@ productScene.on("message", async (ctx) => {
                 await Product.editMessageByID(ctx, categoryName, productName, quantity, messageID)
             }
 
-            // Send new cart message and replace the id of old cart message
-            const cart = await Database.getPendingCartByCategory(ctx.botInfo.id, categoryName, ctx.from.id)
-            const message = await Cart.sendIndivCartMessage(ctx, cart)
-            Utils.replaceCartMessageInState(ctx, { id: message.message_id, type: "cart" })
-
-            await Utils.cancelInputMode(ctx, Template.inputSuccessMessage(productName, current, quantity), 10)
+            await Cart.editIndivCartByID(ctx, categoryName, Utils.getCartMessageByID(ctx))      // Edit cart message with updated quantity
+            await Utils.cancelInputMode(ctx, Template.inputSuccessMessage(productName, current, quantity), 5)
         } catch (error) {
             await Utils.sendSystemMessage(ctx, error)
         }

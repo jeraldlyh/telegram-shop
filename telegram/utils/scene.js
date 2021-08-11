@@ -1,10 +1,13 @@
 const _ = require("lodash")
+const Template = require("../template")
 
 
 module.exports = {
-    initializeCleanUpState: function (ctx) {
-        if (!ctx.session.cleanUpState) {
-            ctx.session.cleanUpState = {}
+    initializeScene: function (ctx) {
+        ctx.session.cleanUpState = []
+        ctx.session.timeout = []
+        ctx.session.isWaiting = {
+            status: false
         }
     },
     cleanUpMessage: function (ctx, isObjectState, condition, update) {     // isObjectState to handle special cases in product scene
@@ -25,13 +28,11 @@ module.exports = {
                         return message
                     }
                 })
-            } else {
-                ctx.session.cleanUpState = null         // Destroy clean up state after clearing scene
             }
         }
     },
     updateCleanUpState: function (ctx, data) {
-        if (ctx.session.cleanUpState) {
+        if (ctx.session.cleanUpState && ctx.session.cleanUpState.length !== 0) {
             ctx.session.cleanUpState = _.concat(ctx.session.cleanUpState, data)
         } else {
             ctx.session.cleanUpState = [{
@@ -98,4 +99,27 @@ module.exports = {
         }
         module.exports.cleanUpMessage(ctx, isObjectState)
     },
+    cancelDateInput: async function (ctx, message, timeout) {
+        module.exports.disableWaitingStatus(ctx)
+        await ctx.editMessageText(message, Template.htmlMode())
+        ctx.session.timeout.push(setTimeout(() => {
+            ctx.deleteMessage()
+            ctx.session.cleanUpState = _.filter(ctx.session.cleanUpState, function (o) {
+                return o ? o.id !== message.id : o
+            })
+        }, timeout * 1000))
+    },
+    sendCartMessage: async function (ctx, message, buttons) {
+        const cart = await ctx.replyWithHTML(message, buttons)
+        module.exports.updateCleanUpState(ctx, { id: cart.message_id, type: "cart" })
+    },
+    sendWelcomeMessage: async function (ctx, message, buttons) {
+        const welcome = await ctx.replyWithHTML(message, buttons)
+        module.exports.updateCleanUpState(ctx, { id: welcome.message_id, type: "welcome" })
+    },
+    checkForHomeButton: function (ctx, message) {
+        if (message === "🏠 Back to Home") {
+            ctx.scene.enter("WELCOME_SCENE")
+        }
+    }
 }

@@ -25,16 +25,13 @@ module.exports = {
         await cart.decrement("quantity", { by: amount })
         await product.increment("quantity", { by: amount })     // Update available quantity in database
     },
-    sendIndivCartMessage: async function (ctx, data) {
-        return await ctx.replyWithHTML(Template.indivCartMessage(data), Template.cartButtons())
-    },
     editIndivCartByID: async function (ctx, categoryName, messageID) {
         const cart = await Database.getPendingCartByCategory(ctx.botInfo.id, categoryName, ctx.from.id)
-        return await ctx.telegram.editMessageText(ctx.chat.id, messageID, undefined, Template.indivCartMessage(cart), Template.cartButtons())
+        return await ctx.telegram.editMessageText(ctx.chat.id, messageID, undefined, Template.indivCartMessage(cart), Template.htmlMode())
     },
-    sendOverallCartMessage: async function (ctx, voucher) {
+    sendOverallCartMessage: async function (ctx, voucher, deliveryDate, note) {
         const cart = await Database.getPendingCartByShopID(ctx.botInfo.id, ctx.from.id)
-        const [templateMessage, isEmpty] = Template.overallCartMessage(cart, ctx.botInfo.first_name, voucher)
+        const [templateMessage, isEmpty] = Template.overallCartMessage(cart, ctx.botInfo.first_name, voucher, deliveryDate, note)
         const message = await ctx.replyWithHTML(templateMessage)
         return [message, isEmpty]
     },
