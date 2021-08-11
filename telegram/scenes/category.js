@@ -27,10 +27,9 @@ categoryScene.on("callback_query", async (ctx) => {
     await ctx.answerCbQuery().catch(err => console.log(err))
 })
 
-
 // Listener to clear message after scene ends
 categoryScene.on("message", async (ctx) => {
-    Utils.updateUserMessageInState(ctx, ctx.message)
+    Utils.updateUserMessageInState(ctx, ctx.message)        // Append normal messages into session clean up state
     Utils.checkForHomeButton(ctx, ctx.message)
 })
 

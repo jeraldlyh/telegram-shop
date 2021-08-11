@@ -31,20 +31,21 @@ dateScene.on("callback_query", async (ctx) => {
     const data = ctx.callbackQuery.data
 
     if (data !== "NIL") {
-        if (!Utils.isTextMode(ctx)) {
+        if (!Utils.isInputMode(ctx)) {
             const message = await Calendar.sendConfirmationMessage(ctx, data)
             Utils.updateSystemMessageInState(ctx, message)
             ctx.session.isWaiting = {       // Activate input mode
                 status: true,
-                data: data
+                date: data
             }
         } else {
             if (data === "Yes") {
                 await Cart.editOverallCartByID(ctx, Utils.getCartMessageByID(ctx), ctx.scene.state.voucher, ctx.session.isWaiting.data)
-                // ctx.scene.enter("NOTE_SCENE")
+                ctx.scene.enter("NOTE_SCENE", {
+                    voucher: ctx.scene.state.voucher,
+                    date: ctx.session.isWaiting.date,
+                })
             } else if (data === "No") {
-                // Utils.disableWaitingStatus(ctx)
-                // await Utils.sendSystemMessage(ctx, Template.cancelDateMessage())
                 await Utils.cancelDateInput(ctx, Template.cancelDateMessage(), 5)
             }
         }

@@ -72,7 +72,7 @@ cartScene.hears("💳 Proceed to Payment", async (ctx) => {
 cartScene.on("message", async (ctx) => {
     Utils.updateUserMessageInState(ctx, ctx.message)        // Append normal messages into session clean up state
 
-    if (Utils.isTextMode(ctx)) {
+    if (Utils.isInputMode(ctx)) {
         if (ctx.message.text === "cancel") {
             return await Utils.cancelInputMode(ctx, Template.cancelVoucherInputMessage(), 5)
         }

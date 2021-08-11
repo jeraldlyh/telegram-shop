@@ -44,7 +44,7 @@ module.exports = {
     disableWaitingStatus: function (ctx) {
         ctx.session.isWaiting.status = false
     },
-    isTextMode: function (ctx) {
+    isInputMode: function (ctx) {
         return ctx.session.isWaiting && ctx.session.isWaiting.status
     },
     getCartMessageByID: function (ctx) {
