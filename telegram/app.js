@@ -93,8 +93,7 @@ bot.command("setup", async (ctx) => {
             await Utils.sendSystemMessage(ctx, Template.registrationSuccessMessage(ctx.from.id, ctx.from.username, ctx.botInfo.first_name))
         }
     } catch (error) {
-        // await Utils.sendSystemMessage(ctx, error)
-        console.log(error)
+        await Utils.sendSystemMessage(ctx, error)
     }
 })
 

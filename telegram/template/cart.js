@@ -148,4 +148,11 @@ You currently do not have any items in your cart to checkout!
 Perhaps, you're looking at the wrong place? 😶
 `
     },
+    cartCheckoutButtons: function() {
+        const extra = Markup.inlineKeyboard([
+            {text: "✅ Proceed to Checkout", callback_data: "GET /checkout"}
+        ])
+        extra.parse_mode = "HTML"
+        return extra
+    }
 }

@@ -35,7 +35,7 @@ productScene.enter(async (ctx) => {
     const productMessageID = await Product.sendCatalogue(ctx, ctx.scene.state.category, cart)
     ctx.session.cleanUpState = _.concat(ctx.session.cleanUpState, productMessageID)
 
-    await Utils.sendCartMessage(ctx, Template.indivCartMessage(cart))
+    await Utils.sendCartMessage(ctx, Template.indivCartMessage(cart), Template.cartCheckoutButtons())
 })
 
 productScene.on("callback_query", async (ctx) => {

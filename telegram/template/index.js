@@ -13,8 +13,8 @@ Congraluations <a href="tg://user?id=${userID}">@${username}</a>! You have just 
     confirmationButtons: function () {
         return Markup.inlineKeyboard([
             [
-                { text: "Confirm ✅", callback_data: "Yes" },
-                { text: "Cancel ❌", callback_data: "No" },
+                { text: "✅ Confirm", callback_data: "Yes" },
+                { text: "❌ Cancel", callback_data: "No" },
             ],
         ])
     },
