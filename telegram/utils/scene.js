@@ -18,7 +18,7 @@ module.exports = {
                         ctx.telegram.deleteMessage(ctx.chat.id, isObjectState ? message.id : message)
                     }
                 } else {
-                    if (ctx.chat.type !== "receipt") {      // Prevent deletion of invoices
+                    if (message.type !== "receipt") {      // Prevent deletion of invoices
                         ctx.telegram.deleteMessage(ctx.chat.id, isObjectState ? message.id : message)
                     }
                 }
@@ -74,6 +74,7 @@ module.exports = {
         module.exports.updateCleanUpState(ctx, data)
     },
     replaceInvoiceToReceiptInState: function (ctx) {
+        console.log(ctx.session.cleanUpState)
         ctx.session.cleanUpState = _.map(ctx.session.cleanUpState, function (message) {         // Convert old cart message ID into text to prune
             if (message.type === "invoice") {
                 message.type = "receipt"
