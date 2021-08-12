@@ -148,10 +148,17 @@ module.exports = {
             userID: userID
         })
     },
-    createNewPayment: async function (orderID, addressID) {
+    createNewPayment: async function (orderID, addressID, deliveryDate) {
         return await Models.Payment.create({
             orderID: orderID,
-            addressID: addressID
+            addressID: addressID,
+            deliveryDate: deliveryDate,
+        })
+    },
+    createNewNote: async function (paymentID, text) {
+        return await Models.Note.create({
+            paymentID: paymentID,
+            text: text,
         })
     },
     getAddress: async function (userID, orderDetails) {

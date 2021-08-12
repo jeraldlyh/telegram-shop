@@ -9,6 +9,7 @@ const Payment = require("./payment")
 const Voucher = require("./voucher")
 const VoucherUser = require("./voucherUser")
 const Chat = require("./chat")
+const Note = require("./note")
 
 
 User.hasMany(Shop, { sourceKey: "telegramID", foreignKey: "ownerID" })
@@ -34,12 +35,15 @@ Product.belongsToMany(Order, { through: "Cart", sourceKey: "id", foreignKey: "pr
 
 Order.belongsTo(Shop, { foreignKey: "shopID" })
 Order.belongsToMany(Product, { through: "Cart", sourceKey: "id", foreignKey: "orderID" })
-Order.hasOne(Payment, { sourceKey: "id", foreignKey: "orderID"})
+Order.hasOne(Payment, { sourceKey: "id", foreignKey: "orderID" })
 
 Payment.belongsTo(Order, { foreignKey: "orderID" })
 Payment.belongsTo(Address, { foreignKey: "addressID" })
+Payment.hasOne(Note, { sourceKey: "id", foreignKey: "paymentID" })
+
+Note.belongsTo(Payment, { foreignKey: "paymentID" })
 
 Address.belongsTo(User, { foreignKey: "userID" })
 Address.hasMany(Payment, { sourceKey: "id", foreignKey: "addressID" })
 
-module.exports = { Shop, Category, Product, User, Address, Order, Cart, Payment, Voucher, VoucherUser, Chat }
+module.exports = { Shop, Category, Product, User, Address, Order, Cart, Payment, Voucher, VoucherUser, Chat, Note }

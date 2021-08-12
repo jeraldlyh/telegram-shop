@@ -28,6 +28,10 @@ const Payment = db.define(
                 key: "id",
                 deferrable: Deferrable.INITIALLY_IMMEDIATE,
             },
+        },
+        deliveryDate: {
+            type: DataTypes.STRING(15),
+            allowNull: false,
         }
     },
     {
