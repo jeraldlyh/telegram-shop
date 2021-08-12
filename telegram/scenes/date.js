@@ -24,9 +24,6 @@ dateScene.enter(async (ctx) => {
     await Utils.sendWelcomeMessage(ctx, Template.dateWelcomeMessage(), Template.dateMenuButtons())
     const calendar = await Calendar.sendCalendarMessage(ctx)
     Utils.updateCleanUpState(ctx, { id: calendar.message_id, type: "calendar" })     // Update as calendar type to prevent message from deletion in midst of selecting a date
-
-    const [cart, isEmpty] = await Cart.sendOverallCartMessage(ctx, ctx.scene.state.voucher, null, null)
-    Utils.updateCleanUpState(ctx, { id: cart.message_id, type: "cart" })
 })
 
 dateScene.on("callback_query", async (ctx) => {
@@ -43,8 +40,7 @@ dateScene.on("callback_query", async (ctx) => {
                 Calendar.updateDateInState(ctx, month)
                 await Calendar.editMessageByID(ctx, Utils.getCalendarMessageID(ctx), month)
             } else {
-                const message = await Calendar.sendConfirmationMessage(ctx, data)
-                Utils.updateSystemMessageInState(ctx, message)
+                Utils.sendSystemMessage(ctx, Template.dateConfirmationMessage(data), Template.confirmationButtons())
                 ctx.session.isWaiting = {       // Activate input mode
                     status: true,
                     date: data
@@ -52,14 +48,14 @@ dateScene.on("callback_query", async (ctx) => {
             }
         } else {
             if (data === "Yes") {
-                console.log(ctx.session.isWaiting)
-                await Cart.editOverallCartByID(ctx, Utils.getCartMessageByID(ctx), ctx.scene.state.voucher, ctx.session.isWaiting.date, null)
+                await Cart.editOverallCartByID(ctx, ctx.scene.state.cartMessage.id, ctx.scene.state.voucher, ctx.session.isWaiting.date, null)
                 ctx.scene.enter("NOTE_SCENE", {
                     voucher: ctx.scene.state.voucher,
-                    date: ctx.session.isWaiting.date,
+                    deliveryDate: ctx.session.isWaiting.date,
+                    cartMessage: ctx.scene.state.cartMessage
                 })
             } else if (data === "No") {
-                await Utils.cancelDateInput(ctx, Template.cancelDateMessage(), 5)
+                await Utils.cancelButtonConfirmation(ctx, Template.cancelDateMessage(), 3)
             }
         }
     }

@@ -18,7 +18,9 @@ module.exports = {
                         ctx.telegram.deleteMessage(ctx.chat.id, isObjectState ? message.id : message)
                     }
                 } else {
-                    ctx.telegram.deleteMessage(ctx.chat.id, isObjectState ? message.id : message)
+                    if (ctx.chat.type !== "receipt") {      // Prevent deletion of invoices
+                        ctx.telegram.deleteMessage(ctx.chat.id, isObjectState ? message.id : message)
+                    }
                 }
             }
 
@@ -71,11 +73,22 @@ module.exports = {
         })
         module.exports.updateCleanUpState(ctx, data)
     },
+    replaceInvoiceToReceiptInState: function (ctx) {
+        ctx.session.cleanUpState = _.map(ctx.session.cleanUpState, function (message) {         // Convert old cart message ID into text to prune
+            if (message.type === "invoice") {
+                message.type = "receipt"
+            }
+            return message
+        })
+    },
     updateSystemMessageInState: function (ctx, message) {
         module.exports.updateCleanUpState(ctx, { id: message.message_id, type: "system" })
     },
     updateUserMessageInState: function (ctx, message) {
         module.exports.updateCleanUpState(ctx, { id: message.message_id, type: "user" })
+    },
+    updateInvoiceMessageInState: function (ctx, message) {
+        module.exports.updateCleanUpState(ctx, { id: message.message_id, type: "invoice" })
     },
     clearTimeout: function (ctx) {
         for (const timeout of ctx.session.timeout) {
@@ -101,7 +114,7 @@ module.exports = {
         }
         module.exports.cleanUpMessage(ctx, isObjectState)
     },
-    cancelDateInput: async function (ctx, message, timeout) {
+    cancelButtonConfirmation: async function (ctx, message, timeout) {
         module.exports.disableWaitingStatus(ctx)
         await ctx.editMessageText(message, Template.htmlMode())
         ctx.session.timeout.push(setTimeout(() => {
@@ -123,5 +136,5 @@ module.exports = {
         if (message === "🏠 Back to Home") {
             ctx.scene.enter("WELCOME_SCENE")
         }
-    }
+    },
 }

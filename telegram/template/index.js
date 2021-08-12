@@ -1,3 +1,4 @@
+const { Markup } = require("telegraf")
 
 
 module.exports = {
@@ -8,6 +9,14 @@ Congraluations <a href="tg://user?id=${userID}">@${username}</a>! You have just 
     },
     htmlMode: function () {
         return { parse_mode: "HTML" }
+    },
+    confirmationButtons: function () {
+        return Markup.inlineKeyboard([
+            [
+                { text: "Confirm ✅", callback_data: "Yes" },
+                { text: "Cancel ❌", callback_data: "No" },
+            ],
+        ])
     },
     ...require("./category"),
     ...require("./welcome"),

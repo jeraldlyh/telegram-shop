@@ -58,12 +58,12 @@ cartScene.hears("💳 Proceed to Payment", async (ctx) => {
     if (ctx.session.cart.isEmpty) {
         await Utils.sendSystemMessage(ctx, Template.checkoutErrorMessage())
     } else {
-        ctx.scene.enter("DATE_SCENE", {
+        ctx.scene.enter("DATE_SCENE", {     // Pass down cart message into other scene for editing
             voucher: ctx.session.cart.voucher,
             cartMessage: {
                 id: Utils.getCartMessageByID(ctx),
                 type: "cart"
-            },       // Pass down cart message into option scene for editing
+            },
         })
     }
 })
@@ -97,7 +97,8 @@ cartScene.on("message", async (ctx) => {
 
 cartScene.leave(async (ctx) => {
     console.log("Cleaning cart scene")
-    Utils.clearScene(ctx, true)
+    Utils.clearTimeout(ctx)
+    Utils.cleanUpMessage(ctx, true, ["user", "system", "welcome"])
 })
 
 module.exports = {

@@ -27,5 +27,15 @@ Would you like to leave a note along with the order?
         return Markup.inlineKeyboard([
             { text: "⏩ Skip", callback_data: "Skip" }
         ])
-    }
+    },
+    noteConfirmationMessage: function(message) {
+        return `
+This is the note that you wish to leave for the seller: <i>${message}</i>
+`
+    },
+    cancelNoteMessage: function () {
+        return `
+You have just cancelled your current note. Please leave another note for the seller.
+`
+    },
 }

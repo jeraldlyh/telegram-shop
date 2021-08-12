@@ -9,9 +9,6 @@ module.exports = {
     sendCalendarMessage: async function (ctx) {
         return await ctx.replyWithHTML(Template.calendarMessage(), module.exports.calendarButtons(null))
     },
-    sendConfirmationMessage: async function (ctx, date) {
-        return await ctx.replyWithHTML(Template.dateConfirmationMessage(date), Template.confirmationButtons())
-    },
     editMessageByID: async function (ctx, messageID, month) {
         return await ctx.telegram.editMessageText(ctx.chat.id, messageID, undefined, Template.calendarMessage(), module.exports.calendarButtons(month - 1))     // Moment months (0-11)
     },
@@ -48,7 +45,7 @@ module.exports = {
     getToggleButtons: function () {
         const buttons = [[
             { text: "<", callback_data: "Previous" },
-            { text: " ", callback_data: "NIL" },
+            { text: "Self-collection", callback_data: "Self-collection" },
             { text: ">", callback_data: "Next" }
         ]]
         return buttons

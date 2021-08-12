@@ -23,17 +23,10 @@ Kindly select your preferred delivery date 🚚
 `
     },
     dateConfirmationMessage: function (date) {
+        var momentDate = moment(date, "DD-MM-YYYY").format("DD-MM-YYYY")
         return `
-You've selected <b>${moment(date, "DD-MM-YYYY").format("DD-MM-YYYY")}</b>. Are you sure?
+You've selected <b>${momentDate === "Invalid date" ? date : momentDate}</b>. Are you sure?
 `
-    },
-    confirmationButtons: function () {
-        return Markup.inlineKeyboard([
-            [
-                { text: "Confirm ✅", callback_data: "Yes" },
-                { text: "Cancel ❌", callback_data: "No" },
-            ],
-        ])
     },
     cancelDateMessage: function () {
         return `

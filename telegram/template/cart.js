@@ -58,7 +58,7 @@ module.exports = {
         }
 
         if (note) {
-            message += `Note for seller: ${note}`
+            message += `Note for seller: ${note}\n`
         }
 
         message += `Total cost: <b>${numeral(totalCost).format("$0,0.00")}</b>`
