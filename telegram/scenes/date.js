@@ -48,7 +48,13 @@ dateScene.on("callback_query", async (ctx) => {
             }
         } else {
             if (data === "Yes") {
-                await Cart.editOverallCartByID(ctx, ctx.scene.state.cartMessage.id, ctx.scene.state.voucher, ctx.session.isWaiting.date, null)
+                await Cart.editOverallCartByID(
+                    ctx,
+                    ctx.scene.state.cartMessage.id,
+                    ctx.scene.state.voucher,
+                    ctx.session.isWaiting.date,
+                    null
+                )
                 ctx.scene.enter("NOTE_SCENE", {
                     voucher: ctx.scene.state.voucher,
                     deliveryDate: ctx.session.isWaiting.date,

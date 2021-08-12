@@ -1,7 +1,6 @@
 const { Scenes } = require("telegraf")
 const Cart = require("../modules/cart")
 const Utils = require("../utils")
-const Voucher = require("../modules/voucher")
 const Template = require("../template")
 
 
@@ -38,6 +37,13 @@ noteScene.on("message", async (ctx) => {
 noteScene.on("callback_query", async (ctx) => {
     if (Utils.isInputMode(ctx)) {
         if (ctx.callbackQuery.data === "Yes") {
+            Cart.editOverallCartByID(
+                ctx,
+                ctx.scene.state.cartMessage.id,
+                ctx.scene.state.voucher,
+                ctx.scene.state.deliveryDate,
+                ctx.session.isWaiting.note
+            )
             ctx.scene.enter("PAYMENT_SCENE", {
                 voucher: ctx.scene.state.voucher,
                 deliveryDate: ctx.scene.state.deliveryDate,

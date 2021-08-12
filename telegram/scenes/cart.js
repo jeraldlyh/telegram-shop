@@ -36,6 +36,7 @@ cartScene.enter(async (ctx) => {
 
 cartScene.hears("🏠 Back to Home", async (ctx) => {
     Utils.updateUserMessageInState(ctx, ctx.message)
+    Utils.cleanUpMessage(ctx, true, ["cart"], true)
     ctx.scene.enter("WELCOME_SCENE")
 })
 

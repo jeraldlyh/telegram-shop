@@ -44,7 +44,6 @@ paymentScene.enter(async (ctx) => {
 paymentScene.on("successful_payment", async (ctx) => {
     console.log("Success payment", ctx.message.successful_payment)
     Utils.replaceInvoiceToReceiptInState(ctx)
-    console.log(ctx.state.cleanUpState)
 
     const payment = ctx.message.successful_payment
     const invoice = JSON.parse(payment.invoice_payload)
