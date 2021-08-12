@@ -65,7 +65,7 @@ noteScene.on("callback_query", async (ctx) => {
 })
 
 noteScene.leave(async (ctx) => {
-    console.log("Cleaning cart scene")
+    console.log("Cleaning note scene")
     Utils.clearTimeout(ctx)
     Utils.cleanUpMessage(ctx, true)
 })
