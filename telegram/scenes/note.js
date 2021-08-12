@@ -54,6 +54,12 @@ noteScene.on("callback_query", async (ctx) => {
             Utils.cancelButtonConfirmation(ctx, Template.cancelNoteMessage(), 3)
             Utils.cleanUpMessage(ctx, true, ["user"], true)     // Delete user message
         }
+    } else if (ctx.callbackQuery.data === "Skip") {
+        ctx.scene.enter("PAYMENT_SCENE", {
+            voucher: ctx.scene.state.voucher,
+            deliveryDate: ctx.scene.state.deliveryDate,
+            cartMessage: ctx.scene.state.cartMessage,
+        })
     }
     await ctx.answerCbQuery()
 })

@@ -24,4 +24,5 @@ Congraluations <a href="tg://user?id=${userID}">@${username}</a>! You have just 
     ...require("./product"),
     ...require("./date"),
     ...require("./note"),
+    ...require("./payment"),
 }

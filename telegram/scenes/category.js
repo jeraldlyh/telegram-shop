@@ -8,7 +8,7 @@ const categoryScene = new Scenes.BaseScene("CATEGORY_SCENE")
 
 categoryScene.enter(async (ctx) => {
     Utils.initializeScene(ctx)
-    Utils.sendSystemMessage(ctx, Template.categoryWelcomeMessage(ctx.botInfo.first_name), Template.categoryMenuButtons())
+    await Utils.sendSystemMessage(ctx, Template.categoryWelcomeMessage(ctx.botInfo.first_name), Template.categoryMenuButtons())
     const message = await Category.getAllCategories(ctx)
     Utils.updateCleanUpState(ctx, { id: message.message_id, type: "system" })
 })

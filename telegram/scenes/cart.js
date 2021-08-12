@@ -24,7 +24,7 @@ const cartScene = new Scenes.BaseScene("CART_SCENE")
 
 cartScene.enter(async (ctx) => {
     Utils.initializeScene(ctx)
-    Utils.sendWelcomeMessage(ctx, Template.cartWelcomeMessage(), Template.cartMenuButtons())
+    await Utils.sendWelcomeMessage(ctx, Template.cartWelcomeMessage(), Template.cartMenuButtons())
     const [message, isEmpty] = await Cart.sendOverallCartMessage(ctx)
     Utils.updateCleanUpState(ctx, { id: message.message_id, type: "cart" })
 

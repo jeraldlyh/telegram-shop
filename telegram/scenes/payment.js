@@ -6,6 +6,7 @@ const Cart = require("../modules/cart")
 const Utils = require("../utils")
 const Voucher = require("../modules/voucher")
 const Payment = require("../modules/payment")
+const Template = require("../template")
 
 
 const paymentScene = new Scenes.BaseScene("PAYMENT_SCENE")
@@ -19,6 +20,8 @@ const paymentScene = new Scenes.BaseScene("PAYMENT_SCENE")
 
 paymentScene.enter(async (ctx) => {
     Utils.initializeScene(ctx)
+    await Utils.sendSystemMessage(ctx, Template.paymentWelcomeMessage(), Template.paymentMenuButtons())
+
     const priceLabels = await Cart.getPriceLabelsOfCart(ctx.botInfo.id, ctx.from.id, ctx.scene.state.voucher)
     const totalCost = _.sumBy(priceLabels, function (label) {
         return label.amount
@@ -67,6 +70,7 @@ paymentScene.on("successful_payment", async (ctx) => {
 
 paymentScene.on("message", async (ctx) => {
     Utils.updateUserMessageInState(ctx, ctx.message.message_id)
+    Utils.checkForHomeButton(ctx)
 })
 
 paymentScene.leave(async (ctx) => {
