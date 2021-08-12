@@ -13,7 +13,7 @@ module.exports = {
         return await ctx.replyWithHTML(Template.dateConfirmationMessage(date), Template.confirmationButtons())
     },
     editMessageByID: async function (ctx, messageID, month) {
-        return await ctx.telegram.editMessageText(ctx.chat.id, messageID, undefined, Template.calendarMessage(), module.exports.calendarButtons(month - 1))
+        return await ctx.telegram.editMessageText(ctx.chat.id, messageID, undefined, Template.calendarMessage(), module.exports.calendarButtons(month - 1))     // Moment months (0-11)
     },
     getCalendar: function (month) {
         const now = month ? moment().set("month", month) : moment()

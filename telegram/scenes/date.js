@@ -21,7 +21,7 @@ dateScene.enter(async (ctx) => {
     Utils.initializeScene(ctx)
     ctx.session.isWaiting.date = Calendar.getTodayDate()
 
-    Utils.sendWelcomeMessage(ctx, Template.dateWelcomeMessage(), Template.dateMenuButtons())
+    await Utils.sendWelcomeMessage(ctx, Template.dateWelcomeMessage(), Template.dateMenuButtons())
     const calendar = await Calendar.sendCalendarMessage(ctx)
     Utils.updateCleanUpState(ctx, { id: calendar.message_id, type: "calendar" })     // Update as calendar type to prevent message from deletion in midst of selecting a date
 
@@ -52,7 +52,8 @@ dateScene.on("callback_query", async (ctx) => {
             }
         } else {
             if (data === "Yes") {
-                await Cart.editOverallCartByID(ctx, Utils.getCartMessageByID(ctx), ctx.scene.state.voucher, ctx.session.isWaiting.data)
+                console.log(ctx.session.isWaiting)
+                await Cart.editOverallCartByID(ctx, Utils.getCartMessageByID(ctx), ctx.scene.state.voucher, ctx.session.isWaiting.date, null)
                 ctx.scene.enter("NOTE_SCENE", {
                     voucher: ctx.scene.state.voucher,
                     date: ctx.session.isWaiting.date,

@@ -8,6 +8,9 @@ module.exports = {
         }
         return "🔴"
     },
+    convertValueToFloat: function (value) {
+        return parseFloat(value.toFixed(2))
+    },
     ...require("./route"),
     ...require("./scene")
 }
