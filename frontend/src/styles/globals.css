@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+#sidebar .pro-sidebar-inner {
+    background-color: #fff;
+    box-shadow: 0.5px 0.866px 2px 0px rgba(0, 0, 0, 0.15);
+}
+
+#sidebar .pro-sidebar-inner .pro-sidebar-layout {
+    overflow-y: hidden;
+}
+
+/* Menu Buttons (Individual Rows) */
+
+#sidebar .pro-sidebar-inner .pro-sidebar-layout ul {
+    padding: 0 10px;
+}
+
+#sidebar .pro-sidebar-inner .pro-sidebar-layout ul .pro-inner-item .pro-icon-wrapper {
+    background-color: rgba(255, 255, 255, 0.0);
+    border-radius: 3px;
+}
