@@ -14,8 +14,7 @@ categoryScene.enter(async (ctx) => {
 })
 
 categoryScene.on("callback_query", async (ctx) => {
-    const [method, data] = Utils.getRouteData(ctx.callbackQuery.data)
-    const pathData = Utils.getPathData(data)
+    const [method, pathData] = Utils.getRouteData(ctx.callbackQuery.data)
 
     switch (method) {
         case "GET":

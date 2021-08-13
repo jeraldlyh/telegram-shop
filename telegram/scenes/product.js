@@ -40,8 +40,7 @@ productScene.enter(async (ctx) => {
 
 productScene.on("callback_query", async (ctx) => {
     if (!Utils.isInputMode(ctx)) {         // Ignore all callbacks if user is in text mode
-        const [method, data] = Utils.getRouteData(ctx.callbackQuery.data)
-        const pathData = Utils.getPathData(data)
+        const [method, pathData] = Utils.getRouteData(ctx.callbackQuery.data)
 
         switch (method) {
             case "GET":
@@ -52,7 +51,7 @@ productScene.on("callback_query", async (ctx) => {
                 }
                 break
             case "POST":
-                const categoryName = pathData[1]
+                const categoryName = pathData[1]                // i.e. ["cart", "Headphones", "Razer Kraken X", "add"]
                 const productName = pathData[2]
                 const action = pathData[3]
                 const inlineKeyboardData = _.flatten(ctx.callbackQuery.message.reply_markup.inline_keyboard)

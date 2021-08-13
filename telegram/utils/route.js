@@ -2,14 +2,10 @@ const _ = require("lodash")
 
 
 module.exports = {
-    getPathData: function (path) {
-        // Slice to remove preceding path i.e. /category/Electronics
-        return path.length > 1 ? path.slice(1).split("/") : path
-    },
     getRouteData: function (request) {
-        const callbackData = request.split(" ")
-        const method = callbackData[0]
-        const data = callbackData[1] ? callbackData[1] : callbackData
+        const callbackData = request.split("/")
+        const method = callbackData[0].trim()
+        const data = _.slice(callbackData, 1, callbackData.length)
         return [method, data]
     },
     getQueryParameters: function (query) {
