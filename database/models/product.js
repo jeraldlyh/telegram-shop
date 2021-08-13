@@ -21,7 +21,7 @@ const Product = db.define(
             allowNull: false,
         },
         image: {
-            type: DataTypes.STRING(100),
+            type: DataTypes.STRING(200),
             allowNull: null,
         },
         price: {
