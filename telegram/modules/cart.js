@@ -53,7 +53,7 @@ module.exports = {
 
                 priceLabels.push({
                     label: `${quantity}x ${product.name}`,
-                    amount: 100 * productCost,
+                    amount: Utils.convertValueToFloat(100 * productCost),
                 })
                 totalSavings += voucher ? (productCost * discount) : 0
             }

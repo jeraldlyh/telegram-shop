@@ -1,7 +1,6 @@
 const { Telegraf, session, Scenes, Markup } = require("telegraf")
 const faker = require("faker")
 const CustomScenes = require("./scenes")
-const db = require("../database")
 const Dummy = require("./modules/dummy")
 const Models = require("../database/models")
 const Database = require("../database/actions")
@@ -11,11 +10,6 @@ const Calendar = require("./modules/calendar")
 
 
 const bot = new Telegraf(process.env.BOT_TOKEN)
-
-db.authenticate()
-    .then(() => console.log("Connection has been established successfully."))
-    .catch((err) => console.log(err))
-// db.sync({ force: true })
 
 // Middlewares
 const stage = new Scenes.Stage([
