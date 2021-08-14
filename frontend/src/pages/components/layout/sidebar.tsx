@@ -1,6 +1,7 @@
 import classNames from "classnames"
 import { AiOutlineClose } from "react-icons/ai"
 import { useRouter } from "next/router"
+import Link from "next/link"
 import { FiArrowRightCircle, FiLogOut } from "react-icons/fi"
 import { ProSidebar, SidebarHeader, Menu, MenuItem, SubMenu, SidebarContent, SidebarFooter } from "react-pro-sidebar"
 import "react-pro-sidebar/dist/css/styles.css"
@@ -12,11 +13,18 @@ type Props = {
 const Sidebar = ({ collapsed }: Props) => {
     const router = useRouter()
 
-    const button = (path: string) => {
+    const background = (path: string) => {
         return classNames({
-            "mb-1 font-semibold items-center justify-center": true,
-            "bg-purple shadow-sidebar rounded-lg text-white": router.pathname === path,
-            "text-black hover:text-gray-700": router.pathname !== path,
+            "mb-1 items-center justify-center": true,
+            "bg-purple shadow-sidebar rounded-lg text-white": router.pathname === `/${path}`,
+            "text-black hover:text-gray-700": router.pathname !== `/${path}`,
+        })
+    }
+    const text = (path: string) => {
+        return classNames({
+            "font-semibold": true,
+            "text-white": router.pathname === `/${path}`,
+            "text-black hover:text-gray-700": router.pathname !== `/${path}`,
         })
     }
 
@@ -32,15 +40,22 @@ const Sidebar = ({ collapsed }: Props) => {
                 </SidebarHeader>
                 <SidebarContent>
                     <Menu iconShape="square">
-                        <MenuItem className={button("/")} icon={<AiOutlineClose />}>/</MenuItem>
-                        <MenuItem className={button("Customers")} icon={<AiOutlineClose />}>Customers</MenuItem>
-                        <MenuItem className={button("Categories")} icon={<AiOutlineClose />}>Categories</MenuItem>
-                        <MenuItem className={button("Products")} icon={<AiOutlineClose />}>Products</MenuItem>
+                        <MenuItem className={background("Customers")} icon={<AiOutlineClose />}>
+                            Customers
+                        </MenuItem>
+                        <MenuItem className={background("Categories")} icon={<AiOutlineClose />}>
+                            Categories
+                        </MenuItem>
+                        <MenuItem className={background("products")} icon={<AiOutlineClose />}>
+                            <Link href="/products">
+                                <span className={text("products")}>Products</span>
+                            </Link>
+                        </MenuItem>
                     </Menu>
                 </SidebarContent>
                 <SidebarFooter>
                     <Menu iconShape="square">
-                        <MenuItem className={button("Logout")} icon={<FiLogOut />}>Logout</MenuItem>
+                        <MenuItem className={background("Logout")} icon={<FiLogOut />}>Logout</MenuItem>
                     </Menu>
                 </SidebarFooter>
             </ProSidebar>
