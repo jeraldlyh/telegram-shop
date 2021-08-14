@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "node -r dotenv/config index.js"
+        "dev": "node -r dotenv/config dotenv_config_path=../.env index.js"
     },
     "author": "",
     "license": "ISC",

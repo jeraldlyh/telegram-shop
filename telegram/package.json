@@ -4,7 +4,7 @@
     "description": "",
     "main": "app.js",
     "scripts": {
-        "dev": "nodemon -r dotenv/config app.js"
+        "dev": "nodemon -r dotenv/config dotenv_config_path=../.env app.js"
     },
     "dependencies": {
         "dotenv": "^10.0.0",
@@ -13,9 +13,6 @@
         "moment": "^2.29.1",
         "nodemon": "^2.0.12",
         "numeral": "^2.0.6",
-        "pg": "^8.7.1",
-        "pg-hstore": "^2.3.4",
-        "sequelize": "^6.6.5",
         "telegraf": "^4.4.1"
     }
 }

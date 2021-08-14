@@ -4,7 +4,6 @@ const axios = require("axios")
 const Database = require("../database/actions")
 const db = require("../database")
 
-
 // const BOT_API_KEY = "BOT_API_KEY"
 // const API_KEY_LENGTH = BOT_API_KEY.length
 // const CHAT_ID = "CHAT_ID"
