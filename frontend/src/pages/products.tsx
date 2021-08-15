@@ -4,30 +4,26 @@ import NumberFormat from "react-number-format"
 import Card from "./components/card"
 import ImageSelector from "./components/form/imageSelector"
 import axiosInstance from "../axios/axiosInstance"
+import ListBox from "./components/form/listBox"
 
 
 type Props = {
-    category: object
+    categoryNames: [{
+        id: string,
+        name: string
+    }]
 }
 
-export default function Products({ category }: Props) {
+export default function Products({ categoryNames }: Props) {
     const [images, setImages] = useState<[]>([])
-    const [product, setProduct] = useState({
-        category: "",
-        name: "",
-        description: "",
-        image: "",
-        price: "",
-        quantity: "",
-    })
+    const [name, setName] = useState("")
+    const [description, setDescription] = useState("")
+    const [image, setImage] = useState("")
+    const [price, setPrice] = useState("")
+    const [quantity, setQuantity] = useState("")
+    const [category, setCategory] = useState(categoryNames[0])
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        var data = { ...product }
-        _.set(data, e.target.name, e.target.value)
-        setProduct(data)
-    }
-
-    const priceLimit = ({ floatValue }: any) => floatValue <= 999999
+    const priceLimit = ({ floatValue }: any) => floatValue <= 999999 && floatValue >= 0 || !floatValue
 
     const onChange = (imageList: any, addUpdateIndex: any) => {
         setImages(imageList)
@@ -40,15 +36,21 @@ export default function Products({ category }: Props) {
                 <div className="flex flex-col w-full h-full space-y-3 md:flex-row md:space-x-3 md:space-y-0">
                     <div className="flex flex-col w-full md:w-1/2 space-y-4 h-full">
                         <div className="flex flex-col md:flex-row md:justify-between h-1/5">
+                            <span className="w-1/3">Category</span>
+                            <div className="w-full md:w-2/3 text-sm md:text-base">
+                                <ListBox data={categoryNames} selected={category} setSelected={setCategory} />
+                            </div>
+                        </div>
+                        <div className="flex flex-col md:flex-row md:justify-between h-1/5">
                             <span className="w-1/3">Name</span>
                             <input
                                 id="name"
                                 name="name"
-                                className="w-full md:w-2/3 border rounded text-center text-sm md:text-base focus:ring-1 focus:ring-purple focus:outline-none"
+                                className="w-full md:w-2/3 py-0.5 border rounded text-center text-sm md:text-base focus:ring-1 focus:ring-purple focus:outline-none"
                                 type="text"
                                 placeholder="Product Name"
-                                value={product.name}
-                                onChange={e => handleChange(e)}
+                                value={name}
+                                onChange={e => setName(e.target.value)}
                             />
                         </div>
                         <div className="flex flex-col md:flex-row md:justify-between h-1/5">
@@ -56,27 +58,25 @@ export default function Products({ category }: Props) {
                             <input
                                 id="Description"
                                 name="description"
-                                className="w-full md:w-2/3 border rounded text-center text-sm md:text-base focus:ring-1 focus:ring-purple focus:outline-none"
+                                className="w-full md:w-2/3 py-0.5 border rounded text-center text-sm md:text-base focus:ring-1 focus:ring-purple focus:outline-none"
                                 type="text"
                                 placeholder="Product Description"
-                                value={product.description}
-                                onChange={e => handleChange(e)}
+                                value={description}
+                                onChange={e => setDescription(e.target.value)}
                             />
                         </div>
                         <div className="flex flex-col md:flex-row md:justify-between h-1/5">
                             <span className="w-1/3">Price</span>
                             <NumberFormat
-                                className="w-full md:w-2/3 border rounded text-center text-sm md:text-base focus:ring-1 focus:ring-purple focus:outline-none"
-                                value={product.price}
+                                className="w-full md:w-2/3 py-0.5 border rounded text-center text-sm md:text-base focus:ring-1 focus:ring-purple focus:outline-none"
+                                value={price}
                                 prefix="$"
                                 type="text"
                                 thousandSeparator={true}
                                 displayType="input"
                                 onValueChange={(values) => {
                                     const { formattedValue, value } = values
-                                    var data = { ...product }
-                                    data.price = formattedValue
-                                    setProduct(data)
+                                    setPrice(formattedValue)
                                 }}
                                 placeholder="Product Price"
                                 isAllowed={priceLimit}
@@ -87,11 +87,11 @@ export default function Products({ category }: Props) {
                             <input
                                 id="quantity"
                                 name="quantity"
-                                className="w-full md:w-2/3 border rounded text-center text-sm md:text-base focus:ring-1 focus:ring-purple focus:outline-none"
+                                className="w-full md:w-2/3 py-0.5 border rounded text-center text-sm md:text-base focus:ring-1 focus:ring-purple focus:outline-none"
                                 type="number"
                                 placeholder="Product Quantity"
-                                value={product.quantity}
-                                onChange={e => handleChange(e)}
+                                value={quantity}
+                                onChange={e => setQuantity(e.target.value)}
                             />
                         </div>
                         <div className="flex flex-col md:flex-row md:justify-between">
@@ -112,11 +112,20 @@ export default function Products({ category }: Props) {
 }
 
 export async function getServerSideProps() {
-    try {
-        const response = await axiosInstance.get("/api/category/1947480752")
+    const response = await axiosInstance.get("/api/category/1947480752")
+    const categoryNames = _.map(response.data, (category) => {
+        return ({
+            id: category.id,
+            name: category.name
+        })
+    })
 
-    } catch (error) {
-
+    if (categoryNames) {
+        return {
+            props: {
+                categoryNames: categoryNames
+            }
+        }
     }
     return {
         props: {}

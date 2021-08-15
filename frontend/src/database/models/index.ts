@@ -46,4 +46,4 @@ Note.belongsTo(Payment, { foreignKey: "paymentID" })
 Address.belongsTo(User, { foreignKey: "userID" })
 Address.hasMany(Payment, { sourceKey: "id", foreignKey: "addressID" })
 
-export { Shop, Category, Product, User, Address, Order, Cart, Payment, Voucher, VoucherUser, Chat, Note }
+export default { Shop, Category, Product, User, Address, Order, Cart, Payment, Voucher, VoucherUser, Chat, Note }

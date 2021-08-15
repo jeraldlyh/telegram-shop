@@ -42,7 +42,7 @@ function ImageSelector({ images, setImages, onChange }: Props) {
                         {errors.maxFileSize && <span>Selected file size exceed maxFileSize</span>}
                         {errors.resolution && <span>Selected file is not match your desired resolution</span>}
                         <button
-                            className="border border-gray-400"
+                            className="border rounded"
                             style={isDragging ? { color: "red" } : undefined}
                             onClick={onImageUpload}
                             {...dragProps}
@@ -54,7 +54,7 @@ function ImageSelector({ images, setImages, onChange }: Props) {
                         {
                             imageList && imageList.length === 0
                                 ? <button
-                                    className="border border-gray-400"
+                                    className="border rounded"
                                     style={isDragging ? { color: "red" } : undefined}
                                     onClick={onImageUpload}
                                     {...dragProps}
