@@ -1,5 +1,5 @@
 const Template = require("../template")
-const Database = require("../../database/actions")
+const Database = require("../database/actions")
 const _ = require("lodash")
 
 

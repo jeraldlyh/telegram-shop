@@ -1,4 +1,4 @@
-const { Shop, Category, Product, User, Address, Voucher } = require("../../database/models")
+const { Shop, Category, Product, User, Address, Voucher } = require("../database/models")
 const faker = require("faker")
 const _ = require("lodash")
 

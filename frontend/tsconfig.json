@@ -1,6 +1,8 @@
 {
     "compilerOptions": {
         "target": "es5",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
         "lib": [
             "dom",
             "dom.iterable",
@@ -18,12 +20,14 @@
         "isolatedModules": true,
         "jsx": "preserve",
         "baseUrl": ".",
-        "paths": {}
+        "paths": {
+            "@/database/*": ["src/database/*"]
+        },
     },
     "include": [
         "next-env.d.ts",
         "**/*.ts",
-        "**/*.tsx"
+        "**/*.tsx",
     ],
     "exclude": [
         "node_modules"

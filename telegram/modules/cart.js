@@ -1,5 +1,5 @@
 const Utils = require("../utils")
-const Database = require("../../database/actions")
+const Database = require("../database/actions")
 const Template = require("../template")
 
 
