@@ -3,7 +3,7 @@ const Product = require("../modules/product")
 const Cart = require("../modules/cart")
 const Utils = require("../utils")
 const _ = require("lodash")
-const Database = require("../../database/actions")
+const Database = require("../database/actions")
 const Template = require("../template")
 
 

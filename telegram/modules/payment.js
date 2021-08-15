@@ -1,4 +1,4 @@
-const Database = require("../../database/actions")
+const Database = require("../database/actions")
 
 
 module.exports = {

@@ -1,6 +1,6 @@
 const _ = require("lodash")
 const { Markup } = require("telegraf")
-const Database = require("../../database/actions")
+const Database = require("../database/actions")
 const Utils = require("../utils")
 const Template = require("../template")
 
