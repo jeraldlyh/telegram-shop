@@ -1,12 +1,12 @@
-import React, { useState, Fragment, useEffect } from "react"
+import React, { useState } from "react"
 import Image from "next/image"
 import _ from "lodash"
+import axiosInstance from "../axios/axiosInstance"
 import NumberFormat from "react-number-format"
+import { FiMinus, FiPlus } from "react-icons/fi"
 import Card from "./components/card"
 import ImageSelector from "./components/form/imageSelector"
-import axiosInstance from "../axios/axiosInstance"
 import ListBox from "./components/form/listBox"
-import { FiMinus, FiPlus } from "react-icons/fi"
 
 
 type Props = {
@@ -20,7 +20,6 @@ export default function Products({ categoryNames }: Props) {
     const [images, setImages] = useState<any[]>([])
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
-    const [imageURL, setImageURL] = useState("")
     const [price, setPrice] = useState("")
     const [quantity, setQuantity] = useState("")
     const [category, setCategory] = useState(categoryNames[0])
@@ -29,14 +28,24 @@ export default function Products({ categoryNames }: Props) {
 
     const onChange = (imageList: any, addUpdateIndex: any) => {
         setImages(imageList)
+        console.log(imageList)
     }
 
-    useEffect(() => {
-        if (images && images.length !== 0) {
-            console.log(images[0]["data_url"])
-            setImageURL(images[0]["data_url"])
+    const handleUpload = async () => {
+        try {
+            const file = {
+                name: `shop-${name}`,
+                data: images[0]["data_url"],
+                type: images[0]["file"]["type"],
+            }
+
+            const response = await axiosInstance.post("api/product", file)
+            console.log(response)
+        } catch (error) {
+            console.log(error)
         }
-    }, [images])
+
+    }
 
     return (
         <Card>
@@ -141,6 +150,7 @@ export default function Products({ categoryNames }: Props) {
                             </div>
                         </div>
                     </div>
+                    <button onClick={handleUpload}>test</button>
                 </div>
             </div>
         </Card>

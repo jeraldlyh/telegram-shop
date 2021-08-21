@@ -11,6 +11,7 @@
     "dependencies": {
         "@headlessui/react": "^1.4.0",
         "@tailwindcss/line-clamp": "^0.2.1",
+        "aws-sdk": "^2.973.0",
         "axios": "^0.21.1",
         "classnames": "^2.2.6",
         "dotenv": "^10.0.0",
@@ -19,7 +20,6 @@
         "pg": "^8.7.1",
         "pg-hstore": "^2.3.4",
         "react": "17.0.2",
-        "react-chat-elements": "^10.15.0",
         "react-dom": "17.0.2",
         "react-icons": "^4.2.0",
         "react-images-uploading": "^3.1.3",
