@@ -24,6 +24,9 @@ function ImageSelector({ images, setImages, onChange }: Props) {
             dataURLKey="data_url"
             onError={(error, files) => onError()}
             acceptType={["jpg", "png"]}
+            resolutionHeight={480}
+            resolutionWidth={640}
+            resolutionType="less"
         >
             {({
                 imageList,
@@ -40,7 +43,7 @@ function ImageSelector({ images, setImages, onChange }: Props) {
                         {errors.maxNumber && <span>Number of selected images exceed maxNumber</span>}
                         {errors.acceptType && <span>Your selected file type is not allow</span>}
                         {errors.maxFileSize && <span>Selected file size exceed maxFileSize</span>}
-                        {errors.resolution && <span>Selected file is not match your desired resolution</span>}
+                        {errors.resolution && <span>The image should be 640x480px!</span>}
                         <button
                             className="border rounded"
                             style={isDragging ? { color: "red" } : undefined}

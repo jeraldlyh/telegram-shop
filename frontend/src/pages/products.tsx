@@ -115,8 +115,8 @@ export default function Products({ categoryNames }: Props) {
                         <div className="flex flex-col p-8 rounded-lg bg-gray-800 bg-opacity-40 h-full ">
                             {
                                 images && images.length !== 0
-                                    ? <Image src={images[0]["data_url"]} alt="" width="100%" height="100%" layout="fixed" />
-                                    : <Image src="/download.png" alt="" width="100%" height="100%" layout="fixed" />
+                                    ? <Image src={images[0]["data_url"]} alt="" width={250} height={150} layout="fixed" />
+                                    : <Image src="/download.png" alt="" width={250} height={150} layout="fixed" />
                             }
                             <span className="underline font-semibold">{name ? name : "This is your product name"}</span>
                             <br />
