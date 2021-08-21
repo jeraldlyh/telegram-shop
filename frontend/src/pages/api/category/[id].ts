@@ -3,7 +3,6 @@ import Database from "@/database/actions"
 import _ from "lodash"
 
 
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { query: { id }, method, body } = req
 

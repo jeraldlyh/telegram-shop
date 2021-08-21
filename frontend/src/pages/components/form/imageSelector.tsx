@@ -5,8 +5,8 @@ import ImageUploading from "react-images-uploading"
 
 
 type Props = {
-    images: [],
-    setImages: React.Dispatch<React.SetStateAction<[]>>,
+    images: object[],
+    setImages: React.Dispatch<React.SetStateAction<object[]>>,
     onChange: (imageList: any, addUpdateIndex: any) => void,
 }
 
@@ -65,9 +65,9 @@ function ImageSelector({ images, setImages, onChange }: Props) {
                         }
                         {
                             imageList.map((image, index) => (
-                                <div key={index} className="flex flex-col">
-                                    <Image src={image["data_url"]} alt="" width="100%" height="100%" layout="responsive" />
-                                    <div className="flex mt-3 justify-around">
+                                <div key={index} className="flex flex-col items-center border rounded p-3">
+                                    <Image className="flex" src={image["data_url"]} alt="" width="100%" height="100%" layout="fixed" />
+                                    <div className="flex w-full mt-3 justify-around">
                                         <Button text="Update" inverse={false} onClick={() => onImageUpdate(index)} />
                                         <Button text="Remove" inverse={true} onClick={() => onImageRemove(index)} />
                                     </div>

@@ -1,10 +1,12 @@
 import React, { useState, Fragment, useEffect } from "react"
+import Image from "next/image"
 import _ from "lodash"
 import NumberFormat from "react-number-format"
 import Card from "./components/card"
 import ImageSelector from "./components/form/imageSelector"
 import axiosInstance from "../axios/axiosInstance"
 import ListBox from "./components/form/listBox"
+import { FiMinus, FiPlus } from "react-icons/fi"
 
 
 type Props = {
@@ -15,10 +17,10 @@ type Props = {
 }
 
 export default function Products({ categoryNames }: Props) {
-    const [images, setImages] = useState<[]>([])
+    const [images, setImages] = useState<any[]>([])
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
-    const [image, setImage] = useState("")
+    const [imageURL, setImageURL] = useState("")
     const [price, setPrice] = useState("")
     const [quantity, setQuantity] = useState("")
     const [category, setCategory] = useState(categoryNames[0])
@@ -29,19 +31,26 @@ export default function Products({ categoryNames }: Props) {
         setImages(imageList)
     }
 
+    useEffect(() => {
+        if (images && images.length !== 0) {
+            console.log(images[0]["data_url"])
+            setImageURL(images[0]["data_url"])
+        }
+    }, [images])
+
     return (
         <Card>
             <div className="flex flex-col h-full">
-                <span className="mb-5 font-bold text-lg">Upload Product</span>
                 <div className="flex flex-col w-full h-full space-y-3 md:flex-row md:space-x-3 md:space-y-0">
                     <div className="flex flex-col w-full md:w-1/2 space-y-4 h-full">
-                        <div className="flex flex-col md:flex-row md:justify-between h-1/5">
+                        <span className="mb-5 font-bold text-lg">Upload Product</span>
+                        <div className="flex flex-col md:flex-row md:justify-between">
                             <span className="w-1/3">Category</span>
                             <div className="w-full md:w-2/3 text-sm md:text-base">
                                 <ListBox data={categoryNames} selected={category} setSelected={setCategory} />
                             </div>
                         </div>
-                        <div className="flex flex-col md:flex-row md:justify-between h-1/5">
+                        <div className="flex flex-col md:flex-row md:justify-between">
                             <span className="w-1/3">Name</span>
                             <input
                                 id="name"
@@ -53,19 +62,19 @@ export default function Products({ categoryNames }: Props) {
                                 onChange={e => setName(e.target.value)}
                             />
                         </div>
-                        <div className="flex flex-col md:flex-row md:justify-between h-1/5">
+                        <div className="flex flex-col md:flex-row md:justify-between">
                             <span className="w-1/3">Description</span>
                             <input
                                 id="Description"
                                 name="description"
-                                className="w-full md:w-2/3 py-0.5 border rounded text-center text-sm md:text-base focus:ring-1 focus:ring-purple focus:outline-none"
+                                className="w-full md:w-2/3 py-0.5 border rounded whitespace-normal text-center text-sm md:text-base focus:ring-1 focus:ring-purple focus:outline-none"
                                 type="text"
                                 placeholder="Product Description"
                                 value={description}
                                 onChange={e => setDescription(e.target.value)}
                             />
                         </div>
-                        <div className="flex flex-col md:flex-row md:justify-between h-1/5">
+                        <div className="flex flex-col md:flex-row md:justify-between">
                             <span className="w-1/3">Price</span>
                             <NumberFormat
                                 className="w-full md:w-2/3 py-0.5 border rounded text-center text-sm md:text-base focus:ring-1 focus:ring-purple focus:outline-none"
@@ -82,7 +91,7 @@ export default function Products({ categoryNames }: Props) {
                                 isAllowed={priceLimit}
                             />
                         </div>
-                        <div className="flex flex-col md:flex-row md:justify-between h-1/5">
+                        <div className="flex flex-col md:flex-row md:justify-between">
                             <span className="w-1/3">Quantity</span>
                             <input
                                 id="quantity"
@@ -97,13 +106,40 @@ export default function Products({ categoryNames }: Props) {
                         <div className="flex flex-col md:flex-row md:justify-between">
                             <span className="w-1/3">Image</span>
                             <div className="flex flex-col w-full md:w-2/3 text-sm md:text-base">
-                                <ImageSelector images={images} setImages={setImages} onChange={onChange}
-                                />
+                                <ImageSelector images={images} setImages={setImages} onChange={onChange} />
                             </div>
                         </div>
                     </div>
                     <div className="flex flex-col w-full md:w-1/2">
-                        <span className="font-semibold">Telegram Message Preview</span>
+                        <span className="mb-5 font-bold text-lg">Telegram Message Preview</span>
+                        <div className="flex flex-col p-8 rounded-lg bg-gray-800 bg-opacity-40 h-full ">
+                            {
+                                images && images.length !== 0
+                                    ? <Image src={images[0]["data_url"]} alt="" width="100%" height="100%" layout="fixed" />
+                                    : <Image src="/download.png" alt="" width="100%" height="100%" layout="fixed" />
+                            }
+                            <span className="underline font-semibold">{name ? name : "This is your product name"}</span>
+                            <br />
+                            <span className="line-clamp-8 whitespace-normal italic break-words text-sm">{description ? description : "This is a description of your product"}</span>
+                            <br />
+                            <span>
+                                Price: <NumberFormat
+                                    value={price ? price : "0"}
+                                    prefix="$"
+                                    type="text"
+                                    displayType="text"
+                                    thousandSeparator={true}
+                                />
+                            </span>
+                            <span>Available Quantity: {quantity ? quantity : 0}</span>
+                            <div className="flex flex-col space-y-2">
+                                <div className="flex space-x-2">
+                                    <span className="flex py-2 rounded-lg items-center justify-center bg-gray-800 bg-opacity-25 w-1/2"><FiMinus />Remove</span>
+                                    <span className="flex py-2 rounded-lg items-center justify-center  bg-gray-800 bg-opacity-25 w-1/2"><FiPlus />Add</span>
+                                </div>
+                                <span className="text-center py-2 rounded-lg items-center justify-center bg-gray-800 bg-opacity-25">Quantity: 0</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

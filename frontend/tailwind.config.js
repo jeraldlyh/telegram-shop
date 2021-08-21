@@ -13,11 +13,19 @@ module.exports = {
             },
             boxShadow: {
                 sidebar: "0 0 10px 1px rgba(115, 103, 240, 0.7)",
-            }
+            },
+            lineClamp: {
+                7: "7",
+                8: "8",
+                9: "9",
+                10: "10",
+            },
         },
     },
     variants: {
         extend: {},
     },
-    plugins: [],
+    plugins: [
+        require("@tailwindcss/line-clamp"),
+    ],
 }

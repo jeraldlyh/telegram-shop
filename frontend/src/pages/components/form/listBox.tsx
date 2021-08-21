@@ -1,8 +1,8 @@
-import { Fragment, useState } from "react"
 import { Listbox, Transition } from "@headlessui/react"
 import classNames from "classnames"
 import { AiOutlineCheck } from "react-icons/ai"
 import { RiArrowUpDownFill } from "react-icons/ri"
+
 
 type Props = {
     data: [{
