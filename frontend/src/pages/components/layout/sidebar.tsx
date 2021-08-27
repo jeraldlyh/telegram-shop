@@ -1,5 +1,5 @@
 import classNames from "classnames"
-import { AiOutlineClose } from "react-icons/ai"
+import { AiOutlineClose, AiOutlineShoppingCart, AiFillSetting, AiOutlineUser, AiOutlineInbox, AiOutlineSkin } from "react-icons/ai"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import { FiArrowRightCircle, FiLogOut } from "react-icons/fi"
@@ -47,7 +47,7 @@ const Sidebar = ({ collapsed }: Props) => {
 					<Menu iconShape="square">
 						<MenuItem
 							className={background("orders")}
-							icon={<AiOutlineClose />}
+							icon={<AiOutlineShoppingCart />}
 						>
 							<Link href="/orders">
 								<span className={text("orders")}>Orders</span>
@@ -55,7 +55,7 @@ const Sidebar = ({ collapsed }: Props) => {
 						</MenuItem>
 						<MenuItem
 							className={background("customers")}
-							icon={<AiOutlineClose />}
+							icon={<AiOutlineUser />}
 						>
 							<Link href="/customers">
 								<span className={text("customers")}>Customers</span>
@@ -63,7 +63,7 @@ const Sidebar = ({ collapsed }: Props) => {
 						</MenuItem>
 						<MenuItem
 							className={background("categories")}
-							icon={<AiOutlineClose />}
+							icon={<AiOutlineInbox />}
 						>
                             <Link href="/categories">
 								<span className={text("categories")}>Categories</span>
@@ -71,7 +71,7 @@ const Sidebar = ({ collapsed }: Props) => {
 						</MenuItem>
 						<MenuItem
 							className={background("products")}
-							icon={<AiOutlineClose />}
+							icon={<AiOutlineSkin />}
 						>
 							<Link href="/products">
 								<span className={text("products")}>Products</span>
@@ -79,7 +79,7 @@ const Sidebar = ({ collapsed }: Props) => {
 						</MenuItem>
                         <MenuItem
 							className={background("Settings")}
-							icon={<AiOutlineClose />}
+							icon={<AiFillSetting />}
 						>
 							<Link href="/settings">
 								<span className={text("settings")}>Settings</span>
