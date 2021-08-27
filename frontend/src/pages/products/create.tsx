@@ -1,12 +1,12 @@
 import React, { useState } from "react"
 import Image from "next/image"
 import _ from "lodash"
-import axiosInstance from "../axios/axiosInstance"
+import axiosInstance from "../../axios/axiosInstance"
 import NumberFormat from "react-number-format"
 import { FiMinus, FiPlus } from "react-icons/fi"
-import Card from "./components/card"
-import ImageSelector from "./components/form/imageSelector"
-import ListBox from "./components/form/listBox"
+import Card from "../components/card"
+import ImageSelector from "../components/form/imageSelector"
+import ListBox from "../components/form/listBox"
 
 
 type Props = {
