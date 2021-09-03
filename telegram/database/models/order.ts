@@ -1,15 +1,22 @@
-const { Sequelize, DataTypes } = require("sequelize")
-const db = require("../index")
-const User = require("./user")
-const Shop = require("./shop")
+import { DataTypes, Model, Optional } from "sequelize"
+import sequelize from "../index"
+import User from "./user"
+import Shop from "./shop"
+import { OrderAttributes } from "database/interfaces"
 
 
-const Order = db.define(
+interface OrderCreationAttributes extends Optional<OrderAttributes, "id"> { }
+interface OrderInstance extends Model<OrderAttributes, OrderCreationAttributes>, OrderAttributes {
+    createdAt?: Date,
+    updatedAt?: Date,
+}
+
+const Order = sequelize.define<OrderInstance>(
     "Order",
     {
         id: {
             type: DataTypes.UUID,
-            defaultValue: Sequelize.UUIDV4,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
             allowNull: false,
         },
@@ -28,7 +35,7 @@ const Order = db.define(
             },
         },
         status: {
-            type: Sequelize.ENUM,
+            type: DataTypes.ENUM,
             values: ["PENDING", "COMPLETED"],
             defaultValue: "PENDING",
             allowNull: false
@@ -39,4 +46,4 @@ const Order = db.define(
     }
 )
 
-module.exports = Order
+export default Order

@@ -1,14 +1,21 @@
-const { Sequelize, DataTypes, Deferrable } = require("sequelize")
-const db = require("../index")
-const Category = require("./category")
+import { DataTypes, Deferrable, Model, Optional } from "sequelize"
+import { ProductAttributes } from "database/interfaces"
+import sequelize from "../index"
+import Category from "./category"
 
 
-const Product = db.define(
+interface ProductCreationAttributes extends Optional<ProductAttributes, "id"> { }
+interface ProductInstance extends Model<ProductAttributes, ProductCreationAttributes>, ProductAttributes {
+    createdAt?: Date,
+    updatedAt?: Date,
+}
+
+const Product = sequelize.define<ProductInstance>(
     "Product",
     {
         id: {
             type: DataTypes.UUID,
-            defaultValue: Sequelize.UUIDV4,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
             allowNull: false,
         },
@@ -22,7 +29,7 @@ const Product = db.define(
         },
         image: {
             type: DataTypes.STRING(200),
-            allowNull: null,
+            allowNull: false,
         },
         price: {
             type: DataTypes.DECIMAL(10, 2),
@@ -46,4 +53,4 @@ const Product = db.define(
     }
 )
 
-module.exports = Product
+export default Product
