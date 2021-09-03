@@ -1,6 +1,6 @@
 import Models from "../models"
 import { Op } from "sequelize"
-import moment from "moment"
+import moment from "moment-timezone"
 
 
 module.exports = {
@@ -103,9 +103,9 @@ module.exports = {
                 }]
             }]
         })
-        return data ? data.toJSON().Categories[0].Products : null
+        return data && data.Categories ? data.Categories[0].Products : null
     },
-    getPendingCartByShopID: async function (shopID, userID) {
+    getPendingCartByShopID: async function (shopID: string, userID: string) {
         const data = await Models.Shop.findOne({
             where: { botID: shopID },
             include: [{
@@ -127,9 +127,9 @@ module.exports = {
                 }]
             }]
         })
-        return data.Categories
+        return data ? data.Categories : null
     },
-    getVoucherByCode: async function (shopID, voucherCode) {
+    getVoucherByCode: async function (shopID: string, voucherCode: string) {
         return await Models.Voucher.findOne({
             where: {
                 shopID: shopID,
@@ -141,27 +141,27 @@ module.exports = {
             }]
         })
     },
-    createVoucherUser: async function (userID, voucherID) {
+    createVoucherUser: async function (userID: string, voucherID: string) {
         return await Models.VoucherUser.create({
             voucherID: voucherID,
             isClaimed: true,
             userID: userID
         })
     },
-    createNewPayment: async function (orderID, addressID, deliveryDate) {
+    createNewPayment: async function (orderID: string, addressID: string, deliveryDate: string) {
         return await Models.Payment.create({
             orderID: orderID,
             addressID: addressID,
             deliveryDate: deliveryDate,
         })
     },
-    createNewNote: async function (paymentID, text) {
+    createNewNote: async function (paymentID: string, text: string) {
         return await Models.Note.create({
             paymentID: paymentID,
             text: text,
         })
     },
-    getAddress: async function (userID, orderDetails) {
+    getAddress: async function (userID: string, orderDetails: any) { // TODO: Implement interface for orderDetails
         return await Models.Address.findOne({
             where: {
                 userID: userID,
@@ -174,7 +174,7 @@ module.exports = {
             }
         })
     },
-    createAddress: async function (userID, orderDetails) {
+    createAddress: async function (userID: string, orderDetails: any) {
         return await Models.Address.create({
             userID: userID,
             addressLineOne: orderDetails.lineOne,
@@ -185,27 +185,27 @@ module.exports = {
             mobile: orderDetails.mobile
         })
     },
-    getShopByID: async function (shopID) {
+    getShopByID: async function (shopID: string) {
         return await Models.Shop.findOne({
             where: {
                 botID: shopID
             }
         })
     },
-    getUserByID: async function (userID) {
+    getUserByID: async function (userID: string) {
         return await Models.User.findOne({
             where: {
                 telegramID: userID,
             }
         })
     },
-    createUser: async function (telegramID, name) {
+    createUser: async function (telegramID: string, name: string) {
         return await Models.User.create({
             telegramID: telegramID,
             name: name,
         })
     },
-    getChat: async function (shopID, userID) {
+    getChat: async function (shopID: string, userID: string) {
         return await Models.Chat.findOne({
             where: {
                 shopID: shopID,
@@ -213,14 +213,14 @@ module.exports = {
             }
         })
     },
-    createChat: async function (shopID, userID, chatID) {
+    createChat: async function (shopID: number, userID: string, chatID: number) {
         return await Models.Chat.create({
             shopID: shopID,
             userID: userID,
             chatID: chatID,
         })
     },
-    getExpiredOrders: async function (minutes) {
+    getExpiredOrders: async function (minutes: number) {
         const before = moment().subtract(minutes, "minutes").tz("Asia/Singapore").format("YYYY-MM-DD HH:mm:ss")
         return await Models.Order.findAll({
             where: {
@@ -232,7 +232,7 @@ module.exports = {
             }
         })
     },
-    deleteExpiredOrders: async function (minutes) {
+    deleteExpiredOrders: async function (minutes: number) {
         console.log("deleting nowww")
         const before = moment().subtract(minutes, "minutes").tz("Asia/Singapore").format("YYYY-MM-DD HH:mm:ss")
         const amount = await Models.Order.destroy({

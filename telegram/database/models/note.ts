@@ -1,13 +1,8 @@
 import { DataTypes, Deferrable, Model, Optional } from "sequelize"
+import { NoteAttributes } from "database/interfaces"
 import sequelize from "../index"
 import Payment from "./payment"
 
-
-interface NoteAttributes {
-    id: string,
-    paymentID: string,
-    text: string,
-}
 
 interface NoteCreationAttributes extends Optional<NoteAttributes, "id"> { }
 interface NoteInstance extends Model<NoteAttributes, NoteCreationAttributes>, NoteAttributes {
