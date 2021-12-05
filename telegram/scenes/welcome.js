@@ -8,7 +8,8 @@ const welcomeScene = new Scenes.BaseScene("WELCOME_SCENE")
 welcomeScene.enter(async (ctx) => {
     Utils.initializeScene(ctx)
     Utils.sendSystemMessage(ctx, Template.welcomeMessage(ctx.botInfo.first_name), Template.welcomeMenuButtons())
-    Utils.sendSystemMessage(ctx, Template.voucherMessage(Voucher.generateVoucher(ctx))) 
+    const voucherCode = await Voucher.generateVoucher(ctx)
+    Utils.sendSystemMessage(ctx, Template.voucherMessage(voucherCode)) 
 })
 
 welcomeScene.on("message", async (ctx) => {

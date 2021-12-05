@@ -2,9 +2,13 @@
 > TeleShop is an e-commerce application that has an integration built between Telegram and web app. It uses Telegram as a client to serve customers, while the web app acts as a CRM system for shop owners to manage their shop.
 
 ## Table of Contents
-  - [Table of Contents](#table-of-contents)
+  - [Demo](#demo)
   - [Features](#features)
   - [Improvements](#improvements)
+  - [Deployment](#deployment)
+
+## Demo
+Demo can be found on Telegram via @teleshop_beta_bot. Note that the responses might be slow due to Heroku's web dyno sleeping, do wait for a couple of seconds for the bot to respond!
 
 ## Features
 | Feature          | Description                                                                                                                        |      Released      |
