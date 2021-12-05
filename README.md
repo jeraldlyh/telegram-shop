@@ -8,7 +8,9 @@
   - [Deployment](#deployment)
 
 ## Demo
-Demo can be found on Telegram via @teleshop_beta_bot. A dummy [visa card](https://stripe.com/docs/testing#charges-api) can be used for testing of the payment - 4242 4242 4242 4242 in Telegram.  Note that the responses might be slow due to Heroku's web dyno sleeping, do wait for a couple of seconds for the bot to respond! 
+Demo can be found on Telegram via @teleshop_beta_bot. A dummy [visa card](https://stripe.com/docs/testing#charges-api) can be used for testing of the payment - 4242 4242 4242 4242 in Telegram.
+
+<i>Note that the responses might be slow due to Heroku's web dyno sleeping, do wait for a couple of seconds for the bot to respond! </i>
 
 ## Features
 | Feature          | Description                                                                                                                        |      Released      |
