@@ -8,7 +8,7 @@
   - [Deployment](#deployment)
 
 ## Demo
-Demo can be found on Telegram via @teleshop_beta_bot. Note that the responses might be slow due to Heroku's web dyno sleeping, do wait for a couple of seconds for the bot to respond!
+Demo can be found on Telegram via @teleshop_beta_bot. A dummy [visa card](https://stripe.com/docs/testing#charges-api) can be used for testing of the payment - 4242 4242 4242 4242 in Telegram.  Note that the responses might be slow due to Heroku's web dyno sleeping, do wait for a couple of seconds for the bot to respond! 
 
 ## Features
 | Feature          | Description                                                                                                                        |      Released      |
@@ -28,6 +28,8 @@ Demo can be found on Telegram via @teleshop_beta_bot. Note that the responses mi
 - Currently, the bot is being deployed via a hacky way using Express.js while running Telegraf in the background. For production usage, optimise by changing to [webhooks](https://telegraf.js.org/#webhooks).
 
 ## Deployment
+#### Database Desigh
+Database design can be found [here](https://whimsical.com/teleshop-Szdq8aQ3RP5FN9ZVbHbpK).
 #### Environment Variables
 | Name             | Description                                                                                               |
 | ---------------- | --------------------------------------------------------------------------------------------------------- |
