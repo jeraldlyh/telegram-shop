@@ -15,8 +15,8 @@ module.exports = {
     },
     createOrder: async function (userID, shopID) {
         return await Models.Order.create({
-            userID: userID,
-            shopID: shopID,
+            userID: String(userID),
+            shopID: String(shopID),
         })
     },
     createCart: async function (orderID, productID, quantity) {
@@ -36,11 +36,11 @@ module.exports = {
     },
     getPendingOrderByUser: async function (shopID, userID) {
         const data = await Models.Shop.findOne({
-            where: { botID: shopID },
+            where: { botID: String(shopID) },
             include: [{
                 model: Models.Order,
                 where: {
-                    userID: userID,
+                    userID: String(userID),
                     status: { [Op.eq]: "PENDING" }
                 }
             }]
@@ -49,7 +49,7 @@ module.exports = {
     },
     getProductByName: async function (shopID, productName) {
         const data = await Models.Category.findOne({
-            where: { shopID: shopID },
+            where: { shopID: String(shopID) },
             include: [{
                 model: Models.Product,
                 where: { name: productName }
@@ -61,7 +61,7 @@ module.exports = {
         const data = await Models.Category.findOne({
             where: {
                 name: categoryName,
-                shopID: shopID,
+                shopID: String(shopID),
             },
             include: [{
                 model: Models.Product,
@@ -71,7 +71,7 @@ module.exports = {
     },
     getCategoryByShop: async function (shopID) {
         return await Models.Shop.findOne({
-            where: { botID: shopID },
+            where: { botID: String(shopID) },
             include: [{
                 model: Models.Category,
                 include: [{
@@ -82,7 +82,7 @@ module.exports = {
     },
     getPendingCartByCategory: async function (shopID, categoryName, userID) {
         const data = await Models.Shop.findOne({
-            where: { botID: shopID },
+            where: { botID: String(shopID) },
             include: [{
                 model: Models.Category,
                 where: { name: categoryName },
@@ -91,7 +91,7 @@ module.exports = {
                     include: [{
                         model: Models.Order,
                         where: {
-                            userID: userID,
+                            userID: String(userID),
                             status: "PENDING",
                         },
                         required: true,
@@ -107,7 +107,7 @@ module.exports = {
     },
     getPendingCartByShopID: async function (shopID, userID) {
         const data = await Models.Shop.findOne({
-            where: { botID: shopID },
+            where: { botID: String(shopID) },
             include: [{
                 model: Models.Category,
                 include: [{
@@ -115,7 +115,7 @@ module.exports = {
                     include: [{
                         model: Models.Order,
                         where: {
-                            userID: userID,
+                            userID: String(userID),
                             status: "PENDING",
                         },
                         required: true,
@@ -132,7 +132,7 @@ module.exports = {
     getVoucherByCode: async function (shopID, voucherCode) {
         return await Models.Voucher.findOne({
             where: {
-                shopID: shopID,
+                shopID: String(shopID),
                 code: voucherCode,
                 isValid: true
             },
@@ -145,7 +145,7 @@ module.exports = {
         return await Models.VoucherUser.create({
             voucherID: voucherID,
             isClaimed: true,
-            userID: userID
+            userID: String(userID)
         })
     },
     createNewPayment: async function (orderID, addressID, deliveryDate) {
@@ -164,7 +164,7 @@ module.exports = {
     getAddress: async function (userID, orderDetails) {
         return await Models.Address.findOne({
             where: {
-                userID: userID,
+                userID: String(userID),
                 addressLineOne: orderDetails.lineOne,
                 addressLineTwo: orderDetails.lineTwo,
                 city: orderDetails.city,
@@ -176,7 +176,7 @@ module.exports = {
     },
     createAddress: async function (userID, orderDetails) {
         return await Models.Address.create({
-            userID: userID,
+            userID: String(userID),
             addressLineOne: orderDetails.lineOne,
             addressLineTwo: orderDetails.lineTwo,
             city: orderDetails.city,
@@ -195,7 +195,7 @@ module.exports = {
     getUserByID: async function (userID) {
         return await Models.User.findOne({
             where: {
-                telegramID: userID,
+                telegramID: String(userID),
             }
         })
     },
@@ -208,15 +208,15 @@ module.exports = {
     getChat: async function (shopID, userID) {
         return await Models.Chat.findOne({
             where: {
-                shopID: shopID,
-                userID: userID,
+                shopID: String(shopID),
+                userID: String(userID),
             }
         })
     },
     createChat: async function (shopID, userID, chatID) {
         return await Models.Chat.create({
-            shopID: shopID,
-            userID: userID,
+            shopID: String(shopID),
+            userID: String(userID),
             chatID: chatID,
         })
     },
