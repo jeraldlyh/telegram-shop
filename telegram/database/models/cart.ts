@@ -1,9 +1,14 @@
 import { DataTypes, Deferrable, Model } from "sequelize"
-import { CartAttributes } from "database/interfaces"
 import sequelize from "../index"
 import Order from "./order"
 import Product from "./product"
 
+
+interface CartAttributes {
+    orderID: string,
+    productID: string,
+    quantity: number,
+}
 
 interface CartCreationAttributes extends CartAttributes { }
 interface CartInstance extends Model<CartAttributes, CartCreationAttributes>, CartAttributes {

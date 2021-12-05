@@ -1,8 +1,8 @@
 import { DataTypes, Model, Optional } from "sequelize"
-import { OrderAttributes } from "database/interfaces"
 import sequelize from "../index"
 import User from "./user"
 import Shop from "./shop"
+import { OrderAttributes } from "database/interfaces"
 
 
 interface OrderCreationAttributes extends Optional<OrderAttributes, "id"> { }

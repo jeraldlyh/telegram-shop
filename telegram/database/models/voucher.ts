@@ -1,8 +1,15 @@
-import { DataTypes, Deferrable, Model, Optional } from "sequelize"
-import { VoucherAttributes } from "database/interfaces"
+import { DataTypes, Sequelize, Deferrable, Model, Optional } from "sequelize"
 import sequelize from "../index"
 import Shop from "./shop"
 
+
+interface VoucherAttributes {
+    id: string,
+    code: string,
+    discount: number,
+    isValid: boolean,
+    shopID: string,
+}
 
 interface VoucherCreationAttributes extends Optional<VoucherAttributes, "id"> { }
 interface VoucherInstance extends Model<VoucherAttributes, VoucherCreationAttributes>, VoucherAttributes {
