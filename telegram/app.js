@@ -43,7 +43,7 @@ bot.command("voucher", async (ctx) => {
 bot.command("start", async (ctx) => {
     const shop = await Database.getShopByID(ctx.botInfo.id)
     if (!shop) {
-        if (process.env.TEST === "demo")
+        if (process.env.MODE === "demo")
             await Dummy.createDummyData(ctx)
         else
             return await Utils.sendSystemMessage(ctx, "The shop has not yet been setup!")

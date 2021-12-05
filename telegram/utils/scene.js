@@ -116,14 +116,18 @@ module.exports = {
         module.exports.cleanUpMessage(ctx, isObjectState)
     },
     cancelButtonConfirmation: async function (ctx, message, timeout) {
-        module.exports.disableWaitingStatus(ctx)
-        await ctx.editMessageText(message, Template.htmlMode())
-        ctx.session.timeout.push(setTimeout(() => {
-            ctx.deleteMessage()
-            ctx.session.cleanUpState = _.filter(ctx.session.cleanUpState, function (o) {
-                return o ? o.id !== message.id : o
-            })
-        }, timeout * 1000))
+        try {
+            module.exports.disableWaitingStatus(ctx)
+            await ctx.editMessageText(message, Template.htmlMode())
+            ctx.session.timeout.push(setTimeout(() => {
+                ctx.deleteMessage()
+                ctx.session.cleanUpState = _.filter(ctx.session.cleanUpState, function (o) {
+                    return o ? o.id !== message.id : o
+                })
+            }, timeout * 1000))
+        } catch (error) {
+            
+        }
     },
     sendCartMessage: async function (ctx, message, buttons) {
         const cart = await ctx.replyWithHTML(message, buttons)
