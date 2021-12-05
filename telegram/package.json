@@ -4,7 +4,8 @@
     "description": "",
     "main": "app.js",
     "scripts": {
-        "dev": "nodemon -r dotenv/config app.js"
+        "dev": "nodemon -r dotenv/config app.js",
+        "start": "nodemon -r dotenv/config app.js"
     },
     "dependencies": {
         "dotenv": "^10.0.0",
