@@ -3,6 +3,8 @@ const Database = require("../database/actions")
 const _ = require("lodash")
 
 
+const PRICE_LIMIT = 13725
+
 module.exports = {
     sendMessage: async function (ctx, categoryName, product, quantity) {
         return await ctx.replyWithPhoto(product.image, Template.productButtons(categoryName, product, quantity))
@@ -34,4 +36,10 @@ module.exports = {
 
         return productMessageID
     },
+    checkValidQuantity: async function (ctx, productName, quantity) {
+        const product = Database.getProductByName(ctx.botInfo.id, productName)
+        if (quantity * product.price > PRICE_LIMIT) {
+            throw `"You've exceed the price limit of ${PRICE_LIMIT}! Kindly enter a smaller quantity 😅`
+        }
+    }
 }

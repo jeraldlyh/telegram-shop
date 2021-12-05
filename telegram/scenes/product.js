@@ -114,6 +114,8 @@ productScene.on("message", async (ctx) => {
                 throw `Kindly enter a number smaller than <b>${available}</b>!`
             }
 
+            await Product.checkValidQuantity(ctx, productName, quantity)
+
             if (quantity === current) { }
             else if (quantity > current) {
                 await Cart.addProduct(ctx, productName, quantity - current)
@@ -137,7 +139,7 @@ productScene.leave(async (ctx) => {
         console.log("Clearing product scene")
         Utils.clearScene(ctx, true)
     } catch (error) {
-        
+
     }
 })
 
