@@ -1,24 +1,9 @@
-import { DataTypes, Deferrable, Model } from "sequelize"
-import sequelize from "../index"
-import User from "./user"
-import { ShopAttributes } from "database/interfaces"
+const { DataTypes, Deferrable } = require("sequelize")
+const db = require("../index")
+const User = require("./user")
 
 
-// interface ShopAttributes {
-//     botID: string,
-//     name: string,
-//     image?: string | null,
-//     botToken: string,
-//     ownerID: string
-// }
-
-interface ShopCreationAttributes extends ShopAttributes { }
-interface ShopInstance extends Model<ShopAttributes, ShopCreationAttributes>, ShopAttributes {
-    createdAt?: Date,
-    updatedAt?: Date,
-}
-
-const Shop = sequelize.define<ShopInstance>(
+const Shop = db.define(
     "Shop",
     {
         botID: {
@@ -52,4 +37,4 @@ const Shop = sequelize.define<ShopInstance>(
     }
 )
 
-export default Shop
+module.exports = Shop

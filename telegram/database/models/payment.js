@@ -1,28 +1,15 @@
-import { DataTypes, Deferrable, Model, Optional } from "sequelize"
-import sequelize from "../index"
-import Order from "./order"
-import Address from "./address"
+const { Sequelize, DataTypes, Deferrable } = require("sequelize")
+const db = require("../index")
+const Order = require("./order")
+const Address = require("./address")
 
 
-interface PaymentAttributes {
-    id: string,
-    orderID: string,
-    addressID: string,
-    deliveryDate: string,
-}
-
-interface PaymentCreationAttributes extends Optional<PaymentAttributes, "id"> { }
-interface PaymentInstance extends Model<PaymentAttributes, PaymentCreationAttributes>, PaymentAttributes {
-    createdAt?: Date,
-    updatedAt?: Date,
-}
-
-const Payment = sequelize.define<PaymentInstance>(
+const Payment = db.define(
     "Payment",
     {
         id: {
             type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4,
+            defaultValue: Sequelize.UUIDV4,
             primaryKey: true,
             allowNull: false,
         },
@@ -52,4 +39,4 @@ const Payment = sequelize.define<PaymentInstance>(
     }
 )
 
-export default Payment
+module.exports = Payment

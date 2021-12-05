@@ -1,15 +1,15 @@
-import Shop from "./shop"
-import Category from "./category"
-import Product from "./product"
-import User from "./user"
-import Address from "./address"
-import Order from "./order"
-import Cart from "./cart"
-import Payment from "./payment"
-import Voucher from "./voucher"
-import VoucherUser from "./voucherUser"
-import Chat from "./chat"
-import Note from "./note"
+const Shop = require("./shop")
+const Category = require("./category")
+const Product = require("./product")
+const User = require("./user")
+const Address = require("./address")
+const Order = require("./order")
+const Cart = require("./cart")
+const Payment = require("./payment")
+const Voucher = require("./voucher")
+const VoucherUser = require("./voucherUser")
+const Chat = require("./chat")
+const Note = require("./note")
 
 
 User.hasMany(Shop, { sourceKey: "telegramID", foreignKey: "ownerID" })
@@ -46,4 +46,4 @@ Note.belongsTo(Payment, { foreignKey: "paymentID" })
 Address.belongsTo(User, { foreignKey: "userID" })
 Address.hasMany(Payment, { sourceKey: "id", foreignKey: "addressID" })
 
-export default { Shop, Category, Product, User, Address, Order, Cart, Payment, Voucher, VoucherUser, Chat, Note }
+module.exports = { Shop, Category, Product, User, Address, Order, Cart, Payment, Voucher, VoucherUser, Chat, Note }

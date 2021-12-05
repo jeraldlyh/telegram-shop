@@ -1,28 +1,14 @@
-import { DataTypes, Sequelize, Deferrable, Model, Optional } from "sequelize"
-import sequelize from "../index"
-import Shop from "./shop"
+const { DataTypes, Sequelize, Deferrable } = require("sequelize")
+const db = require("../index")
+const Shop = require("./shop")
 
 
-interface VoucherAttributes {
-    id: string,
-    code: string,
-    discount: number,
-    isValid: boolean,
-    shopID: string,
-}
-
-interface VoucherCreationAttributes extends Optional<VoucherAttributes, "id"> { }
-interface VoucherInstance extends Model<VoucherAttributes, VoucherCreationAttributes>, VoucherAttributes {
-    createdAt?: Date,
-    updatedAt?: Date,
-}
-
-const Voucher = sequelize.define<VoucherInstance>(
+const Voucher = db.define(
     "Voucher",
     {
         id: {
             type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4,
+            defaultValue: Sequelize.UUIDV4,
             primaryKey: true,
             allowNull: false,
         },
@@ -52,4 +38,4 @@ const Voucher = sequelize.define<VoucherInstance>(
     }
 )
 
-export default Voucher
+module.exports = Voucher

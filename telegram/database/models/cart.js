@@ -1,22 +1,10 @@
-import { DataTypes, Deferrable, Model } from "sequelize"
-import sequelize from "../index"
-import Order from "./order"
-import Product from "./product"
+const { DataTypes, Deferrable } = require("sequelize")
+const db = require("../index")
+const Order = require("./order")
+const Product = require("./product")
 
 
-interface CartAttributes {
-    orderID: string,
-    productID: string,
-    quantity: number,
-}
-
-interface CartCreationAttributes extends CartAttributes { }
-interface CartInstance extends Model<CartAttributes, CartCreationAttributes>, CartAttributes {
-    createdAt?: Date,
-    updatedAt?: Date,
-}
-
-const Cart = sequelize.define<CartInstance>(
+const Cart = db.define(
     "Cart",
     {
         orderID: {
@@ -45,4 +33,4 @@ const Cart = sequelize.define<CartInstance>(
     }
 )
 
-export default Cart
+module.exports = Cart

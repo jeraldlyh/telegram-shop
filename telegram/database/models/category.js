@@ -1,21 +1,14 @@
-import { DataTypes, Deferrable, Optional, Model } from "sequelize"
-import { CategoryAttributes } from "database/interfaces"
-import sequelize from "../index"
-import Shop from "./shop"
+const { Sequelize, DataTypes, Deferrable } = require("sequelize")
+const db = require("../index")
+const Shop = require("./shop")
 
 
-interface CategoryCreationAttributes extends Optional<CategoryAttributes, "id"> { }
-interface CategoryInstance extends Model<CategoryAttributes, CategoryCreationAttributes>, CategoryAttributes {
-    createdAt?: Date,
-    updatedAt?: Date,
-}
-
-const Category = sequelize.define<CategoryInstance>(
+const Category = db.define(
     "Category",
     {
         id: {
             type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4,
+            defaultValue: Sequelize.UUIDV4,
             primaryKey: true,
             allowNull: false,
         },
@@ -25,7 +18,7 @@ const Category = sequelize.define<CategoryInstance>(
         },
         image: {
             type: DataTypes.STRING(100),
-            allowNull: false,
+            allowNull: null,
         },
         shopID: {
             type: DataTypes.INTEGER,
@@ -41,4 +34,4 @@ const Category = sequelize.define<CategoryInstance>(
     }
 )
 
-export default Category
+module.exports = Category
