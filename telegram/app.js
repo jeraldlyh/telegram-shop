@@ -1,12 +1,9 @@
 const { Telegraf, session, Scenes, Markup } = require("telegraf")
-const faker = require("faker")
 const CustomScenes = require("./scenes")
 const Dummy = require("./modules/dummy")
-const Models = require("./database/models")
 const Database = require("./database/actions")
 const Utils = require("./utils")
 const Template = require("./template")
-const Calendar = require("./modules/calendar")
 const express = require("express")
 
 
@@ -24,21 +21,9 @@ const stage = new Scenes.Stage([
 ], {
     default: CustomScenes.welcomeScene,
 })
+
 bot.use(session())
 bot.use(stage.middleware())
-
-// TO DELETE
-bot.command("voucher", async (ctx) => {
-    const shop = await Database.getShopByID(ctx.botInfo.id)
-
-    const voucher = await Models.Voucher.create({
-        code: faker.lorem.word(),
-        discount: Math.floor(Math.random() * (20 - 1 + 1) + 1),     // 1% - 20%
-        shopID: shop.toJSON().botID,
-        isValid: true,
-    })
-    ctx.reply(voucher.code)
-})
 
 bot.command("start", async (ctx) => {
     const shop = await Database.getShopByID(ctx.botInfo.id)

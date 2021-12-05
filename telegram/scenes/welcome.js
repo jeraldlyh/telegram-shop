@@ -1,13 +1,14 @@
 const { Scenes } = require("telegraf")
 const Utils = require("../utils")
 const Template = require("../template")
-
+const Voucher = require("../modules/voucher")
 
 const welcomeScene = new Scenes.BaseScene("WELCOME_SCENE")
 
 welcomeScene.enter(async (ctx) => {
     Utils.initializeScene(ctx)
     Utils.sendSystemMessage(ctx, Template.welcomeMessage(ctx.botInfo.first_name), Template.welcomeMenuButtons())
+    Utils.sendSystemMessage(ctx, Template.voucherMessage(Voucher.generateVoucher(ctx))) 
 })
 
 welcomeScene.on("message", async (ctx) => {
