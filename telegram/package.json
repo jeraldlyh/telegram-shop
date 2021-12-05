@@ -16,7 +16,6 @@
         "pg": "^8.7.1",
         "pg-hstore": "^2.3.4",
         "sequelize": "^6.6.5",
-        "telegraf": "^4.4.1",
-        "typescript": "^4.4.2"
+        "telegraf": "^4.4.1"
     }
 }
