@@ -13,7 +13,7 @@ const Address = db.define(
             allowNull: false,
         },
         userID: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING(30),
             references: {
                 model: User,
                 key: "telegramID",

@@ -21,7 +21,7 @@ const Category = db.define(
             allowNull: null,
         },
         shopID: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING(30),
             references: {
                 model: Shop,
                 key: "botID",

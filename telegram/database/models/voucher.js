@@ -25,7 +25,7 @@ const Voucher = db.define(
             allowNull: false
         },
         shopID: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING(30),
             references: {
                 model: Shop,
                 key: "botID",

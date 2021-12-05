@@ -20,7 +20,7 @@ const VoucherUser = db.define(
             },
         },
         userID: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING(30),
             references: {
                 model: User,
                 key: "telegramID",

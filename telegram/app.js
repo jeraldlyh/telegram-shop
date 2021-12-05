@@ -81,13 +81,18 @@ bot.command("setup", async (ctx) => {
             })
 
             // Creation of shop
-            await Database.createShop(ctx.botInfo.id, ctx.botInfo.first_name, ctx.from.id, token)
+            // await Database.createShop(ctx.botInfo.id, ctx.botInfo.first_name, ctx.from.id, token)
+
+            // HARDCODED CREATION OF SHOP FOR DEMO PURPOSE
+            await Database.createShop("5055112495", "TeleShopBeta", "12345", process.env.BOT_TOKEN)
+            console.log("Created shop")
 
             // Validation of chat
             validateChatRecord(ctx.botInfo.id, ctx.from.id, ctx.chat.id)
             await Utils.sendSystemMessage(ctx, Template.registrationSuccessMessage(ctx.from.id, ctx.from.username, ctx.botInfo.first_name))
         }
     } catch (error) {
+        console.log("----------- ERRORROROROROROORRORORO")
         await Utils.sendSystemMessage(ctx, error)
     }
 })

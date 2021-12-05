@@ -188,7 +188,7 @@ module.exports = {
     getShopByID: async function (shopID) {
         return await Models.Shop.findOne({
             where: {
-                botID: shopID
+                botID: String(shopID)
             }
         })
     },

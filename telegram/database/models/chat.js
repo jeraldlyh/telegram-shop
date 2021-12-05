@@ -8,7 +8,7 @@ const Chat = db.define(
     "Chat",
     {
         userID: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING(30),
             references: {
                 model: User,
                 key: "telegramID",
@@ -16,7 +16,7 @@ const Chat = db.define(
             },
         },
         shopID: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING(30),
             references: {
                 model: Shop,
                 key: "botID",

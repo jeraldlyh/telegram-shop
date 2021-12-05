@@ -7,7 +7,7 @@ const Shop = db.define(
     "Shop",
     {
         botID: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING(30),
             primaryKey: true,
             allowNull: false,
         },
@@ -24,7 +24,7 @@ const Shop = db.define(
             allowNull: false
         },
         ownerID: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING(30),
             references: {
                 model: User,
                 key: "telegramID",

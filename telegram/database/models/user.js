@@ -6,7 +6,7 @@ const User = db.define(
     "User",
     {
         telegramID: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING(30),
             primaryKey: true,
             allowNull: false,
         },

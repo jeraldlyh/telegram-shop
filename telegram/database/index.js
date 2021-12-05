@@ -17,7 +17,7 @@ const sequelize = new Sequelize(
 
 sequelize
     .authenticate()
-    .then(() => {
+    .then(async () => {
         console.log("Connection has been established successfully.")
         sequelize.sync({ force: true })
     })
