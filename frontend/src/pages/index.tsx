@@ -1,6 +1,6 @@
 import React, { useState, Fragment, useEffect } from "react"
 import _ from "lodash"
-import Card from "../components/card"
+import Card from "./components/card"
 
 
 type Props = {

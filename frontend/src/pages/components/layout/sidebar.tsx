@@ -74,7 +74,7 @@ const Sidebar = ({ collapsed }: Props) => {
 							icon={<AiOutlineSkin />}
 						>
 							<Link href="/products">
-								<span className={text("products")}> Products</span>
+								<span className={text("products")}>Products</span>
 							</Link>
 						</MenuItem>
                         <MenuItem
