@@ -9,7 +9,7 @@ module.exports = {
         var shop = null
         try {
             user = await User.create({
-                telegramID: ctx.from.id,
+                telegramID: String(ctx.from.id),
                 name: faker.name.firstName(),
                 email: faker.internet.email(),
                 mobile: faker.phone.phoneNumber(),
@@ -17,10 +17,11 @@ module.exports = {
             })
 
             shop = await Shop.create({
-                botID: ctx.botInfo.id,
+                botID: String(ctx.botInfo.id),
                 name: ctx.botInfo.first_name,
                 image: faker.image.imageUrl(),
-                ownerID: user.toJSON().telegramID
+                ownerID: String(user.toJSON().telegramID),
+                botToken: process.env.BOT_TOKEN,
             })
 
             await Voucher.create({
@@ -30,12 +31,12 @@ module.exports = {
                 isValid: true,
             })
         } catch (error) {
-            user = await User.findByPk(ctx.from.id)
+            user = await User.findByPk(String(ctx.from.id))
             shop = await Shop.findOne({ where: { name: ctx.botInfo.first_name } })
         }
 
         const category = await Category.create({
-            shopID: shop.toJSON().botID,
+            shopID: String(shop.toJSON().botID),
             name: faker.commerce.department(),
             image: faker.image.imageUrl(),
         })
@@ -57,7 +58,7 @@ module.exports = {
         const randomAddress = _.random(1, 2)
         for (var i = 0; i < randomAddress; i++) {
             await Address.create({
-                userID: user.toJSON().telegramID,
+                userID: String(user.toJSON().telegramID),
                 addressLineOne: faker.address.streetAddress(),
                 addressLineTwo: faker.address.streetAddress(),
                 city: faker.address.city(),

@@ -28,16 +28,6 @@ bot.use(session())
 bot.use(stage.middleware())
 
 // TO DELETE
-bot.command("test", ctx => {
-    Dummy.createDummyData(ctx)
-    ctx.deleteMessage()
-})
-
-bot.command("a", ctx => {
-    ctx.reply("Choose a date", Markup.inlineKeyboard(Calendar.getCalendar()))
-})
-
-// TO DELETE
 bot.command("voucher", async (ctx) => {
     const shop = await Database.getShopByID(ctx.botInfo.id)
 
@@ -53,7 +43,10 @@ bot.command("voucher", async (ctx) => {
 bot.command("start", async (ctx) => {
     const shop = await Database.getShopByID(ctx.botInfo.id)
     if (!shop) {
-        return await Utils.sendSystemMessage(ctx, "The shop has not yet been setup!")
+        if (process.env.TEST === "demo")
+            await Dummy.createDummyData(ctx)
+        else
+            return await Utils.sendSystemMessage(ctx, "The shop has not yet been setup!")
     }
     await validateUserAccount(ctx.from.id, ctx.from.first_name, ctx.botInfo.id, ctx.chat.id)          // Validate user accounts upon entering a shop
     await validateChatRecord(ctx.botInfo.id, ctx.from.id, ctx.chat.id)

@@ -233,7 +233,6 @@ module.exports = {
         })
     },
     deleteExpiredOrders: async function (minutes) {
-        console.log("deleting nowww")
         const before = moment().subtract(minutes, "minutes").tz("Asia/Singapore").format("YYYY-MM-DD HH:mm:ss")
         const amount = await Models.Order.destroy({
             where: {

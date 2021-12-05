@@ -75,8 +75,12 @@ dateScene.on("message", async (ctx) => {
 })
 
 dateScene.leave(async (ctx) => {
-    console.log("Cleaning date scene")
-    Utils.clearScene(ctx, true)
+    try {
+        console.log("Cleaning date scene")
+        Utils.clearScene(ctx, true)
+    } catch (error) {
+        
+    }
 })
 
 module.exports = {

@@ -97,9 +97,13 @@ cartScene.on("message", async (ctx) => {
 })
 
 cartScene.leave(async (ctx) => {
-    console.log("Cleaning cart scene")
-    Utils.clearTimeout(ctx)
-    Utils.cleanUpMessage(ctx, true, ["user", "system", "welcome"])
+    try {
+        console.log("Cleaning cart scene")
+        Utils.clearTimeout(ctx)
+        Utils.cleanUpMessage(ctx, true, ["user", "system", "welcome"])
+    } catch (error) {
+        
+    }
 })
 
 module.exports = {

@@ -133,8 +133,12 @@ productScene.on("message", async (ctx) => {
 })
 
 productScene.leave(async (ctx) => {
-    console.log("Clearing product scene")
-    Utils.clearScene(ctx, true)
+    try {
+        console.log("Clearing product scene")
+        Utils.clearScene(ctx, true)
+    } catch (error) {
+        
+    }
 })
 
 module.exports = {

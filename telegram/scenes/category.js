@@ -33,8 +33,12 @@ categoryScene.on("message", async (ctx) => {
 })
 
 categoryScene.leave(async (ctx) => {
-    console.log("Cleaning category scene")
-    await Utils.clearScene(ctx, true)
+    try {
+        console.log("Cleaning category scene")
+        await Utils.clearScene(ctx, true)
+    } catch (error) {
+        
+    }
 })
 
 module.exports = {
