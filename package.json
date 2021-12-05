@@ -17,5 +17,8 @@
     "bugs": {
         "url": "https://github.com/jeraldlyh/TeleShop/issues"
     },
-    "homepage": "https://github.com/jeraldlyh/TeleShop#readme"
+    "homepage": "https://github.com/jeraldlyh/TeleShop#readme",
+    "dependencies": {
+        "express": "^4.17.1"
+    }
 }

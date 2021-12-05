@@ -7,6 +7,7 @@ const Database = require("./database/actions")
 const Utils = require("./utils")
 const Template = require("./template")
 const Calendar = require("./modules/calendar")
+const express = require("express")
 
 
 const bot = new Telegraf(process.env.BOT_TOKEN)
@@ -122,3 +123,7 @@ const validateChatRecord = async function (shopID, userID, chatID) {
         await Database.createChat(shopID, userID, chatID)
     }
 }
+
+const app = express()
+app.get("/", (req, res) => res.status(200).send({ message: "ok" }))
+app.listen(process.env.PORT || 3000)
