@@ -30,8 +30,7 @@ Demo can be found on Telegram via @teleshop_beta_bot. A dummy [visa card](https:
 - Currently, the bot is being deployed via a hacky way using Express.js while running Telegraf in the background. For production usage, optimise by changing to [webhooks](https://telegraf.js.org/#webhooks).
 
 ## Deployment
-#### Database Desigh
-Database design can be found [here](https://whimsical.com/teleshop-Szdq8aQ3RP5FN9ZVbHbpK).
+Database design and UX flow can be found [here](https://whimsical.com/teleshop-Szdq8aQ3RP5FN9ZVbHbpK).
 #### Environment Variables
 | Name             | Description                                                                                               |
 | ---------------- | --------------------------------------------------------------------------------------------------------- |
