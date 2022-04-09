@@ -29,8 +29,20 @@ Demo can be found on Telegram via @teleshop_beta_bot. A dummy [visa card](https:
 - Develop a full fledged dashboard using Next.js.
 - Currently, the bot is being deployed via a hacky way using Express.js while running Telegraf in the background. For production usage, optimise by changing to [webhooks](https://telegraf.js.org/#webhooks).
 
+## User Flow
+<img src="./images/UX Flow.png" />
+
+## Database Design
+<img src="./images/DB Design.png" />
+
 ## Deployment
-Database design and UX flow can be found [here](https://whimsical.com/teleshop-Szdq8aQ3RP5FN9ZVbHbpK).
+#### Local Deployment
+```
+git clone https://github.com/jeraldlyh/telegram-shop
+
+cd telegram && npm i
+npm run start
+```
 #### Environment Variables
 | Name             | Description                                                                                               |
 | ---------------- | --------------------------------------------------------------------------------------------------------- |
