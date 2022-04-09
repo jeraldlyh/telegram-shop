@@ -30,10 +30,10 @@ Demo can be found on Telegram via @teleshop_beta_bot. A dummy [visa card](https:
 - Currently, the bot is being deployed via a hacky way using Express.js while running Telegraf in the background. For production usage, optimise by changing to [webhooks](https://telegraf.js.org/#webhooks).
 
 ## User Flow
-<img src="./images/UX Flow.png" />
+<img src="./images/UX Flow.PNG" />
 
 ## Database Design
-<img src="./images/DB Design.png" />
+<img src="./images/DB Design.PNG" />
 
 ## Deployment
 #### Local Deployment
